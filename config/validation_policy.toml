@@ -1,0 +1,222 @@
+# Validation policy v1: stress matrix, tolerances and statistical acceptance rules.
+#
+# Written before the first statistical run (see docs/progress.md for the
+# SHA-256 recorded at that time). Thresholds are not to be loosened after
+# observing results; failures are recorded in the report instead.
+#
+# Tolerance rule everywhere: |error| <= atol + rtol * |reference|.
+# Price atol values are for spot = 100 and are scaled by spot/100.
+
+policy_version = "1"
+
+# ---------------------------------------------------------------------------
+# Stress matrix. Each regime is a cartesian grid over the listed axes, for
+# both calls and puts. `expect` states the expected outcome per engine when it
+# is not a price (e.g. a tree probability rejection).
+# ---------------------------------------------------------------------------
+[stress.ordinary]
+spot = [100.0]
+strike = [80.0, 90.0, 100.0, 110.0, 120.0]
+time = [0.25, 1.0, 2.0]
+vol = [0.1, 0.2, 0.4]
+rate = [0.03]
+dividend_yield = [0.0, 0.02]
+
+[stress.deep_itm_otm]
+spot = [100.0]
+strike = [20.0, 40.0, 250.0, 500.0]
+time = [0.1, 1.0]
+vol = [0.15, 0.3]
+rate = [0.03]
+dividend_yield = [0.0]
+
+[stress.short_maturity]
+spot = [100.0]
+strike = [95.0, 100.0, 105.0]
+time = [0.0027397260273972603, 1e-4, 1e-6]
+vol = [0.2]
+rate = [0.03]
+dividend_yield = [0.0]
+
+[stress.long_maturity]
+spot = [100.0]
+strike = [50.0, 100.0, 200.0]
+time = [10.0, 30.0]
+vol = [0.2]
+rate = [0.03]
+dividend_yield = [0.01]
+
+[stress.low_vol]
+spot = [100.0]
+strike = [99.0, 100.0, 101.0, 110.0]
+time = [1.0]
+vol = [1e-4, 1e-3, 5e-3]
+rate = [0.03]
+dividend_yield = [0.0]
+
+[stress.high_vol]
+spot = [100.0]
+strike = [50.0, 100.0, 200.0]
+time = [1.0]
+vol = [1.5, 3.0]
+rate = [0.03]
+dividend_yield = [0.0]
+
+[stress.negative_rates]
+spot = [100.0]
+strike = [90.0, 100.0, 110.0]
+time = [0.5, 3.0]
+vol = [0.2]
+rate = [-0.01, -0.005]
+dividend_yield = [-0.005, 0.02]
+
+[stress.high_yield]
+spot = [100.0]
+strike = [90.0, 100.0, 110.0]
+time = [1.0]
+vol = [0.3]
+rate = [0.01]
+dividend_yield = [0.1]
+
+# ---------------------------------------------------------------------------
+# Deterministic tolerances.
+# ---------------------------------------------------------------------------
+[tolerance.bsm_vs_mpmath.price]
+# float64 inputs carry ~1e-16 relative rounding; price condition numbers in
+# the matrix reach ~1e3 in the tails, so 1e-11 leaves a 100x margin.
+atol = 1e-12
+rtol = 1e-11
+
+[tolerance.bsm_vs_mpmath.greeks]
+# mpmath reference Greeks are 50-digit numerical derivatives of an independent
+# 50-digit price, not the analytic formulas under test.
+atol = 1e-9
+rtol = 1e-8
+
+[tolerance.bsm_vs_quantlib.price]
+atol = 1e-10
+rtol = 1e-10
+
+[tolerance.bsm_vs_quantlib.greeks]
+atol = 1e-8
+rtol = 1e-7
+
+[tolerance.published]
+# Published textbook values are rounded to the printed decimals.
+half_unit_in_last_place = true
+
+[tolerance.identities]
+# Put-call parity and bounds, in price units at spot 100.
+atol = 1e-11
+rtol = 1e-12
+
+[tolerance.crr_vs_bsm]
+# Regime-aware bound on CRR discretisation error at N steps:
+#   |error| <= k * spot * vol * sqrt(T) / N  (+ identities atol)
+# CRR error is O(1/N) with a coefficient bounded well below 1 for vanilla
+# payoffs; k = 0.5 is a deliberately conservative predeclared constant.
+k = 0.5
+steps = [2000, 2001]
+
+[tolerance.crr_american_vs_quantlib_fd]
+# Both methods carry discretisation error; the QuantLib FD reference uses a
+# fine grid. Absolute tolerance in price units at spot 100.
+atol = 5e-3
+rtol = 1e-3
+
+[tolerance.finite_difference_sweep]
+# Min over the bump sweep of |FD - analytic| must meet this.
+atol = 1e-7
+rtol = 1e-6
+relative_bumps = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7]
+# Regimes where the price is smooth on the bump scale. Excluded regimes
+# (low_vol, short_maturity, deep_itm_otm) are dominated by the payoff kink or
+# by subtractive cancellation; FD agreement there is not claimed and those
+# regimes are reported as excluded, not passed.
+regimes = ["ordinary", "long_maturity", "negative_rates", "high_yield", "high_vol"]
+
+[tolerance.implied_vol_round_trip]
+# Vol error allowed: vol_atol + safety * (price tolerance) / vega.
+vol_atol = 1e-9
+safety = 10.0
+
+# ---------------------------------------------------------------------------
+# Monte Carlo statistical acceptance rules (statistical tier).
+# ---------------------------------------------------------------------------
+[statistical]
+master_seed = 918273645
+replications = 500
+paths_per_replication = 20000
+confidence_level = 0.95
+# Family-wise false-alarm budget across all statistical tests in the suite,
+# split evenly (Bonferroni) over the tests actually run.
+family_alpha = 0.01
+methods = ["plain", "antithetic", "control_variate", "antithetic_control_variate"]
+
+[[statistical.cases]]
+name = "atm_call"
+option_type = "call"
+spot = 100.0
+strike = 100.0
+time = 1.0
+vol = 0.2
+rate = 0.03
+dividend_yield = 0.01
+
+[[statistical.cases]]
+name = "otm_call"
+option_type = "call"
+spot = 100.0
+strike = 130.0
+time = 1.0
+vol = 0.2
+rate = 0.03
+dividend_yield = 0.0
+
+[[statistical.cases]]
+name = "itm_put"
+option_type = "put"
+spot = 100.0
+strike = 120.0
+time = 0.5
+vol = 0.3
+rate = 0.05
+dividend_yield = 0.0
+
+[[statistical.cases]]
+name = "otm_put_negative_rate"
+option_type = "put"
+spot = 100.0
+strike = 85.0
+time = 2.0
+vol = 0.25
+rate = -0.005
+dividend_yield = 0.01
+
+[[statistical.cases]]
+name = "deep_itm_call"
+option_type = "call"
+spot = 100.0
+strike = 60.0
+time = 1.0
+vol = 0.2
+rate = 0.03
+dividend_yield = 0.0
+
+# ---------------------------------------------------------------------------
+# Surface calibration gate (Release B, M6). Added before any fitting code ran.
+# Evaluated on the committed synthetic snapshots whose generating SSVI surface
+# is known (fixtures/snapshots/*, `synthetic_truth`).
+# ---------------------------------------------------------------------------
+[surface_gate]
+fixtures = ["synthetic_clean_day1.json", "synthetic_day1.json"]
+# Held-out quotes (every 4th OTM strike per expiry, never used in the fit):
+min_holdout_bid_ask_containment = 0.90
+# Implied-vol recovery vs the generating surface on k in [-0.3, 0.2] at the
+# fitted expiries, in absolute volatility (0.005 = half a vol point):
+max_abs_iv_error_vs_truth = 0.005
+k_range_for_truth = [-0.3, 0.2]
+# Sampled static-arbitrage diagnostics must find no violations, and the
+# sufficient conditions of the parametric guarantee must hold.
+require_no_sampled_violations = true
+require_guarantee_conditions = true

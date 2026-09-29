@@ -11,6 +11,7 @@ from options_engine.analytics.implied_vol import (
     quote_resolution,
 )
 from options_engine.engines.bsm_analytic import black_scholes_price
+from options_engine.validation.checks import iv_failure_cases
 
 
 def price(sign, S, K, T, r, q, v):
@@ -33,6 +34,11 @@ def test_itm_inverts_time_value_via_parity():
     quote = price(1, 100.0, 50.0, 0.5, 0.03, 0.0, 0.25)
     r = implied_volatility(quote, 1, 100.0, 50.0, 0.5, 0.03, 0.0)
     assert r.status in (IVStatus.OK, IVStatus.AT_LOWER_BOUND)
+
+
+@pytest.mark.parametrize("row", iv_failure_cases(), ids=lambda r: r["case"])
+def test_adversarial_quotes_have_specific_status(row):
+    assert row["got"] == row["expected"]
 
 
 def test_failures_carry_no_implied_vol():

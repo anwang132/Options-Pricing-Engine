@@ -11,6 +11,7 @@ from hypothesis import strategies as st
 from options_engine.application.surface import SurfaceConfig, SurfaceService, arbitrage_diagnostics
 from options_engine.domain.errors import DomainError
 from options_engine.models.ssvi import SSVISurface
+from options_engine.validation.policy import load_policy
 
 FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "snapshots"
 T = (30 / 365, 91 / 365, 1.0)
@@ -65,6 +66,20 @@ def test_sampled_diagnostics_detect_an_arbitrageable_surface():
     diag = arbitrage_diagnostics(s, SurfaceConfig())
     assert diag["sampled_violations_total"] > 0
     assert diag["min_butterfly_density_g"] < 0
+
+
+def test_surface_gate_from_policy(svc):
+    gate = load_policy()["surface_gate"]
+    for name in gate["fixtures"]:
+        art, created = svc.fit(ingest(svc, name))
+        assert created
+        assert art["status"] == "ok", name
+        assert art["held_out"]["bid_ask_containment"] >= gate["min_holdout_bid_ask_containment"]
+        assert art["truth_recovery"]["max_abs_iv_error"] <= gate["max_abs_iv_error_vs_truth"]
+        assert art["truth_recovery"]["k_range"] == gate["k_range_for_truth"]
+        assert art["arbitrage_diagnostics"]["sampled_violations_total"] == 0
+        cond = art["guarantee"]["conditions"]
+        assert cond["eta_bound_ok"] and cond["gamma_in_(0,0.5]"] and cond["theta_non_decreasing"]
 
 
 def test_american_quotes_excluded_with_reason(svc):

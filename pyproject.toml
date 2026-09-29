@@ -60,7 +60,7 @@ ignore = ["N803", "N806", "RUF001", "RUF002", "RUF003"]
 python_version = "3.13"
 strict = true
 plugins = ["pydantic.mypy"]
-files = ["src", "tests"]
+files = ["src", "tests", "scripts"]
 
 [[tool.mypy.overrides]]
 module = ["QuantLib", "QuantLib.*", "mpmath", "mpmath.*", "matplotlib", "matplotlib.*"]

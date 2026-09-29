@@ -1,0 +1,2805 @@
+{
+ "fixture": "american_quantlib_fd",
+ "fixture_version": 1,
+ "description": "QuantLib FdBlackScholesVanillaEngine (Douglas scheme) for American exercise; cash dividends use CashDividendModel=Escrowed; European dividend cases use AnalyticDividendEuropeanEngine. FD prices carry their own discretisation error.",
+ "generated_at": "2026-09-28T17:50:03+00:00",
+ "generator": "scripts/generate_reference_fixtures.py",
+ "generator_sha256": "03b129e336a81bce829a205b2f5cf6a7b3d5f15ee415f671f2fa86c293e95228",
+ "policy_sha256": "b341906a9fc9dcc96a7efb624e05fb274cc353fd56b9f93196c8d636a4cb565b",
+ "libraries": {
+  "python": "3.13.14",
+  "mpmath": "1.4.1",
+  "QuantLib": "1.43"
+ },
+ "fd_grid": {
+  "t_grid": 2000,
+  "x_grid": 1600,
+  "damping_steps": 10
+ },
+ "cases": [
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 21.018370098699044
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 20.279823820267904
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 20.00000000000004
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 19.99999999995848
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 22.025918215361934
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 21.35940428071997
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 20.767739818300527
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 21.053192025495484
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 24.588902272451314
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 21.88312768480966
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 20.110529029266612
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 20.746478450202144
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 28.976503840494917
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 26.67218294393933
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 24.781543189863
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 25.961117607948434
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 29.120314545232105
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 24.049416154609002
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 20.699089090627798
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 22.22685069796838
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 35.93931347573852
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 31.610510689055506
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 28.484840941398627
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 30.786455381738424
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 4.607826870897028
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 4.194552786905509
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 3.6631124555422865
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 3.8764570120862802
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 8.540188110991318
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 8.125120552747997
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 7.610648006920093
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 7.850601888258274
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 10.450605305978723
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 8.65277105097196
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 6.742726163909249
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 7.568429713085422
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 18.02299924630346
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 16.229252318746745
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 14.465875849444886
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 15.474028469864308
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 16.126820006703607
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 12.34077586043086
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 8.88606493679279
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 10.490896851124424
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 26.290331729639224
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 22.581384698059612
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 19.501868695390893
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 21.574160600774416
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 0.19820100548370273
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 0.16414005234233328
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 0.12105949140482752
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 0.13759420187429647
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 2.3820405111426117
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 2.217453884407516
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 1.9975373164436865
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 2.095232299641
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 3.247484980970773
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 2.4716633275585704
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 1.636885774104905
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 1.976690536097525
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 10.805995037783624
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 9.531289108386224
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 8.178187241810832
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 8.904047094250865
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 7.92823253793312
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 5.601726104324452
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 3.425401759852107
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 4.368889133036946
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 19.174371715832354
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 16.127188091035393
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 13.41270355755241
+  },
+  {
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 15.122725629654488
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 0.027589751967712198
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 0.03400198940258108
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 0.04870409409469277
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 0.04249261309199398
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 1.0432128693990657
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 1.1158799444192682
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 1.2666969646949626
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 1.2118601560479338
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 0.7234501376997939
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 0.9489759120933853
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 1.5616826189174837
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 1.3153350677994642
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 5.225104497826666
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 5.748225259151724
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 7.087625679269265
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 6.684588666287326
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 1.67006364357241
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 2.2991282904898047
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 4.27663243092358
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 3.519486573130413
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 8.808689352952339
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 9.87269552156507
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 13.084289484219228
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 12.281993912428899
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 3.4756136717126505
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 3.7430867608467797
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 4.351157815090161
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 4.113328668318028
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 7.399521646549758
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 7.6771035417465505
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 8.30316973933803
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 8.090051453769355
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 6.0899998774591
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 6.972706943131522
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 9.413411712168692
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 8.518082436590921
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 13.667136812260926
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 14.58862205550149
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 17.138743963272777
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 16.439028501909334
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 7.7225278790323
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 9.22997308532879
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 14.073646324949271
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 12.398160779882403
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 17.991683002562734
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 19.56100041426844
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 24.65183820288738
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 23.518964444671404
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 19.99999999999999
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 19.9999999999999
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 20.865358953876793
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 20.43694730188703
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 21.33856998577629
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 21.68957317134013
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 22.7335017657363
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 91,
+   "time": 0.2493150684931507,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 22.392853853606525
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 20.135457167196062
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 20.78549566606533
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 24.54724425320274
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 23.17247869288303
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 26.228658269168562
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 27.36998934836655
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 31.00647989643299
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 30.090260911582448
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 20.680894998264275
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 22.06533600168943
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 29.070738215122446
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.2,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 26.756104048509098
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 30.199169120730115
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.05,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 32.069380427319544
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": 0.0,
+   "dividend_yield": 0.03,
+   "dividends": [],
+   "price": 38.84628442575081
+  },
+  {
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 730,
+   "time": 2.0,
+   "vol": 0.4,
+   "rate": -0.01,
+   "dividend_yield": 0.0,
+   "dividends": [],
+   "price": 37.49891749717454
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 14.453179444092688,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 14.38782345939574,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 13.332377115858064,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 12.895945056539844,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 19.24877412644009,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 19.217301373305464,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 17.94873120800275,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 17.839819298167253,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 8.674403819958213,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 8.666828636496541,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 7.612680154129138,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 7.554739015198942,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 14.349593636659515,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 14.344965771021476,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 13.209746910659065,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 13.19093566335457,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 4.807418846421124,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 4.807409580847465,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 4.071354682784522,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 4.068071192394447,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 10.544917410855039,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 10.544895825361214,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "call",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 9.607897190848492,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "call",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 9.605626643077448,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 3.0873941132841134,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 2.929242073266075,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 3.6948236257701716,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 3.4250733431902654,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 7.991549402773389,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 7.758719987175798,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 8.719618362009884,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 90.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 8.368947584817676,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 7.12001397032828,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 6.720541495374015,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 8.352314758440341,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 7.5961615468564965,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 12.795878886749277,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 12.39867862989895,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 13.87393536172897,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 13.23235819501213,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 13.223889988494282,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 12.373416684732078,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 15.191093611796063,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.2,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 13.621787969059149,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 18.73856560917079,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "two_quarterly",
+   "dividends": [
+    [
+     0.2191780821917808,
+     1.5
+    ],
+    [
+     0.7178082191780822,
+     1.5
+    ]
+   ],
+   "price": 18.110902929245825,
+   "engine": "AnalyticDividendEuropeanEngine"
+  },
+  {
+   "option_type": "put",
+   "exercise": "american",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 20.207849517050857,
+   "engine": "FdBlackScholesVanillaEngine(Escrowed)"
+  },
+  {
+   "option_type": "put",
+   "exercise": "european",
+   "spot": 100.0,
+   "strike": 110.0,
+   "days": 365,
+   "time": 1.0,
+   "vol": 0.35,
+   "rate": 0.05,
+   "dividend_yield": 0.0,
+   "dividend_set": "large_single",
+   "dividends": [
+    [
+     0.3287671232876712,
+     5.0
+    ]
+   ],
+   "price": 19.15934341974215,
+   "engine": "AnalyticDividendEuropeanEngine"
+  }
+ ]
+}
