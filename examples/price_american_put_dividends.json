@@ -1,0 +1,24 @@
+{
+  "schema_version": "1",
+  "contract": {
+    "underlying": "SYNTH-DIV",
+    "currency": "USD",
+    "strike": "100",
+    "option_type": "put",
+    "exercise_style": "american",
+    "expiry": "2027-09-28T20:00:00Z",
+    "multiplier": "100"
+  },
+  "valuation": {"as_of": "2026-09-28T20:00:00Z"},
+  "market": {
+    "spot": "100",
+    "rate": "0.05",
+    "cash_dividends": [
+      {"ex_date": "2026-12-15T14:30:00Z", "amount": "1.50"},
+      {"ex_date": "2027-06-15T14:30:00Z", "amount": "1.50"}
+    ],
+    "source": "synthetic"
+  },
+  "model": {"volatility": 0.25},
+  "engine": {"engine": "crr_tree", "steps": 2000}
+}

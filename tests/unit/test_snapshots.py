@@ -128,3 +128,25 @@ def test_malformed_ids_rejected(svc):
     with pytest.raises(DomainError) as e:
         svc.manifest("snap-0000000000000000")
     assert e.value.code is ErrorCode.NOT_FOUND
+
+
+def test_api_snapshot_endpoints(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from options_engine.interfaces.http.app import create_app
+
+    monkeypatch.setenv("OPTIONS_ENGINE_DATA_DIR", str(tmp_path))
+    with TestClient(create_app(workers=0)) as c:
+        r = c.post("/api/v1/snapshots", content=raw(), headers={"content-type": "application/json"})
+        assert r.status_code == 201, r.text
+        sid = r.json()["manifest"]["snapshot_id"]
+        assert c.post("/api/v1/snapshots", content=raw()).status_code == 200  # already present
+        assert [s["snapshot_id"] for s in c.get("/api/v1/snapshots").json()] == [sid]
+        quotes = c.get(f"/api/v1/snapshots/{sid}/quotes").json()
+        assert any(not q["accepted"] for q in quotes)
+        assert c.get("/api/v1/snapshots/snap-0000000000000000").status_code == 404
+        bad = c.post("/api/v1/snapshots", content=b"[]")
+        assert bad.status_code == 422
+        assert bad.json()["error"]["code"] == "invalid_request"
+        bundled = c.post("/api/v1/snapshots/bundled").json()
+        assert len(bundled) == 2

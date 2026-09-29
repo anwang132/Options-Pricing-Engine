@@ -173,3 +173,50 @@ def test_matches_single_contract_pricing():
 
     single = PricingService().price(PriceRequest(p.contract, VAL, MKT, BlackScholesModel(0.25)))
     assert run([p]).positions[0]["price_per_unit"] == single.price
+
+
+def test_api_portfolio_endpoint():
+    from fastapi.testclient import TestClient
+
+    from options_engine.interfaces.http.app import create_app
+
+    body = {
+        "valuation": {"as_of": "2026-09-28T20:00:00Z"},
+        "market": {"spot": "100", "rate": "0.03"},
+        "positions": [
+            {
+                "position_id": "c",
+                "quantity": "5",
+                "volatility": 0.2,
+                "contract": {
+                    "strike": "100",
+                    "option_type": "call",
+                    "expiry": "2026-12-28T20:00:00Z",
+                    "multiplier": "100",
+                },
+            },
+            {
+                "position_id": "p",
+                "quantity": "-5",
+                "volatility": 0.22,
+                "contract": {
+                    "strike": "95",
+                    "option_type": "put",
+                    "exercise_style": "american",
+                    "expiry": "2026-12-28T20:00:00Z",
+                    "multiplier": "100",
+                },
+            },
+        ],
+    }
+    with TestClient(create_app(workers=0)) as c:
+        r = c.post("/api/v1/portfolio/scenarios", json=body)
+        assert r.status_code == 200, r.text
+        out = r.json()
+        assert len(out["scenarios"]) == 15
+        assert out["engines_used"] == {"c": "bsm_analytic", "p": "crr_tree"}
+        body["positions"][1]["contract"]["currency"] = "EUR"
+        assert (
+            c.post("/api/v1/portfolio/scenarios", json=body).json()["error"]["code"]
+            == "unsupported_contract"
+        )

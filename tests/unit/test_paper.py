@@ -206,3 +206,70 @@ def test_unknown_account(svc):
     assert e.value.code is ErrorCode.NOT_FOUND
     with pytest.raises(DomainError):
         svc.summary("../../etc")
+
+
+def test_api_paper_flow(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from options_engine.interfaces.http.app import create_app
+
+    monkeypatch.setenv("OPTIONS_ENGINE_DATA_DIR", str(tmp_path))
+    contract = {
+        "underlying": "SYNTH",
+        "strike": "40",
+        "option_type": "call",
+        "expiry": "2026-12-18T21:00:00Z",
+        "multiplier": "100",
+    }
+    with TestClient(create_app(workers=0)) as c:
+        r = c.post(
+            "/api/v1/paper/accounts",
+            json={"name": "demo", "starting_cash": "10000", "opened_at": "2026-09-28T14:00:00Z"},
+        )
+        assert r.status_code == 201, r.text
+        acct = r.json()["account_id"]
+        assert "no real money" in r.json()["notice"]
+        r = c.post(
+            f"/api/v1/paper/accounts/{acct}/trades",
+            json={
+                "timestamp": "2026-09-28T14:05:00Z",
+                "contract": contract,
+                "side": "buy",
+                "quantity": "2",
+                "price": "1.50",
+                "fees": "1.30",
+            },
+        )
+        assert r.status_code == 200, r.text
+        s = r.json()
+        assert s["cash"] == "9698.70"  # exact decimal string
+        key = s["positions"][0]["key"]
+        r = c.post(
+            f"/api/v1/paper/accounts/{acct}/marks",
+            json={
+                "as_of": "2026-09-29T20:00:00Z",
+                "markets": {"SYNTH": {"spot": "42", "rate": "0.05"}},
+                "inputs": {key: {"observed_price": "2.25", "volatility": 0.25}},
+            },
+        )
+        assert r.status_code == 200, r.text
+        m = r.json()
+        assert m["equity"] == "10148.70"
+        assert m["positions"][0]["model_price"] is not None
+        hist = c.get(f"/api/v1/paper/accounts/{acct}/history").json()
+        assert [h["total_pnl"] for h in hist] == ["148.70"]
+        events = c.get(f"/api/v1/paper/accounts/{acct}/events").json()
+        assert [e["type"] for e in events] == ["open_account", "trade", "mark"]
+        assert c.get(f"/api/v1/paper/accounts/{acct}").json()["integrity"]["intact"] is True
+        assert c.get("/api/v1/paper/accounts/acct-000000000000").status_code == 404
+        bad = c.post(
+            f"/api/v1/paper/accounts/{acct}/trades",
+            json={
+                "timestamp": "2026-12-19T14:05:00Z",
+                "contract": contract,
+                "side": "buy",
+                "quantity": "1",
+                "price": "1",
+            },
+        )
+        assert bad.json()["error"]["code"] == "expired_contract"

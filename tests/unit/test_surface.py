@@ -124,3 +124,60 @@ def test_later_snapshot_evaluated_without_refit(svc):
     assert ls["elapsed_days"] == pytest.approx(1.0)
     # The day-2 generating surface is 1 vol point lower: a fixed surface must misprice it.
     assert ls["price_rmse"] > 5 * art["held_out"]["price_rmse"]
+
+
+def test_api_surface_and_sticky_moneyness_portfolio(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from options_engine.interfaces.http.app import create_app
+
+    monkeypatch.setenv("OPTIONS_ENGINE_DATA_DIR", str(tmp_path))
+    with TestClient(create_app(workers=0)) as c:
+        ids = [b["snapshot_id"] for b in c.post("/api/v1/snapshots/bundled").json()]
+        r = c.post(
+            "/api/v1/surface/fits", json={"snapshot_id": ids[0], "later_snapshot_id": ids[1]}
+        )
+        assert r.status_code == 200, r.text
+        fit_id = r.json()["artifact"]["fit_id"]
+        assert c.get(f"/api/v1/surface/fits/{fit_id}").json()["status"] == "ok"
+        assert c.get("/api/v1/surface/fits").json()[0]["fit_id"] == fit_id
+        body = {
+            "valuation": {"as_of": "2026-09-28T20:00:00Z"},
+            "market": {"spot": "4500", "rate": "0.04", "dividend_yield": "0.015"},
+            "fit_id": fit_id,
+            "positions": [
+                {
+                    "position_id": "put",
+                    "quantity": "-10",
+                    "contract": {
+                        "underlying": "SYNTH-IDX",
+                        "strike": "4000",
+                        "option_type": "put",
+                        "expiry": "2026-12-28T20:00:00Z",
+                        "multiplier": "100",
+                    },
+                },
+            ],
+            "scenarios": {
+                "spot_shocks_pct": [-10, 0, 10],
+                "vol_shocks_pts": [0],
+                "surface_dynamics": "sticky_moneyness",
+            },
+        }
+        r = c.post("/api/v1/portfolio/scenarios", json=body)
+        assert r.status_code == 200, r.text
+        out = r.json()
+        vol = out["positions"][0]["volatility"]
+        assert 0.15 < vol < 0.35  # read from the surface, not supplied
+        sticky_m = {s["spot_shock_pct"]: s["pnl"] for s in out["scenarios"]}
+        body["scenarios"]["surface_dynamics"] = "sticky_strike"
+        sticky_k = {
+            s["spot_shock_pct"]: s["pnl"]
+            for s in c.post("/api/v1/portfolio/scenarios", json=body).json()["scenarios"]
+        }
+        assert sticky_m[0] == pytest.approx(0.0, abs=1e-6)
+        assert sticky_m[-10] != pytest.approx(sticky_k[-10])  # dynamics assumption matters
+        body["positions"][0]["contract"]["underlying"] = "OTHER"
+        r = c.post("/api/v1/portfolio/scenarios", json=body)
+        assert r.status_code == 422
+        assert "fitted for 'SYNTH-IDX'" in r.json()["error"]["message"]

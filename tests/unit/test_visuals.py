@@ -145,3 +145,34 @@ def test_surface_views_grid_matches_surface(tmp_path):
     assert views["implied_vol"][i][j] == pytest.approx(float(expected))
     regions = {p["region"] for p in views["term_structure"]}
     assert regions == {"interpolated", "extrapolated"}
+
+
+def test_api_visual_endpoints(tmp_path, monkeypatch):
+    import json
+
+    from fastapi.testclient import TestClient
+
+    from options_engine.interfaces.http.app import create_app
+
+    monkeypatch.setenv("OPTIONS_ENGINE_DATA_DIR", str(tmp_path))
+    body = json.loads(
+        (Path(__file__).resolve().parents[2] / "examples" / "price_hull_call.json").read_text()
+    )
+    with TestClient(create_app(workers=0)) as c:
+        r = c.post("/api/v1/visuals/profile", json=body)
+        assert r.status_code == 200, r.text
+        assert len(r.json()["spots"]) == visuals.PROFILE_POINTS
+        r = c.post("/api/v1/visuals/exercise-boundary", json=body)
+        assert r.status_code == 422  # European: no boundary
+        body["contract"]["exercise_style"] = "american"
+        body["contract"]["option_type"] = "put"
+        body["engine"] = {"engine": "crr_tree"}
+        r = c.post("/api/v1/visuals/exercise-boundary", json=body)
+        assert r.status_code == 200, r.text
+        ids = [b["snapshot_id"] for b in c.post("/api/v1/snapshots/bundled").json()]
+        fit_id = c.post("/api/v1/surface/fits", json={"snapshot_id": ids[0]}).json()["artifact"][
+            "fit_id"
+        ]
+        r = c.get(f"/api/v1/surface/fits/{fit_id}/views")
+        assert r.status_code == 200, r.text
+        assert len(r.json()["densities"]) == 5
