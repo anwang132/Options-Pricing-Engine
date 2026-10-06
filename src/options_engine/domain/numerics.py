@@ -107,4 +107,83 @@ class MonteCarloConfig:
             raise DomainError(ErrorCode.INVALID_NUMERICAL_CONFIG, "confidence_level in [0.5, 1)")
 
 
-NumericalConfig = AnalyticConfig | CRRConfig | MonteCarloConfig
+@dataclass(frozen=True, slots=True)
+class HestonConfig:
+    """Quadrature settings for the Heston Fourier integral (scipy.integrate.quad on [0, inf))."""
+
+    epsabs: float = 1e-12
+    epsrel: float = 1e-10
+    limit: int = 1000
+    method: str = "heston_lewis"
+
+    def __post_init__(self) -> None:
+        if not (0 < self.epsabs <= 1e-4 and 0 < self.epsrel <= 1e-4):
+            raise DomainError(ErrorCode.INVALID_NUMERICAL_CONFIG, "Heston tolerances in (0, 1e-4]")
+        _limit("limit", self.limit, 50, 20_000)
+
+
+MAX_LSM_WORK = 50_000_000  # (paths + regression_paths) * exercise_dates
+MAX_LSM_DUAL_WORK = 400_000_000  # outer * inner * exercise_dates^2 / 2 (inner path-steps)
+
+
+@dataclass(frozen=True, slots=True)
+class LSMConfig:
+    """Longstaff-Schwartz settings (ADR 0018).
+
+    ``regression_paths`` fit the continuation-value regressions; ``paths`` are an
+    independent set that applies the fitted rule, so the price is a low-biased
+    estimate of the Bermudan price on ``exercise_dates`` equally spaced dates with
+    a valid standard error. Both counts are payoff evaluations (even when antithetic).
+    SeedSequence(seed).spawn(4): child 0 regression set, child 1 pricing set, children 2
+    and 3 the outer and inner paths of the optional Andersen-Broadie upper bound.
+    """
+
+    paths: int = 100_000
+    regression_paths: int = 50_000
+    exercise_dates: int = 50
+    basis_degree: int = 3
+    seed: int = 20260928
+    antithetic: bool = True
+    control_variate: bool = True
+    confidence_level: float = 0.95
+    upper_bound: bool = False
+    outer_paths: int = 1_000
+    inner_paths: int = 200
+    method: str = "lsm"
+
+    def __post_init__(self) -> None:
+        _limit("paths", self.paths, 2, MAX_MC_PATHS)
+        _limit("regression_paths", self.regression_paths, 1_000, MAX_MC_PATHS)
+        _limit("exercise_dates", self.exercise_dates, 1, 1_000)
+        if not 1 <= self.basis_degree <= 6:
+            raise DomainError(ErrorCode.INVALID_NUMERICAL_CONFIG, "basis_degree in [1, 6]")
+        work = (self.paths + self.regression_paths) * self.exercise_dates
+        if work > MAX_LSM_WORK:
+            raise DomainError(
+                ErrorCode.WORK_LIMIT_EXCEEDED,
+                "(paths + regression_paths) * exercise_dates exceeds the LSM work limit",
+                {"work": work, "limit": MAX_LSM_WORK},
+            )
+        if self.antithetic and (self.paths % 2 or self.regression_paths % 2):
+            raise DomainError(
+                ErrorCode.INVALID_NUMERICAL_CONFIG,
+                "antithetic sampling requires even path counts",
+            )
+        if self.seed < 0:
+            raise DomainError(ErrorCode.INVALID_NUMERICAL_CONFIG, "seed must be non-negative")
+        if not 0.5 <= self.confidence_level < 1.0:
+            raise DomainError(ErrorCode.INVALID_NUMERICAL_CONFIG, "confidence_level in [0.5, 1)")
+        if self.upper_bound:
+            _limit("outer_paths", self.outer_paths, 100, 100_000)
+            _limit("inner_paths", self.inner_paths, 10, 10_000)
+            dual = self.outer_paths * self.inner_paths * self.exercise_dates**2 // 2
+            if dual > MAX_LSM_DUAL_WORK:
+                raise DomainError(
+                    ErrorCode.WORK_LIMIT_EXCEEDED,
+                    "outer_paths * inner_paths * exercise_dates^2 / 2 exceeds the "
+                    "upper-bound work limit",
+                    {"work": dual, "limit": MAX_LSM_DUAL_WORK},
+                )
+
+
+NumericalConfig = AnalyticConfig | CRRConfig | MonteCarloConfig | HestonConfig | LSMConfig

@@ -65,6 +65,7 @@ def build_tree(
     problem: PricingProblem,
     steps: int,
     boundary: list[tuple[float, float | None]] | None = None,
+    exercise_every: int = 1,
 ) -> TreeResult:
     """Backward induction. Caller guarantees T > 0, sigma > 0.
 
@@ -73,6 +74,9 @@ def build_tree(
     continuation and closest to the continuation region (largest such spot for a
     put, smallest for a call); ``None`` when no node exercises at that step.
     Resolution is one node spacing, sigma*sqrt(dt) in log-spot.
+
+    ``exercise_every`` > 1 restricts early exercise to every that-many steps
+    (a Bermudan contract; used as the exact reference for Longstaff-Schwartz).
     """
     T, vol, r = problem.time_to_expiry, problem.volatility, problem.rate
     sign = problem.option_type.sign
@@ -98,7 +102,7 @@ def build_tree(
     for i in range(steps - 1, -1, -1):
         values = pu * values[1:] + pd * values[:-1]
         nodes = powers[steps - i : steps + i + 1 : 2]
-        if american:
+        if american and i % exercise_every == 0:
             spot_nodes = nodes + _remaining_dividend_pv(problem, i * dt) if has_divs else nodes
             exercise = sign * (spot_nodes - K)
             if boundary is not None:

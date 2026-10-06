@@ -26,7 +26,13 @@ def example(name: str) -> dict[str, Any]:
 def test_health_and_engines(client):
     assert client.get("/api/v1/health").json()["status"] == "ok"
     engines = {e["engine_id"]: e for e in client.get("/api/v1/engines").json()}
-    assert set(engines) == {"bsm_analytic", "crr_tree", "mc_terminal_gbm"}
+    assert set(engines) == {
+        "bsm_analytic",
+        "crr_tree",
+        "mc_terminal_gbm",
+        "heston_fourier",
+        "lsm_american",
+    }
     assert engines["mc_terminal_gbm"]["capabilities"]["exercise_styles"] == ["european"]
 
 
@@ -63,7 +69,7 @@ def test_domain_errors_are_structured(client):
     assert r.status_code == 422
     err = r.json()["error"]
     assert err["code"] == "unsupported_combination"
-    assert err["details"]["engines_supporting_request"] == ["crr_tree"]
+    assert err["details"]["engines_supporting_request"] == ["crr_tree", "lsm_american"]
 
 
 def test_work_limit(client):

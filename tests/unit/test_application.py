@@ -110,7 +110,7 @@ def test_compatible_engines():
     svc = PricingService()
     assert svc.compatible_engines(make_request()) == ["bsm_analytic", "crr_tree", "mc_terminal_gbm"]
     american = make_request(contract={"exercise_style": ExerciseStyle.AMERICAN})
-    assert svc.compatible_engines(american) == ["crr_tree"]
+    assert svc.compatible_engines(american) == ["crr_tree", "lsm_american"]
     zero_vol = make_request(
         model=__import__("options_engine.models.black_scholes", fromlist=["x"]).BlackScholesModel(
             0.0

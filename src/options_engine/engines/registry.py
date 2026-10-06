@@ -9,6 +9,8 @@ from options_engine.domain.errors import DomainError, ErrorCode
 from options_engine.engines.base import PricingEngine
 from options_engine.engines.bsm_analytic import BlackScholesAnalyticEngine
 from options_engine.engines.crr import CRREngine
+from options_engine.engines.heston_fourier import HestonFourierEngine
+from options_engine.engines.lsm_american import LongstaffSchwartzEngine
 from options_engine.engines.mc_terminal import MonteCarloTerminalEngine
 
 
@@ -47,4 +49,12 @@ class EngineRegistry:
 
 
 def default_registry() -> EngineRegistry:
-    return EngineRegistry([BlackScholesAnalyticEngine(), CRREngine(), MonteCarloTerminalEngine()])
+    return EngineRegistry(
+        [
+            BlackScholesAnalyticEngine(),
+            CRREngine(),
+            MonteCarloTerminalEngine(),
+            HestonFourierEngine(),
+            LongstaffSchwartzEngine(),
+        ]
+    )

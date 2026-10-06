@@ -32,6 +32,3 @@ class BlackScholesModel:
                 ErrorCode.INVALID_MODEL_PARAMETER,
                 f"volatility exceeds the supported domain limit of {MAX_VOLATILITY}",
             )
-
-
-ModelSpec = BlackScholesModel

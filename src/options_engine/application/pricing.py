@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import math
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from options_engine import __version__
@@ -27,7 +27,10 @@ from options_engine.domain.numerics import AnalyticConfig, NumericalConfig
 from options_engine.domain.results import EngineOutput
 from options_engine.engines.base import PricingEngine, PricingProblem
 from options_engine.engines.registry import EngineRegistry, default_registry
-from options_engine.models.black_scholes import ModelSpec
+from options_engine.models.black_scholes import BlackScholesModel
+from options_engine.models.heston import HestonModel
+
+ModelSpec = BlackScholesModel | HestonModel
 
 
 @dataclass(frozen=True, slots=True)
@@ -61,9 +64,9 @@ class PricingResult:
 
 
 def resolve_problem(request: PriceRequest) -> PricingProblem:
-    return resolve_inputs(
-        request.contract, request.valuation, request.market, request.model.volatility
-    )
+    model = request.model
+    problem = resolve_inputs(request.contract, request.valuation, request.market, model.volatility)
+    return replace(problem, heston=model) if isinstance(model, HestonModel) else problem
 
 
 def resolve_inputs(
@@ -191,8 +194,13 @@ class PricingService:
 
 
 def assumptions_for(problem: PricingProblem, request: PriceRequest) -> dict[str, Any]:
+    model = (
+        "Heston stochastic volatility (risk-neutral)"
+        if problem.heston is not None
+        else "Black-Scholes-Merton (GBM, flat volatility, risk-neutral)"
+    )
     return {
-        "model": "Black-Scholes-Merton (GBM, flat volatility, risk-neutral)",
+        "model": model,
         "exercise_style": problem.exercise_style.value,
         "dividends": (
             "escrowed cash dividends (spot net of PV of dividends before expiry)"

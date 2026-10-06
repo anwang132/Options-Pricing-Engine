@@ -16,6 +16,7 @@ from options_engine.domain.conventions import (
 )
 from options_engine.domain.errors import DomainError, ErrorCode
 from options_engine.domain.results import EngineOutput
+from options_engine.models.heston import HestonModel
 
 
 @dataclass(frozen=True, slots=True)
@@ -34,6 +35,8 @@ class PricingProblem:
     dividend_yield: float
     volatility: float
     dividends: tuple[tuple[float, float], ...] = ()
+    # Full Heston parameters when the model is Heston (``volatility`` is then sqrt(v0), a label).
+    heston: HestonModel | None = None
 
     @property
     def dividend_treatment(self) -> DividendTreatment:

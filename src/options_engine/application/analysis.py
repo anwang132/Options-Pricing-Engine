@@ -30,6 +30,8 @@ from options_engine.domain.numerics import (
     AnalyticConfig,
     ControlVariate,
     CRRConfig,
+    HestonConfig,
+    LSMConfig,
     MonteCarloConfig,
     NumericalConfig,
 )
@@ -40,6 +42,8 @@ DEFAULT_CONFIGS: dict[str, NumericalConfig] = {
     "bsm_analytic": AnalyticConfig(),
     "crr_tree": CRRConfig(steps=1000),
     "mc_terminal_gbm": MonteCarloConfig(paths=200_000),
+    "heston_fourier": HestonConfig(),
+    "lsm_american": LSMConfig(),
 }
 
 MAX_CONVERGENCE_TREE_WORK = 60_000_000  # sum of N^2 over requested step counts
