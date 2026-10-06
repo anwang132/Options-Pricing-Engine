@@ -15,7 +15,7 @@ from typing import Any
 
 from options_engine.domain.errors import DomainError, ErrorCode
 
-ID_PATTERN = re.compile(r"^(snap|fit)-[0-9a-f]{16}$")
+ID_PATTERN = re.compile(r"^(snap|fit|heston|svi)-[0-9a-f]{16}$")
 
 
 def default_data_dir() -> Path:

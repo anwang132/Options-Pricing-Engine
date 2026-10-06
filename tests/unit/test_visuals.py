@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import itertools
 import math
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,7 @@ from options_engine.domain.conventions import ExerciseStyle, OptionType
 from options_engine.domain.errors import DomainError
 from options_engine.engines.base import PricingProblem
 from options_engine.engines.crr import build_tree
+from options_engine.models.heston import HestonModel
 from options_engine.models.ssvi import SSVISurface
 from tests.conftest import make_request
 
@@ -176,3 +178,54 @@ def test_api_visual_endpoints(tmp_path, monkeypatch):
         r = c.get(f"/api/v1/surface/fits/{fit_id}/views")
         assert r.status_code == 200, r.text
         assert len(r.json()["densities"]) == 5
+
+
+def _heston_request(sigma: float = 0.5, rho: float = -0.7, **kw: Any):
+    return make_request(
+        model=HestonModel(0.04, 1.5, 0.04, sigma, rho),
+        engine_id="heston_fourier",
+        market={"spot": Decimal("100"), "dividend_yield": Decimal("0.01")},
+        contract={"strike": Decimal("100")},
+        **kw,
+    )
+
+
+def test_black_scholes_smile_is_flat():
+    smile = visuals.model_smile(SVC, make_request())
+    ivs = [p["implied_vol"] for p in smile["points"]]
+    assert all(v == pytest.approx(0.2, abs=1e-9) for v in ivs)
+    assert abs(smile["skew"]) < 1e-9
+
+
+def test_heston_smile_has_negative_correlation_skew():
+    smile = visuals.model_smile(SVC, _heston_request(rho=-0.7))
+    ivs = [p["implied_vol"] for p in smile["points"]]
+    assert None not in ivs
+    assert smile["skew"] > 0.02  # downside strikes richer than upside
+    assert ivs[0] > smile["atm_implied_vol"] > ivs[len(ivs) * 3 // 4]
+
+
+def test_heston_smile_is_a_smile_at_zero_correlation():
+    smile = visuals.model_smile(SVC, _heston_request(rho=0.0))
+    ivs = [p["implied_vol"] for p in smile["points"]]
+    atm = smile["atm_implied_vol"]
+    assert ivs[0] > atm and ivs[-1] > atm  # convex in strike: vol of vol fattens both tails
+
+
+def test_heston_smile_flattens_as_vol_of_vol_vanishes():
+    req = _heston_request(sigma=1e-6)
+    smile = visuals.model_smile(SVC, req)
+    T = smile["time_to_expiry"]
+    target = req.model.effective_volatility(T)
+    assert all(p["implied_vol"] == pytest.approx(target, abs=1e-5) for p in smile["points"])
+
+
+def test_heston_profile_uses_fourier_engine_and_boundary_is_rejected():
+    req = _heston_request()
+    assert visuals.value_profile(SVC, req)["engine"].startswith("Heston")
+    american = make_request(
+        model=req.model,
+        contract={"exercise_style": ExerciseStyle.AMERICAN, "strike": Decimal("100")},
+    )
+    with pytest.raises(DomainError):
+        visuals.exercise_boundary(SVC, american)

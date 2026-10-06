@@ -1,7 +1,7 @@
 """Synthetic, clearly labelled snapshot generator (no market data involved).
 
 Prices a European, cash-settled index-style chain from a known SSVI surface
-under flat carry, adds bid/ask spreads, tick rounding and seeded noise, then
+or a known Heston model under flat carry, adds bid/ask spreads, tick rounding and seeded noise, then
 injects named defects so that ingestion and calibration failure paths can be
 exercised offline. The generating parameters are embedded in the file under
 ``synthetic_truth`` so calibration can be checked for parameter recovery.
@@ -20,6 +20,8 @@ import numpy as np
 
 from options_engine.domain.conventions import year_fraction
 from options_engine.engines.bsm_analytic import black_scholes_price
+from options_engine.engines.heston_batch import heston_batch
+from options_engine.models.heston import HestonModel
 from options_engine.models.ssvi import SSVISurface
 
 TICK = Decimal("0.05")
@@ -37,11 +39,20 @@ def generate(
     spot: float,
     rate: float,
     dividend_yield: float,
-    surface: SSVISurface,
+    surface: SSVISurface | HestonModel,
     seed: int,
     inject_defects: bool = True,
 ) -> dict[str, Any]:
+    """``surface`` is the generating model: an SSVI surface or a Heston model."""
     rng = np.random.default_rng(seed)
+
+    def model_mid(sign: int, K: float, T: float, F: float) -> float:
+        if isinstance(surface, HestonModel):
+            D = math.exp(-rate * T)
+            return float(heston_batch(sign, F, K, D, T, surface.v0, surface).price)
+        vol = float(surface.implied_vol(math.log(K / F), T))
+        return float(black_scholes_price(sign, spot, K, T, rate, dividend_yield, vol)[0])
+
     quotes: list[dict[str, Any]] = []
     expiry_base = as_of.replace(hour=20, minute=0, second=0, microsecond=0)
     for days in EXPIRY_DAYS:
@@ -50,9 +61,8 @@ def generate(
         F = spot * math.exp((rate - dividend_yield) * T)
         for m in MONEYNESS:
             K = round(spot * m / 5) * 5  # strikes on a 5-point grid
-            vol = float(surface.implied_vol(math.log(K / F), T))
             for opt, sign in (("call", 1), ("put", -1)):
-                mid = float(black_scholes_price(sign, spot, K, T, rate, dividend_yield, vol)[0])
+                mid = model_mid(sign, K, T, F)
                 half = max(0.10, 0.015 * mid)
                 noisy = mid + rng.uniform(-0.25, 0.25) * half
                 bid, ask = _round(noisy - half, "down"), _round(noisy + half, "up")
@@ -78,9 +88,16 @@ def generate(
     defects: list[dict[str, Any]] = []
     if inject_defects:
         defects = _inject(quotes, as_of, rng)
+    heston = isinstance(surface, HestonModel)
+    truth: dict[str, Any] = (
+        {"heston": _heston_dict(surface), "seed": seed}
+        if isinstance(surface, HestonModel)
+        else {"surface": surface.to_dict(), "seed": seed}
+    )
     return {
         "format": "options-snapshot/v1",
-        "source": "synthetic: SSVI generator (options_engine.adapters.snapshots.synthetic)",
+        "source": f"synthetic: {'Heston' if heston else 'SSVI'} generator "
+        "(options_engine.adapters.snapshots.synthetic)",
         "synthetic": True,
         "as_of": as_of.isoformat().replace("+00:00", "Z"),
         "retrieved_at": None,
@@ -96,7 +113,7 @@ def generate(
             "source": "synthetic: generator inputs",
         },
         "quotes": quotes,
-        "synthetic_truth": {"surface": surface.to_dict(), "seed": seed},
+        "synthetic_truth": truth,
         "synthetic_defects": defects,
     }
 
@@ -171,6 +188,10 @@ def _inject(
     return defects
 
 
+def _heston_dict(m: HestonModel) -> dict[str, float]:
+    return {"v0": m.v0, "kappa": m.kappa, "theta": m.theta, "sigma": m.sigma, "rho": m.rho}
+
+
 def default_surfaces() -> tuple[SSVISurface, SSVISurface]:
     """Day-1 truth and a day-2 surface with slightly lower ATM variance."""
     T = tuple(d / 365.0 for d in EXPIRY_DAYS)
@@ -194,6 +215,29 @@ def write_default_fixtures(directory: str | Path) -> list[str]:
             t0, 4500.0, 0.04, 0.015, day1, seed=1, inject_defects=False
         ),
     }
+    docs |= heston_fixtures(t0)
     for name, doc in docs.items():
         (out / name).write_text(json.dumps(doc, indent=1) + "\n")
     return list(docs)
+
+
+# Generating parameters of the Heston fixtures; equal to [heston_calibration] in the
+# validation policy (a unit test checks this).
+HESTON_TRUTH_DAY1 = (0.035, 2.0, 0.05, 0.6, -0.75)  # v0, kappa, theta, sigma, rho
+HESTON_TRUTH_DAY2_V0 = 0.045
+
+
+def heston_models() -> tuple[HestonModel, HestonModel]:
+    """Day-1 truth and day 2 with the same structural parameters and a new variance state."""
+    day1 = HestonModel(*HESTON_TRUTH_DAY1)
+    return day1, HestonModel(HESTON_TRUTH_DAY2_V0, day1.kappa, day1.theta, day1.sigma, day1.rho)
+
+
+def heston_fixtures(t0: datetime) -> dict[str, dict[str, Any]]:
+    day1, day2 = heston_models()
+    return {
+        "synthetic_heston_day1.json": generate(t0, 4500.0, 0.04, 0.015, day1, seed=11),
+        "synthetic_heston_day2.json": generate(
+            t0 + timedelta(days=1), 4455.0, 0.04, 0.015, day2, seed=12
+        ),
+    }

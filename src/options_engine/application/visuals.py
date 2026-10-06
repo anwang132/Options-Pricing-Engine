@@ -22,17 +22,20 @@ from typing import Any
 
 import numpy as np
 
+from options_engine.analytics.implied_vol import SOLVED, implied_volatility
 from options_engine.application.pricing import PriceRequest, PricingService, resolve_problem
 from options_engine.domain.conventions import (
     GREEK_DISPLAY,
     SECONDS_PER_YEAR,
     ExerciseStyle,
     GreekName,
+    OptionType,
 )
 from options_engine.domain.errors import DomainError, ErrorCode
-from options_engine.domain.numerics import AnalyticConfig, CRRConfig, NumericalConfig
+from options_engine.domain.numerics import AnalyticConfig, CRRConfig, HestonConfig, NumericalConfig
 from options_engine.domain.results import GreekStatus
 from options_engine.engines.crr import build_tree, minimum_valid_steps, up_probability
+from options_engine.models.heston import HestonModel
 from options_engine.models.ssvi import SSVISurface
 
 PROFILE_POINTS = 61
@@ -44,7 +47,9 @@ PROFILE_GREEKS = (GreekName.DELTA, GreekName.GAMMA, GreekName.VEGA, GreekName.TH
 
 
 def _profile_engine(request: PriceRequest) -> tuple[str, NumericalConfig, str]:
-    """Closed form for European (exact, fast); CRR for American. Stated in the output."""
+    """Heston model -> Fourier engine; else closed form (European) or CRR (American)."""
+    if isinstance(request.model, HestonModel):
+        return "heston_fourier", HestonConfig(), "Heston Fourier (Lewis)"
     if request.contract.exercise_style is ExerciseStyle.AMERICAN:
         cfg = CRRConfig(
             steps=PROFILE_TREE_STEPS,
@@ -130,6 +135,11 @@ def exercise_boundary(pricing: PricingService, request: PriceRequest) -> dict[st
         raise DomainError(
             ErrorCode.UNSUPPORTED_COMBINATION,
             "an early-exercise boundary exists only for American exercise",
+        )
+    if isinstance(request.model, HestonModel):
+        raise DomainError(
+            ErrorCode.UNSUPPORTED_COMBINATION,
+            "the exercise boundary uses a Black-Scholes CRR tree; Heston is European only",
         )
     problem = resolve_problem(request)
     if problem.time_to_expiry <= 0 or problem.volatility <= 0:
@@ -232,4 +242,71 @@ def surface_views(surface: SSVISurface, artifact: dict[str, Any]) -> dict[str, A
             "risk-neutral density of k = ln(K/F); non-negative everywhere iff no butterfly "
             "arbitrage; mass and E[F_T/F] should both be ~1."
         ),
+    }
+
+
+SMILE_POINTS = 41
+SMILE_HALF_WIDTH = 2.5  # strikes span k = ln(K/F) in +-2.5 total standard deviations
+
+
+def model_smile(pricing: PricingService, request: PriceRequest) -> dict[str, Any]:
+    """Black-Scholes implied vols of the model's own European prices across strikes.
+
+    Flat for Black-Scholes by construction (a consistency check); skewed and
+    curved for Heston. American contracts are smiled as their European
+    counterpart, since an early-exercise premium is not volatility.
+    """
+    problem = resolve_problem(request)
+    T = problem.time_to_expiry
+    if T <= 0:
+        raise DomainError(ErrorCode.UNSUPPORTED_COMBINATION, "no smile at expiry")
+    S, r, q = problem.escrowed_spot(), problem.rate, problem.dividend_yield
+    F = S * math.exp((r - q) * T)
+    model = request.model
+    heston = isinstance(model, HestonModel)
+    vol = model.effective_volatility(T) if isinstance(model, HestonModel) else model.volatility
+    s = max(vol * math.sqrt(T), 0.02)
+    engine_id, config, label = _profile_engine(
+        replace(request, contract=replace(request.contract, exercise_style=ExerciseStyle.EUROPEAN))
+    )
+    ks = np.linspace(-SMILE_HALF_WIDTH * s, SMILE_HALF_WIDTH * s, SMILE_POINTS)
+    points: list[dict[str, Any]] = []
+    ivs: list[float | None] = []
+    for k in ks:
+        K = F * math.exp(k)
+        opt = OptionType.PUT if k < 0 else OptionType.CALL  # out of the money: well conditioned
+        contract = replace(
+            request.contract,
+            strike=Decimal(repr(K)),
+            option_type=opt,
+            exercise_style=ExerciseStyle.EUROPEAN,
+        )
+        _, _, out = pricing.evaluate(
+            replace(request, contract=contract, engine_id=engine_id, config=config, greeks=())
+        )
+        iv = implied_volatility(out.price, opt.sign, S, K, T, r, q)
+        value = iv.implied_vol if iv.status in SOLVED else None
+        ivs.append(value)
+        points.append(
+            {
+                "k": float(k),
+                "strike": K,
+                "price": out.price,
+                "implied_vol": value,
+                "status": iv.status.value,
+            }
+        )
+    mid, off = SMILE_POINTS // 2, SMILE_POINTS // 10  # off: k = -+0.5 s
+    lo, hi = ivs[mid - off], ivs[mid + off]
+    return {
+        "model": "Heston" if heston else "Black-Scholes",
+        "engine": label,
+        "time_to_expiry": T,
+        "forward": F,
+        "points": points,
+        "atm_implied_vol": ivs[mid],
+        "skew": None if lo is None or hi is None else lo - hi,
+        "note": "Each strike is priced by the engine and inverted with the Black-Scholes "
+        "implied-volatility solver, using the out-of-the-money option on each side. Skew is "
+        "IV at k = -s/2 minus IV at k = +s/2, with k = ln(K/F) and s the total volatility.",
     }
