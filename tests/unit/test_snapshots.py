@@ -149,4 +149,4 @@ def test_api_snapshot_endpoints(tmp_path, monkeypatch):
         assert bad.status_code == 422
         assert bad.json()["error"]["code"] == "invalid_request"
         bundled = c.post("/api/v1/snapshots/bundled").json()
-        assert len(bundled) == 2
+        assert len(bundled) == 4

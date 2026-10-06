@@ -12,9 +12,10 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Annotated, Any, Literal
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, model_validator
 
 from options_engine.analytics.implied_vol import SOLVED, IVResult, IVStatus
+from options_engine.application.hedging import HedgeSetup
 from options_engine.application.pricing import PriceRequest, PricingResult
 from options_engine.domain.contracts import Settlement, VanillaContract
 from options_engine.domain.conventions import (
@@ -26,17 +27,20 @@ from options_engine.domain.conventions import (
     OptionType,
     SettlementType,
 )
-from options_engine.domain.errors import DomainError
+from options_engine.domain.errors import DomainError, ErrorCode
 from options_engine.domain.market import CashDividend, MarketSnapshot, ValuationContext
 from options_engine.domain.numerics import (
     AnalyticConfig,
     ControlVariate,
     CRRConfig,
+    HestonConfig,
+    LSMConfig,
     MonteCarloConfig,
     NumericalConfig,
 )
 from options_engine.domain.results import GreekResult
 from options_engine.models.black_scholes import BlackScholesModel
+from options_engine.models.heston import HestonModel
 
 SCHEMA_VERSION: Literal["1"] = "1"
 
@@ -109,6 +113,18 @@ class ModelIn(Strict):
         return BlackScholesModel(self.volatility)
 
 
+class HestonModelIn(Strict):
+    family: Literal["heston"]
+    v0: float = Field(description="Initial variance (0.04 = 20% vol squared)")
+    kappa: float = Field(description="Mean-reversion speed per year")
+    theta: float = Field(description="Long-run variance")
+    sigma: float = Field(description="Volatility of variance")
+    rho: float = Field(description="Spot/variance correlation, in (-1, 1)")
+
+    def to_domain(self) -> HestonModel:
+        return HestonModel(self.v0, self.kappa, self.theta, self.sigma, self.rho)
+
+
 class ValuationIn(Strict):
     as_of: AwareDatetime
     day_count: DayCount = DayCount.ACT_365F
@@ -139,6 +155,19 @@ class CRREngineIn(Strict):
         return CRRConfig(**self.model_dump(exclude={"engine"}))
 
 
+_HESTON = HestonConfig()
+
+
+class HestonEngineIn(Strict):
+    engine: Literal["heston_fourier"] = "heston_fourier"
+    epsabs: float = _HESTON.epsabs
+    epsrel: float = _HESTON.epsrel
+    limit: int = _HESTON.limit
+
+    def to_domain(self) -> HestonConfig:
+        return HestonConfig(**self.model_dump(exclude={"engine"}))
+
+
 class MonteCarloEngineIn(Strict):
     engine: Literal["mc_terminal_gbm"] = "mc_terminal_gbm"
     paths: int = _MC.paths
@@ -153,8 +182,32 @@ class MonteCarloEngineIn(Strict):
         return MonteCarloConfig(**self.model_dump(exclude={"engine"}))
 
 
+_LSM = LSMConfig()
+
+
+class LSMEngineIn(Strict):
+    engine: Literal["lsm_american"] = "lsm_american"
+    paths: int = Field(_LSM.paths, description="Pricing-set payoff evaluations")
+    regression_paths: int = Field(_LSM.regression_paths, description="Independent fitting set")
+    exercise_dates: int = _LSM.exercise_dates
+    basis_degree: int = _LSM.basis_degree
+    seed: int = _LSM.seed
+    antithetic: bool = _LSM.antithetic
+    control_variate: bool = _LSM.control_variate
+    confidence_level: float = _LSM.confidence_level
+    upper_bound: bool = Field(
+        _LSM.upper_bound, description="Also compute the Andersen-Broadie dual upper bound"
+    )
+    outer_paths: int = _LSM.outer_paths
+    inner_paths: int = _LSM.inner_paths
+
+    def to_domain(self) -> LSMConfig:
+        return LSMConfig(**self.model_dump(exclude={"engine"}))
+
+
 EngineIn = Annotated[
-    AnalyticEngineIn | CRREngineIn | MonteCarloEngineIn, Field(discriminator="engine")
+    AnalyticEngineIn | CRREngineIn | MonteCarloEngineIn | HestonEngineIn | LSMEngineIn,
+    Field(discriminator="engine"),
 ]
 
 
@@ -164,7 +217,7 @@ class InstrumentIn(Strict):
     contract: ContractIn
     valuation: ValuationIn
     market: MarketIn
-    model: ModelIn
+    model: ModelIn | HestonModelIn = Field(description="Black-Scholes (default) or Heston")
     greeks: list[GreekName] = Field(default_factory=lambda: list(GreekName))
 
     def to_request(self, engine: EngineIn) -> PriceRequest:
@@ -182,7 +235,19 @@ class InstrumentIn(Strict):
 
 class PriceRequestIn(InstrumentIn):
     schema_version: Literal["1"] = SCHEMA_VERSION
-    engine: EngineIn = Field(default_factory=AnalyticEngineIn)
+    engine: EngineIn = Field(
+        default_factory=AnalyticEngineIn,
+        description="Defaults to bsm_analytic, or heston_fourier for a Heston model",
+    )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _default_engine_for_model(cls, data: Any) -> Any:
+        if isinstance(data, dict) and "engine" not in data:
+            model = data.get("model")
+            if isinstance(model, dict) and model.get("family") == "heston":
+                return {**data, "engine": {"engine": "heston_fourier"}}
+        return data
 
     def to_domain(self) -> PriceRequest:
         return self.to_request(self.engine)
@@ -509,6 +574,112 @@ class SurfaceFitIn(Strict):
     )
 
 
+class HestonCalibrationIn(Strict):
+    schema_version: Literal["1"] = SCHEMA_VERSION
+    snapshot_id: str
+    later_snapshot_id: str | None = Field(
+        default=None, description="Optional later snapshot: no-refit and v0-only-refit evaluation"
+    )
+
+
+# --- Hedging experiment ------------------------------------------------------------------------
+
+
+HedgeStrategy = Literal["bsm", "heston", "heston_mv"]
+
+
+def _default_strategies() -> list[HedgeStrategy]:
+    return ["bsm"]
+
+
+class HedgingIn(Strict):
+    schema_version: Literal["1"] = SCHEMA_VERSION
+    option_type: OptionType = OptionType.CALL
+    spot: float = 100.0
+    strike: float = 100.0
+    time: float = Field(0.5, description="Years to expiry")
+    rate: float = 0.03
+    dividend_yield: float = 0.01
+    world: Literal["gbm", "heston"] = "gbm"
+    real_vol: float = Field(0.2, description="Volatility of the GBM world")
+    heston: HestonModelIn | None = Field(None, description="Parameters of the Heston world")
+    hedge_vol: float | None = Field(
+        None, description="Black-Scholes hedge vol; default: the model's own (implied) vol"
+    )
+    strategies: list[HedgeStrategy] = Field(default_factory=_default_strategies)
+    rebalances: list[int] = Field(default_factory=lambda: [16, 32, 64, 128, 256])
+    paths: int = 5000
+    seed: int = 20260928
+    drift: float | None = Field(None, description="Real-world drift; default the rate")
+
+    def to_domain(self) -> HedgeSetup:
+        heston = None
+        if self.world == "heston":
+            if self.heston is None:
+                raise DomainError(ErrorCode.INVALID_REQUEST, "world 'heston' needs parameters")
+            heston = self.heston.to_domain()
+        return HedgeSetup(
+            option_type=self.option_type,
+            spot=self.spot,
+            strike=self.strike,
+            time=self.time,
+            rate=self.rate,
+            dividend_yield=self.dividend_yield,
+            paths=self.paths,
+            rebalances=tuple(self.rebalances),
+            seed=self.seed,
+            real_vol=None if heston else self.real_vol,
+            heston=heston,
+            hedge_vol=self.hedge_vol,
+            strategies=tuple(self.strategies),
+            drift=self.drift,
+        )
+
+
+class HedgingRow(BaseModel):
+    strategy: str
+    rebalances: int
+    mean: float
+    std: float
+    se_mean: float
+    q01: float
+    q05: float
+    median: float
+    q95: float
+    q99: float
+    std_times_sqrt_n: float
+    leading_order_std: float | None = None
+    vol_mismatch_identity_mean: float | None = None
+    pnl_minus_identity_mean: float | None = None
+    pnl_minus_identity_se: float | None = None
+
+
+class Histogram(BaseModel):
+    edges: list[float]
+    counts: list[int]
+
+
+class HedgingResponse(BaseModel):
+    schema_version: Literal["1"] = SCHEMA_VERSION
+    world: str
+    model_price: float
+    model_implied_vol: float
+    hedge_vol: float
+    drift: float
+    paths: int
+    grid_steps: int
+    simulation: dict[str, Any]
+    rows: list[HedgingRow]
+    histograms: dict[str, Histogram]
+    histogram_rebalances: int
+    slope: dict[str, float | None]
+    note: str = Field(
+        "Short one option, hedged in the underlying at N equal intervals; P&L discounted to "
+        "t = 0. leading_order_std is the Gamma-based prediction sqrt(0.5 sigma^4 dt^2 "
+        "sum E[e^{-2rt} Gamma^2 S^4]) on the same paths (GBM world)."
+    )
+
+
 # --- Visualisation data ------------------------------------------------------------------
 
 
@@ -707,3 +878,23 @@ class LedgerEventOut(BaseModel):
     payload: dict[str, Any]
     prev_hash: str
     hash: str
+
+
+class SmilePoint(BaseModel):
+    k: float
+    strike: float
+    price: float
+    implied_vol: float | None
+    status: str
+
+
+class SmileResponse(BaseModel):
+    schema_version: Literal["1"] = SCHEMA_VERSION
+    model: str
+    engine: str
+    time_to_expiry: float
+    forward: float
+    points: list[SmilePoint]
+    atm_implied_vol: float | None
+    skew: float | None = Field(description="IV at k = -s/2 minus IV at k = +s/2")
+    note: str

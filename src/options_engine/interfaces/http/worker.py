@@ -28,6 +28,8 @@ from options_engine.domain.errors import DomainError
 from options_engine.interfaces import handlers
 from options_engine.interfaces.schemas import (
     CompareRequestIn,
+    HedgingIn,
+    HestonCalibrationIn,
     ImpliedVolIn,
     MCConvergenceIn,
     PortfolioRequestIn,
@@ -47,8 +49,11 @@ HANDLERS: dict[str, tuple[type[BaseModel], Callable[[Any], Any]]] = {
     "implied_vol": (ImpliedVolIn, handlers.implied_vol),
     "portfolio": (PortfolioRequestIn, handlers.portfolio),
     "surface_fit": (SurfaceFitIn, handlers.surface_fit),
+    "heston_calibrate": (HestonCalibrationIn, handlers.heston_calibrate),
+    "hedging": (HedgingIn, handlers.hedging_experiment),
     "profile": (PriceRequestIn, handlers.profile),
     "exercise_boundary": (PriceRequestIn, handlers.exercise_boundary),
+    "smile": (PriceRequestIn, handlers.smile),
 }
 
 

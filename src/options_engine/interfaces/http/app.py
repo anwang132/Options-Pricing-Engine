@@ -34,6 +34,9 @@ from options_engine.interfaces.schemas import (
     CompareResponse,
     ErrorResponse,
     ExerciseBoundaryResponse,
+    HedgingIn,
+    HedgingResponse,
+    HestonCalibrationIn,
     ImpliedVolIn,
     ImpliedVolResponse,
     LedgerEventOut,
@@ -54,6 +57,7 @@ from options_engine.interfaces.schemas import (
     PriceResponse,
     ProfileResponse,
     RunManifest,
+    SmileResponse,
     SurfaceFitIn,
     SurfaceViewsResponse,
     TreeConvergenceIn,
@@ -211,6 +215,10 @@ def create_app(
     async def profile(body: PriceRequestIn) -> Response:
         return await dispatch("profile", body)
 
+    @app.post("/api/v1/visuals/smile", response_model=SmileResponse)
+    async def smile(body: PriceRequestIn) -> Response:
+        return await dispatch("smile", body)
+
     @app.post("/api/v1/visuals/exercise-boundary", response_model=ExerciseBoundaryResponse)
     async def exercise_boundary(body: PriceRequestIn) -> Response:
         return await dispatch("exercise_boundary", body)
@@ -226,6 +234,22 @@ def create_app(
     @app.get("/api/v1/surface/fits")
     def surface_fits() -> list[dict[str, Any]]:
         return handlers.surface_fits()
+
+    @app.post("/api/v1/heston/calibrations")
+    async def heston_calibrate(body: HestonCalibrationIn) -> Response:
+        return await dispatch("heston_calibrate", body)
+
+    @app.get("/api/v1/heston/calibrations")
+    def heston_calibrations() -> list[dict[str, Any]]:
+        return handlers.heston_calibrations()
+
+    @app.get("/api/v1/heston/calibrations/{calibration_id}")
+    def heston_calibration(calibration_id: str) -> dict[str, Any]:
+        return handlers.heston_calibration(calibration_id)
+
+    @app.post("/api/v1/analysis/hedging", response_model=HedgingResponse)
+    async def hedging_experiment(body: HedgingIn) -> Response:
+        return await dispatch("hedging", body)
 
     @app.get("/api/v1/surface/fits/{fit_id}")
     def surface_artifact(fit_id: str) -> dict[str, Any]:

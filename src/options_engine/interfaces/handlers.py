@@ -7,9 +7,10 @@ from datetime import UTC, datetime
 from typing import Any
 
 from options_engine.adapters.environment import PROJECT_ROOT, environment_info
-from options_engine.application import visuals
+from options_engine.application import hedging, visuals
 from options_engine.application.analysis import AnalysisService, invert_quotes, z_for
 from options_engine.application.hashing import to_jsonable
+from options_engine.application.heston_calibration import HestonCalibrationService
 from options_engine.application.paper import PaperTradingService
 from options_engine.application.portfolio import (
     PortfolioService,
@@ -32,6 +33,9 @@ from options_engine.interfaces.schemas import (
     EngineComparison,
     ErrorOut,
     ExerciseBoundaryResponse,
+    HedgingIn,
+    HedgingResponse,
+    HestonCalibrationIn,
     ImpliedVolIn,
     ImpliedVolResponse,
     IVOut,
@@ -56,6 +60,7 @@ from options_engine.interfaces.schemas import (
     ProfileResponse,
     RunManifest,
     ScenarioOut,
+    SmileResponse,
     SurfaceFitIn,
     SurfaceViewsResponse,
     TreeConvergenceIn,
@@ -228,7 +233,12 @@ def _default_engine() -> AnalyticEngineIn:
 
 # --- Snapshots (Release B) ----------------------------------------------------------------
 
-BUNDLED_SNAPSHOTS = ("synthetic_day1.json", "synthetic_day2.json")
+BUNDLED_SNAPSHOTS = (
+    "synthetic_day1.json",
+    "synthetic_day2.json",
+    "synthetic_heston_day1.json",
+    "synthetic_heston_day2.json",
+)
 
 
 def _snapshots() -> SnapshotService:
@@ -339,11 +349,38 @@ def surface_artifact(fit_id: str) -> dict[str, Any]:
     return SurfaceService().artifact(fit_id)
 
 
+# --- Heston calibration and hedging ------------------------------------------------------------
+
+
+def heston_calibrate(req: HestonCalibrationIn) -> dict[str, Any]:
+    artifact, created = HestonCalibrationService().calibrate(req.snapshot_id, req.later_snapshot_id)
+    return {"created": created, "artifact": artifact}
+
+
+def heston_calibrations() -> list[dict[str, Any]]:
+    return HestonCalibrationService().list()
+
+
+def heston_calibration(calibration_id: str) -> dict[str, Any]:
+    return HestonCalibrationService().artifact(calibration_id)
+
+
+def hedging_experiment(req: HedgingIn) -> HedgingResponse:
+    out = hedging.run(req.to_domain())
+    out.pop("pnl")
+    out.pop("theory")
+    return HedgingResponse(**out)
+
+
 # --- Visualisation data ---------------------------------------------------------------------
 
 
 def profile(req: PriceRequestIn) -> ProfileResponse:
     return ProfileResponse(**visuals.value_profile(_pricing, req.to_domain()))
+
+
+def smile(req: PriceRequestIn) -> SmileResponse:
+    return SmileResponse(**visuals.model_smile(_pricing, req.to_domain()))
 
 
 def exercise_boundary(req: PriceRequestIn) -> ExerciseBoundaryResponse:

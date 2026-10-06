@@ -189,3 +189,55 @@ def test_timeout_does_not_release_capacity_until_job_finishes(monkeypatch):
 
     asyncio.run(scenario())
     runner.shutdown()
+
+
+def test_heston_price_defaults_to_fourier_engine(client):
+    body = example("price_heston_call.json")
+    del body["engine"]
+    r = client.post("/api/v1/price", json=body)
+    assert r.status_code == 200, r.text
+    out = r.json()
+    assert out["engine_id"] == "heston_fourier"
+    assert out["assumptions"]["model"].startswith("Heston")
+    greeks = {g["name"]: g for g in out["greeks"]}
+    assert greeks["vega"]["status"] == "not_supported"
+    assert greeks["delta"]["status"] == "ok"
+
+
+def test_heston_rejected_by_black_scholes_engine(client):
+    body = example("price_heston_call.json")
+    body["engine"] = {"engine": "bsm_analytic"}
+    r = client.post("/api/v1/price", json=body)
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "unsupported_combination"
+
+
+def test_invalid_heston_parameters(client):
+    body = example("price_heston_call.json")
+    body["model"]["rho"] = -1.0
+    r = client.post("/api/v1/price", json=body)
+    assert r.status_code == 422
+    assert r.json()["error"]["code"] == "invalid_model_parameter"
+
+
+def test_smile_endpoint(client):
+    r = client.post("/api/v1/visuals/smile", json=example("price_heston_call.json"))
+    assert r.status_code == 200, r.text
+    smile = r.json()
+    assert smile["model"] == "Heston"
+    assert len(smile["points"]) == 41
+    assert smile["skew"] > 0
+
+
+def test_lsm_american_price_with_uncertainty(client):
+    body = example("price_american_put_dividends.json")
+    body["engine"] = {"engine": "lsm_american", "paths": 20000, "regression_paths": 10000}
+    r = client.post("/api/v1/price", json=body)
+    assert r.status_code == 200, r.text
+    out = r.json()
+    assert out["engine_id"] == "lsm_american"
+    assert out["uncertainty"]["standard_error"] > 0
+    tree = client.post(
+        "/api/v1/price", json={**body, "engine": {"engine": "crr_tree", "steps": 2000}}
+    ).json()
+    assert abs(out["price"] - tree["price"]) < 5 * out["uncertainty"]["standard_error"] + 0.05
