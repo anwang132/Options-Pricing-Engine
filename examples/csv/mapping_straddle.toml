@@ -1,0 +1,22 @@
+# Column mapping for synthetic_chain_day2_straddle.csv (calls and puts side by side per
+# strike, date-only expiries in New York time, no sizes or quote times).
+[mapping]
+layout = "straddle"
+expiry = "Expiry"
+strike = "Strike"
+call_bid = "Call Bid"
+call_ask = "Call Ask"
+put_bid = "Put Bid"
+put_ask = "Put Ask"
+
+[formats]
+expiry = "%m/%d/%Y"
+expiry_time = "16:00"
+timezone = "America/New_York"
+
+[contract]
+exercise_style = "european"
+settlement_type = "cash"
+settlement_lag_days = 0
+multiplier = "100"
+deliverable = "standard"

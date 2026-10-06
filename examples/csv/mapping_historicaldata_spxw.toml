@@ -1,0 +1,38 @@
+# Mapping for the historicaldata.net option-chain CSV format (34 columns, one row per
+# contract; e.g. their free 2022H2 sample), keeping SPXW only: European, PM-settled at the
+# 16:00 ET close. Standard SPX monthlies settle AM against the opening print and would need
+# a different expiry time, so they are filtered out here. Data files are licensed: keep them
+# under data/ (git-ignored) and do not commit them.
+[mapping]
+layout = "long"
+expiry = "expiration"
+strike = "strike"
+option_type = "type"
+bid = "bid"
+ask = "ask"
+bid_size = "bid_size"
+ask_size = "ask_size"
+quote_time = "quote_time"   # blank in the archive era (before 2026-08-06): freshness unknown
+contract_id = "contract"
+
+[mapping.option_type_values]
+call = ["call"]
+put = ["put"]
+
+[filters]
+underlying = ["SPXW"]
+settlement_time = ["PM"]
+style = ["E"]
+
+[formats]
+expiry = "%Y-%m-%d"
+expiry_time = "16:00"
+timezone = "America/New_York"
+quote_time = "iso8601"
+
+[contract]
+exercise_style = "european"
+settlement_type = "cash"
+settlement_lag_days = 0
+multiplier = "100"
+deliverable = "standard"

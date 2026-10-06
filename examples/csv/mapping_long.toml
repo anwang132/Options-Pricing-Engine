@@ -1,0 +1,29 @@
+# Column mapping for synthetic_chain_day1_long.csv (one row per contract).
+[mapping]
+layout = "long"
+expiry = "Expiration"
+strike = "Strike"
+option_type = "Type"
+bid = "Bid"
+ask = "Ask"
+bid_size = "Bid Size"
+ask_size = "Ask Size"
+quote_time = "Quote Time"
+contract_id = "Symbol"
+
+[mapping.option_type_values]
+call = ["C"]
+put = ["P"]
+
+[formats]
+expiry = "iso8601"
+# quote times are naive UTC, with or without fractional seconds
+quote_time = ["%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S"]
+timezone = "UTC"
+
+[contract]
+exercise_style = "european"
+settlement_type = "cash"
+settlement_lag_days = 0
+multiplier = "100"
+deliverable = "standard"
