@@ -17,6 +17,10 @@ engines; ADR 0002 records the reasoning.
 | Cash dividend | Dᵢ at tᵢ | currency per unit, ex-date tᵢ (also used for discounting) |
 | Volatility | σ | decimal per year (0.2 = 20%), model parameter, σ ≥ 0 |
 | Multiplier | m | units of underlying per contract (instrument metadata) |
+| Heston initial / long-run variance | v₀, θ | decimal² per year (0.04 = 20% vol); UI takes √v₀, √θ in % |
+| Heston mean reversion | κ | per year; half-life ln 2/κ |
+| Heston vol of variance | σ (Heston) | per √year; σ = 0 is deterministic variance |
+| Heston correlation | ρ | spot/variance shocks, −1 < ρ < 1 |
 
 Derived: D = e^{−rT}, F = S·e^{(r−q)T} (with cash dividends S is replaced by
 S* = S − Σ Dᵢe^{−r tᵢ} over ex-dates in (t₀, T_exp]).
@@ -30,6 +34,18 @@ European BSM: C = D[F·N(d₁) − K·N(d₂)], P = D[K·N(−d₂) − F·N(−
 d₁ = ln(F/K)/(σ√T) + σ√T/2, d₂ = d₁ − σ√T.
 
 Limits: T = 0 → max(±(S−K), 0) (undiscounted); σ = 0, T > 0 → D·max(±(F−K), 0).
+
+Heston European (ADR 0017): C = D(F − √(FK)/π ∫₀^∞ Re[e^{iux}φ(u − i/2)]/(u² + 1/4) du),
+x = ln(F/K), φ the characteristic function of ln(S_T/F). With σ = 0 it is BSM with volatility
+√(I(T)/T), I(T) = θT + (v₀ − θ)(1 − e^{−κT})/κ.
+
+Hedging experiment (ADR 0021): short one European option, hedged at N equal intervals; P&L
+discounted to t = 0 is V0 − e^{−rT}·payoff + Σ Δ_i (e^{−r t_{i+1}} S_{i+1} e^{qΔt} − e^{−r t_i} S_i)
+(dividends reinvested in the stock over each interval). The minimum-variance delta is
+∂C/∂S + (ρσ/S)·∂C/∂v.
+
+Longstaff–Schwartz (ADR 0018) prices American exercise as Bermudan on M equally spaced dates
+plus t = 0; its estimate is low-biased for that Bermudan price and carries a standard error.
 
 ## Identities (valid only under their assumptions)
 

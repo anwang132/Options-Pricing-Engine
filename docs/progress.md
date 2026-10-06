@@ -16,6 +16,30 @@ Factual record of gates, commands and next steps. Newest entries at the bottom.
   (fixture provenance records it); the stress matrix itself is unchanged.
 - 2026-09-28T19:54:52Z — policy amended: added `[surface_gate]` (M6 acceptance rules) before any surface-fitting
   code was written or run. New SHA-256 `6e5ec2ff3d415618c5731b4050e058fbb1ee79997a9ae213edd4eb8abe834aee`. Existing sections unchanged.
+- 2026-09-29T17:38:21Z — policy amended: added Heston tolerances and parameter sets before any Heston code
+  was written. New SHA-256 `b297fc256edb81bcf33cb05002bb853c614afcb7e82fd1c694e03b1184b930c2`. Existing sections unchanged.
+- 2026-09-29T17:40:58Z — policy corrected: `heston_deterministic_limit` had assumed the Heston-BSM gap
+  vanishes below 1e-9 at sigma = 1e-7 for any rho. A scratch run showed the gap is first order
+  in sigma when rho != 0 (gap/sigma -> -1.7212 for K=110, rho=-0.7), as the small-vol-of-vol
+  expansion predicts (skew term ~ rho*sigma). The 1e-9 tolerance now applies at rho = 0 (gap is
+  second order: 3e-14 observed); for rho != 0 a first-order convergence criterion is used. Not a
+  loosening: the original criterion was mathematically wrong. New SHA-256 `e257e0c953f3b0711fd3ac363f8217689ba27f52abd5963247f5eb68084d4a81`.
+- 2026-09-29T17:52:19Z — policy amended: added `[lsm]` (Longstaff-Schwartz acceptance rules, case matrix and
+  statistical SE-calibration band) before any LSM code was written. New SHA-256
+  `76e2db68f216a7d9d078b9a0ef5e06902f65c93702fb57581a8552c7b71358f8`. Existing sections unchanged.
+- 2026-09-30T19:00:59Z — policy amended: added `[heston_batch]`, `[heston_calibration]`, `[hedging]`,
+  `[lsm.upper_bound]` and `[real_data_study]` before any code for them was written.
+  New SHA-256 `797f0225d22963ac0bfa064d26ef515e54e4a500c21fc42843fb742cea47e82a`. Existing sections unchanged.
+- 2026-09-30T19:05:32Z — policy amended before any formal Heston-batch check ran:
+  `heston_batch.fourier_min_total_variance` 4e-4 → 1e-5. A scratch run of the first (fixed-node)
+  implementation missed the gate (worst scaled error 35 vs QuantLib; e^{iux} under-resolved at
+  large |x|), so the node rule was made adaptive; with it, all 540 sweep points down to I = 1e-5
+  are within 2e-11 of the adaptive pricer. Lowering the threshold routes fewer prices to the
+  deterministic-variance approximation and puts more points under the unchanged 1e-7 gate: a
+  tightening, not a loosening. New SHA-256 `fdf412bb369705ba78921a5df7760ffe0ef153ca5320ba9d392410fa8a0dacc0`.
+- 2026-10-01T14:24:00Z — policy amended: added `[svi_slices]` and `[heston_term_structure]`, and two models in
+  `[real_data_study].models`, before any code for them was written. The real-data metrics and
+  comparison metrics are unchanged. New SHA-256 `c1b9783c1f13a73a2842af14d2958436a6cb8f12e044530b5f0bd4a37a5b640a`.
 
 ## Defects found by validation
 
@@ -135,19 +159,141 @@ under concurrent writers; a UI bug where an account opened at 03:42:53 rejected 
 at 03:42 (minute-precision field). Also: tests now always use a temporary data directory (a stray
 `./data` from an earlier run was removed).
 
+## Heston and Longstaff–Schwartz (2026-09-29)
+
+Goal: strengthen the quantitative depth with a stochastic-volatility model and a regression
+Monte Carlo American engine, each validated against an independent reference. Both policy
+sections were predeclared and hashed before the code existed (entries above).
+
+- **Heston** (ADR 0017): `models/heston.py`, `engines/heston_fourier.py`, `HestonConfig`,
+  fixture `heston_quantlib_v1.json` (200 QuantLib cases), checks `heston_price_vs_quantlib`,
+  `heston_deterministic_variance_limit`, `heston_put_call_parity`,
+  `heston_integration_settings`, two mutants. API: `HestonModelIn` (default engine chosen by
+  model family), `/api/v1/visuals/smile`; CLI `--heston`; UI model selector, Feller note and smile
+  chart. Found on the way: the predeclared limit criterion was wrong for ρ ≠ 0 (corrected and
+  logged above); the Heston profile omits the vega chart because vega is not defined.
+- **Longstaff–Schwartz** (ADR 0018): `engines/lsm_american.py`, `LSMConfig`, Bermudan option on
+  the CRR tree (`build_tree(..., exercise_every=m)`), `validation/lsm.py` with
+  `lsm_vs_bermudan_crr` and `lsm_se_calibration`. API/CLI/UI engine settings.
+  Found on the way: with a polynomial-only basis, the American call with two cash dividends
+  passed but used 93% of its allowance (−7.4 SE) with the in-sample estimate also below the
+  reference, a basis deficiency. Adding the European value of the remaining contract as a
+  regressor brought it to within about 1 SE; criteria unchanged. Computing that regressor with
+  the cancellation-safe BSM kernel made pricing 10× slower (0.25 s → 2–3.7 s); a plain `ndtr`
+  formula (a regressor needs no 1e-12 accuracy) restored 0.2 s with identical results.
+- **UI:** chart data (profile, boundary, smile) is now fetched concurrently. The browser test
+  failed once when the smile waited behind a 3.6 s Heston profile on cold workers; after the
+  change it passed 3 of 3 runs on freshly started servers.
+- **README:** highlights and images generated by `ui/e2e/screenshots.mjs` from synthetic inputs.
+
+Evidence: `reports/release-c/report.md|json` — all 21 deterministic checks and 60 statistical
+tests pass (81.7 s; dirty-state sha256 246c891d…, base commit da26c51, uncommitted tree).
+Commands run:
+- `uv run ruff format --check . && uv run ruff check . && uv run mypy` — clean (85 files)
+- `uv run pytest -q` — 293 passed; `uv run --group reference pytest -q -m "statistical or reference"` — 6 passed
+- `cd ui && npm run gen:types && npm run typecheck && npm test && npm run build` — 15 passed
+- `node ui/e2e/smoke.mjs http://127.0.0.1:8765 <dir>` — 26 checks, 3 of 3 runs
+
+## Calibration, hedging, duality bound and real-data import (2026-09-30)
+
+Items built, each with its acceptance rules predeclared and hashed first (entries above):
+
+- **Vectorised Heston pricer** (ADR 0019): `engines/heston_batch.py`, with the characteristic
+  function split as C + D·v, adaptive composite Gauss–Legendre nodes, and analytic dP/dF and dP/dv.
+  Checks `heston_batch_vs_quantlib`, `heston_batch_vs_adaptive_sweep`, `heston_batch_greeks_vs_fd`.
+- **Heston calibration** (ADR 0020): `application/heston_calibration.py`, CLI `heston calibrate`,
+  `POST /api/v1/heston/calibrations`, UI panel in the Surface tab, synthetic Heston fixture pair.
+  Checks `heston_calibration_exact_recovery`, `heston_calibration_noisy_snapshot`.
+- **Hedging experiment** (ADR 0021): `application/hedging.py` (GBM and Andersen QE paths; Black–
+  Scholes, Heston and minimum-variance deltas), CLI `hedge`, `POST /api/v1/analysis/hedging`, UI
+  Hedging tab. Checks `hedging_gbm`, `heston_qe_simulator`, `heston_min_variance_hedge`.
+- **Andersen–Broadie upper bound** (ADR 0022): `dual_upper_bound` in `engines/lsm_american.py`,
+  an `LSMConfig.upper_bound` option, and a price bracket in the UI. Check `lsm_dual_upper_bound`.
+- **Real-data import and study** (ADR 0023): `adapters/snapshots/csv_chain.py`,
+  `application/study.py`, CLI `snapshot import-csv` and `study`, `docs/real-data.md`, and
+  synthetic example CSVs in both layouts.
+
+Defects and findings on the way:
+- **Fixed-node Heston batch rule failed its gate in a scratch run** (worst scaled error 35 vs
+  QuantLib; e^{iux} under-resolved at large |x|). Node sets are now adaptive. The routing
+  threshold was lowered before the formal check (a tightening, logged above).
+- **Calibration standard errors were too small.** Quote noise alone put σ 4.0 SE from truth; with
+  the true forwards every parameter was within 2 SE. The missing term, the forwards' estimation
+  error, is now propagated by the delta method (max 2.5 SE). Gate unchanged.
+- **The `snapshot` and `surface` CLI commands were never registered** (handlers existed and the
+  README documented them, but no test ran them; git history shows no registration ever). They
+  are registered now, with CLI tests for every command.
+- **The CSV importer quarantined a valid timestamp** that lacked fractional seconds under a single
+  strptime format. Formats now accept a list or ISO-8601.
+- **Under Heston, the Heston delta hedges worse than the Black–Scholes implied-vol delta** (std
+  1.48 vs 1.27); the minimum-variance delta is best (1.14). This is expected theory (spot/vol
+  correlation), recorded as a result.
+- **The dual-bound gap is inner-path noise** (0.28 / 0.069 / 0.004 at 125 / 500 / 2000 inner paths).
+  An inner European control variate was added; it reduced the gap only modestly.
+- The e2e test selected snapshots by list index; with four bundled snapshots of which two share
+  a timestamp, the order is by id hash. It now selects by provenance label.
+
+`tzdata` (the IANA database for `zoneinfo`) was added as a dependency after the report ran,
+because slim container images may lack the system database the CSV importer's timezones need;
+the report's lockfile hash therefore predates it.
+
+Evidence: `reports/release-d/report.md|json`: all 30 deterministic checks and the statistical
+suite pass (146 s; dirty-state sha256 946c9fdd…, base commit da26c51, uncommitted tree).
+Commands run:
+- `uv run ruff format --check . && uv run ruff check . && uv run mypy`: clean (98 files)
+- `uv run pytest -q`: 335 passed; `uv run --group reference pytest -q -m "statistical or reference"`: 12 passed
+- `cd ui && npm run gen:types && npm run typecheck && npm test && npm run build`: 15 passed
+- `node ui/e2e/smoke.mjs http://127.0.0.1:8765 <dir>`: 30 checks
+
+## First real-data run (2026-09-30)
+
+Two consecutive days of SPXW end-of-day chains (14–15 Sep 2022) from the free HistoricalData.net
+2022H2 sample (evaluation use under its license; stored under git-ignored `data/raw/`, never
+committed). Added mapping-file row filters to the importer (with a test) to keep SPXW PM-settled
+European contracts only, and a committed mapping, `examples/csv/mapping_historicaldata_spxw.toml`.
+Study results and the maturity breakdown are in `docs/real-data.md`. Held-out containment:
+SSVI 15.9%, Heston 6.9%; next day without refit 10.7% / 6.2%; Heston v0-only refit 6.1%. Both
+models miss by 2–4 vol points (7–8.5 under one week) against bid–ask widths of 0.13–0.33 vol
+points. No thresholds applied; results reported as measured.
+
+## Term-structure models (2026-10-01)
+
+Following the first real-data run, added per-expiry raw SVI slices (`application/svi_slices.py`)
+and Heston with a piecewise-constant θ(t) (`HestonTSModel`; exact characteristic function, since
+D does not involve θ), per ADR 0024. Calibration now goes through a `Parameterisation`, so both
+Heston forms share the fitting, uncertainty and next-day code. The QE simulator accepts explicit
+time grids, θ(t), and a terminal-only mode (a 200k × 365 run would otherwise need over 1 GB). CLI:
+`surface fit --model svi-slices`, `heston calibrate --pillars 7,30,91,182`; the study runs all
+four models.
+
+Checks (predeclared, all passed on the first formal run): `heston_ts_reduces_to_constant`
+(1.4e-14), `heston_ts_vs_monte_carlo` (6 prices), `heston_ts_exact_recovery` (relative 6e-8),
+`svi_slices_synthetic` (containment 100% and 95.7%, no arbitrage violations).
+
+Real data (SPXW, 14–15 Sep 2022): SVI slices reduce the held-out IV error from 3.37 (SSVI) to
+0.52 vol points and the next-day error from 3.03 to 0.91, but are not arbitrage-free (95
+butterfly, 336 in-range calendar violations). The θ term structure leaves Heston unchanged (3.99).
+Full table in `docs/real-data.md`. The first four-model run took about 10 minutes, most of it
+the nine-parameter Heston calibration on about 4,000 real quotes.
+
+Evidence: `reports/release-e/report.md|json`: all 34 deterministic checks and the statistical
+suite pass (145 s; policy SHA-256 c1b9783c…; uncommitted tree). `ruff`, strict `mypy` (101 files)
+clean; `uv run pytest -q`: 346 passed.
+
 ## Current state and next steps
 
-Nothing is in progress. The project is committed in 15 pieces on branch
-`build/options-workbench`; every commit passes lint, strict typing and its tests. The saved
-reports predate the commits and record base commit 0848255 plus a dirty-state hash.
+Everything since the 15 committed pieces is **uncommitted** on `build/options-workbench`.
 Suggested next steps, in order:
-1. Regenerate `reports/post-review` so the reports reference a clean commit.
-2. If advanced models are wanted: implement **one** of PDE or Heston (ADR 0012) with the plan's
-   refinement studies and independent references (QuantLib `AnalyticHestonEngine` pinned).
-3. Paper trading follow-ups if wanted: import of real quotes (broker CSV) to mark positions,
-   per-lot (FIFO) tax reporting, a daily mark reminder. Live order placement only via the
-   broker's own paper environment first, with per-order confirmation (ADR 0016).
-4. Optional: American Greeks vs QuantLib FD (delta/gamma fixtures), a real data adapter emitting
-   `options-snapshot/v1` (check provider terms first), recalibrated scenarios as a separate
-   operation, cancellation of running jobs if workloads grow.
+1. Commit the new work in pieces, then regenerate the latest report so it references a clean
+   commit.
+2. An arbitrage-free cross-slice fit (eSSVI-type) to combine SVI-slice accuracy (0.5 vol points
+   on SPX) with SSVI's no-arbitrage guarantee; jumps (Bates) for the sub-week Heston fit.
+3. A PDE engine (ADR 0012) as a third American method; vega hedging with a second option in the
+   hedging experiment; term-structure extensions of Heston calibration.
+4. Paper trading follow-ups if wanted: marks from imported real quotes, per-lot (FIFO) tax
+   reporting. Live order placement only via the broker's own paper environment first, with
+   per-order confirmation (ADR 0016).
+5. Optional: American Greeks vs QuantLib FD (delta/gamma fixtures), recalibrated scenarios as a
+   separate operation, cancellation of running jobs if workloads grow.
+
 Known limitations are listed in README "Limitations".

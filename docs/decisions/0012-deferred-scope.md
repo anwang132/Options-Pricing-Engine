@@ -2,9 +2,9 @@
 
 Status: accepted
 
-- **PDE and Heston:** deferred until Release B is complete and verified; when added, follow the
-  plan's refinement studies and the deterministic-variance limit
-  I(T) = θT + (v0 − θ)(1 − e^{−κT})/κ.
+- **PDE:** deferred. **Heston** was added after Release B (ADR 0017) with the
+  deterministic-variance limit I(T) = θT + (v0 − θ)(1 − e^{−κT})/κ as a validation gate, and a
+  Longstaff–Schwartz American engine alongside it (ADR 0018).
 - **VaR / expected shortfall:** not implemented. The simulators are risk-neutral pricing tools;
   they do not forecast real-world loss probabilities.
 - **Live data providers (e.g. yfinance):** not implemented. Snapshots come from a documented
