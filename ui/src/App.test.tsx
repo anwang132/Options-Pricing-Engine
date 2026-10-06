@@ -10,6 +10,8 @@ const ENGINES = [
     capabilities: { exercise_styles: ["european"], dividend_treatments: ["continuous_yield"], model_families: ["black_scholes"], greeks: { delta: "pathwise" }, stochastic: true, batching: false, diagnostics: [], zero_volatility: false } },
   { engine_id: "crr_tree", version: "1.0.0", description: "Tree", config_type: "CRRConfig",
     capabilities: { exercise_styles: ["european", "american"], dividend_treatments: ["continuous_yield"], model_families: ["black_scholes"], greeks: { delta: "tree_nodes" }, stochastic: false, batching: false, diagnostics: [], zero_volatility: false } },
+  { engine_id: "heston_fourier", version: "1.0.0", description: "Heston", config_type: "HestonConfig",
+    capabilities: { exercise_styles: ["european"], dividend_treatments: ["continuous_yield"], model_families: ["heston"], greeks: { delta: "central_bump_reprice" }, stochastic: false, batching: false, diagnostics: [], zero_volatility: true } },
 ];
 
 function mockFetch(handler: (url: string, body: unknown) => { status: number; body: unknown }) {
@@ -49,6 +51,32 @@ describe("App", () => {
     expect(sent.market.rate).toBe("0.10");
     expect(sent.model.volatility).toBe(0.2);
     expect(sent.contract.expiry).toBe("2027-03-30T08:00:00Z");
+  });
+
+  it("routes the Heston model to the Heston engine and sends variances", async () => {
+    let sent: any = null;
+    mockFetch((url, body) => {
+      if (url.endsWith("/engines")) return { status: 200, body: ENGINES };
+      sent = body;
+      return { status: 422, body: { error: { code: "expired_contract", message: "x", details: {} } } };
+    });
+    render(<App />);
+    await screen.findByText("Closed-form BSM");
+    expect(screen.getByRole("radio", { name: /Heston \(Fourier\)/ })).toBeDisabled();
+    await userEvent.selectOptions(screen.getByLabelText(/^Model/), "heston");
+    expect(screen.getByRole("radio", { name: /Closed-form BSM/ })).toBeDisabled();
+    expect(screen.getByRole("radio", { name: /Heston \(Fourier\)/ })).toBeChecked();
+    const rho = screen.getByLabelText(/Correlation ρ/);
+    await userEvent.clear(rho);
+    await userEvent.type(rho, "-1");
+    expect(screen.getByText("Correlation must be strictly between -1 and 1")).toBeInTheDocument();
+    await userEvent.clear(rho);
+    await userEvent.type(rho, "-0.5");
+    await userEvent.click(screen.getByRole("button", { name: "Price" }));
+    await waitFor(() => expect(sent).not.toBeNull());
+    expect(sent.engine.engine).toBe("heston_fourier");
+    expect(sent.model).toMatchObject({ family: "heston", kappa: 1.5, sigma: 0.5, rho: -0.5 });
+    expect(sent.model.v0).toBeCloseTo(0.04, 15);
   });
 
   it("blocks submission on invalid input", async () => {

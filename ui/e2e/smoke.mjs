@@ -11,6 +11,15 @@ page.on("pageerror", (e) => errors.push(String(e)));
 // Chrome logs intentional 4xx domain errors as console errors; those are expected here.
 page.on("console", (m) => m.type() === "error" && !/status of 4\d\d/.test(m.text()) && errors.push(m.text()));
 const check = (cond, msg) => { if (!cond) throw new Error(`FAILED: ${msg}`); console.log(`ok - ${msg}`); };
+// Select the first option whose text matches (snapshot order among equal timestamps is by id hash).
+const pick = async (label, re) => {
+  const sel = page.getByLabel(label);
+  await sel.locator("option", { hasText: re }).first().waitFor({ state: "attached" });
+  const texts = await sel.locator("option").allTextContents();
+  const i = texts.findIndex((t) => re.test(t));
+  if (i < 0) throw new Error(`FAILED: no option matching ${re} in ${label}`);
+  await sel.selectOption({ index: i });
+};
 
 await page.goto(base);
 await page.getByText("Closed-form BSM").first().waitFor();
@@ -84,7 +93,53 @@ await page.getByText("Early-exercise boundary").waitFor({ timeout: 30000 });
 check(await page.getByText(/exercising immediately is optimal at or below the boundary/).isVisible(), "put exercise boundary explained");
 await page.waitForTimeout(300);
 await page.screenshot({ path: `${out}/09b-american-boundary.png`, fullPage: true });
+await page.getByRole("radio", { name: /Longstaff–Schwartz MC/ }).check();
+await page.getByRole("button", { name: "Price", exact: true }).click();
+await page.getByText(/standard error ·/).waitFor({ timeout: 30000 });
+check(await page.getByText(/regression Greeks are biased/).first().isVisible(), "LSM Greeks reported as not supported with reason");
+await page.screenshot({ path: `${out}/09d-american-lsm.png`, fullPage: true });
+await page.getByLabel(/Andersen–Broadie upper bound/).check();
+await page.getByRole("textbox", { name: "Outer paths" }).fill("300");
+await page.getByRole("textbox", { name: "Inner paths" }).fill("50");
+await page.getByRole("button", { name: "Price", exact: true }).click();
+await page.getByText(/Bermudan price bracket/).waitFor({ timeout: 60000 });
+check(await page.getByText(/Bermudan price bracket/).isVisible(), "LSM dual upper bound brackets the price");
 await page.getByLabel("Option type").selectOption("call");
+
+// Heston: model selector, engine routing, implied-vol smile
+await page.getByLabel("Exercise style").selectOption("european");
+await page.getByLabel(/^Strike/).fill("42");
+await page.getByLabel(/^Model/).selectOption("heston");
+check(await page.getByRole("radio", { name: /Heston \(Fourier\)/ }).isChecked(), "Heston engine selected for the Heston model");
+check(await page.getByRole("radio", { name: /Closed-form BSM/ }).isDisabled(), "BSM engines disabled for the Heston model");
+await page.getByRole("button", { name: "Price", exact: true }).click();
+await page.getByText("Implied-volatility smile").waitFor({ timeout: 30000 });
+check(await page.getByText(/Feller condition/).isVisible(), "Feller condition reported");
+check((await page.locator(".small-multiples figure").count()) === 3, "vega chart omitted for Heston (not supported)");
+await page.waitForTimeout(300);
+await page.screenshot({ path: `${out}/09c-heston-smile.png`, fullPage: true });
+await page.getByLabel(/^Model/).selectOption("black_scholes");
+await page.getByLabel(/^Strike/).fill("40");
+
+// Hedging experiment: GBM world (Black-Scholes model), then Heston world
+await page.getByRole("tab", { name: "Hedging" }).click();
+await page.getByRole("button", { name: "Run hedging experiment" }).click();
+await page.getByText(/Standard deviation of the hedged P&L/).waitFor({ timeout: 60000 });
+const slopeText = await page.getByText(/Standard deviation of the hedged P&L/).innerText();
+const slope = Number(/slope (-?\d+(?:\.\d+)?)/.exec(slopeText)?.[1]);
+check(slope < -0.4 && slope > -0.6, `GBM hedging error falls like N^-1/2 (slope ${slope})`);
+await page.waitForTimeout(300);
+await page.screenshot({ path: `${out}/09e-hedging-gbm.png`, fullPage: true });
+await page.getByLabel(/^Model/).selectOption("heston");
+await page.getByLabel(/Rebalancing counts/).fill("8,16");
+await page.getByLabel(/^Paths/).fill("1000");
+await page.getByRole("button", { name: "Run hedging experiment" }).click();
+await page.getByRole("cell", { name: "Minimum-variance delta" }).first().waitFor({ timeout: 60000 });
+check(await page.getByText(/Heston world \(Andersen QE paths\)/).isVisible(), "Heston-world hedging ran all strategies");
+await page.screenshot({ path: `${out}/09f-hedging-heston.png`, fullPage: true });
+await page.getByLabel(/^Model/).selectOption("black_scholes");
+await page.getByRole("tab", { name: "Price & Greeks" }).click();
+
 await page.getByRole("tab", { name: "Capabilities" }).click();
 await page.screenshot({ path: `${out}/09-capabilities.png`, fullPage: true });
 
@@ -98,7 +153,8 @@ await page.screenshot({ path: `${out}/11-snapshots.png`, fullPage: true });
 
 // Surface fit with later-snapshot evaluation
 await page.getByRole("tab", { name: "Surface" }).click();
-await page.getByLabel("Later snapshot (optional)").selectOption({ index: 1 });
+await pick("Snapshot to fit", /09-28T20:00 · synthetic SSVI/);
+await pick("Later snapshot (optional)", /09-29T20:00 · synthetic SSVI/);
 await page.getByRole("button", { name: "Fit surface" }).click();
 await page.getByText("Parametric guarantee (conditional)").waitFor();
 check(await page.getByText(/no violations detected on the tested grid/).isVisible(), "sampled arbitrage statement shown");
@@ -109,6 +165,15 @@ check(await page.getByText(/implied vol \d/).isVisible(), "heat map hover shows 
 check(await page.getByText(/Risk-neutral density of k/).isVisible(), "risk-neutral density chart rendered");
 await page.waitForTimeout(300);
 await page.screenshot({ path: `${out}/12-surface.png`, fullPage: true });
+
+// Heston calibration on the Heston-generated pair
+await pick("Snapshot to fit", /09-28T20:00 · synthetic Heston/);
+await pick("Later snapshot (optional)", /09-29T20:00 · synthetic Heston/);
+await page.getByRole("button", { name: "Calibrate Heston" }).click();
+await page.getByText(/Later, only v₀ refitted/).waitFor({ timeout: 60000 });
+check(await page.getByText(/Synthetic data generated by Heston/).isVisible(), "Heston calibration recovers the generating model");
+await page.waitForTimeout(300);
+await page.screenshot({ path: `${out}/12b-heston-calibration.png`, fullPage: true });
 
 // Portfolio driven by the surface (sticky moneyness)
 await page.getByRole("tab", { name: "Portfolio" }).click();

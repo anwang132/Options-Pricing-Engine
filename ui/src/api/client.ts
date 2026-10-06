@@ -1,4 +1,4 @@
-import type { FitArtifact, FitSummary, QuoteRow, SnapshotManifest, SnapshotSummary } from "./documents";
+import type { FitArtifact, FitSummary, HestonArtifact, QuoteRow, SnapshotManifest, SnapshotSummary } from "./documents";
 import type { components } from "./schema";
 
 export type * from "./documents";
@@ -19,6 +19,9 @@ export type GreekOut = Schemas["GreekOut"];
 export type PortfolioRequest = Schemas["PortfolioRequestIn"];
 export type ProfileResponse = Schemas["ProfileResponse"];
 export type ExerciseBoundaryResponse = Schemas["ExerciseBoundaryResponse"];
+export type SmileResponse = Schemas["SmileResponse"];
+export type HedgingRequest = Schemas["HedgingIn"];
+export type HedgingResponse = Schemas["HedgingResponse"];
 export type SurfaceViewsResponse = Schemas["SurfaceViewsResponse"];
 export type PaperSummary = Schemas["PaperSummaryOut"];
 export type PaperAccountRow = Schemas["PaperAccountRow"];
@@ -120,5 +123,9 @@ export const api = {
   paperHistory: (id: string) => request<PaperHistoryPoint[]>(`/api/v1/paper/accounts/${id}/history`),
   paperEvents: (id: string) => request<LedgerEvent[]>(`/api/v1/paper/accounts/${id}/events`),
   profile: (b: PriceRequest) => request<ProfileResponse>("/api/v1/visuals/profile", b),
+  hestonCalibrate: (snapshot_id: string, later_snapshot_id: string | null) =>
+    request<{ created: boolean; artifact: HestonArtifact }>("/api/v1/heston/calibrations", { snapshot_id, later_snapshot_id }),
+  hedging: (b: HedgingRequest) => request<HedgingResponse>("/api/v1/analysis/hedging", b),
+  smile: (b: PriceRequest) => request<SmileResponse>("/api/v1/visuals/smile", b),
   exerciseBoundary: (b: PriceRequest) => request<ExerciseBoundaryResponse>("/api/v1/visuals/exercise-boundary", b),
 };

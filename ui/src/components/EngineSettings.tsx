@@ -2,7 +2,12 @@ import type { EngineInfo, Schemas } from "../api/client";
 import { ENGINE_LABELS } from "../lib/instrument";
 import { Field } from "./common";
 
-export type EngineConfig = Schemas["AnalyticEngineIn"] | Schemas["CRREngineIn"] | Schemas["MonteCarloEngineIn"];
+export type EngineConfig =
+  | Schemas["AnalyticEngineIn"]
+  | Schemas["CRREngineIn"]
+  | Schemas["MonteCarloEngineIn"]
+  | Schemas["HestonEngineIn"]
+  | Schemas["LSMEngineIn"];
 
 export const DEFAULT_CONFIGS: Record<string, EngineConfig> = {
   bsm_analytic: { engine: "bsm_analytic" },
@@ -14,7 +19,31 @@ export const DEFAULT_CONFIGS: Record<string, EngineConfig> = {
     antithetic: true,
     control_variate: "none",
   },
+  heston_fourier: { engine: "heston_fourier", epsabs: 1e-12, epsrel: 1e-10, limit: 1000 },
+  lsm_american: {
+    engine: "lsm_american",
+    paths: 100000,
+    regression_paths: 50000,
+    exercise_dates: 50,
+    basis_degree: 3,
+    seed: 20260928,
+    antithetic: true,
+    control_variate: true,
+    upper_bound: false,
+    outer_paths: 1000,
+    inner_paths: 200,
+  },
 };
+
+const MODEL_NAMES: Record<string, string> = { black_scholes: "Black-Scholes", heston: "Heston" };
+
+function unavailableReason(e: EngineInfo, supported: EngineInfo[]): string {
+  const c = e.capabilities;
+  if (supported.length && !c.model_families.some((m) => supported.some((s) => s.capabilities.model_families.includes(m))))
+    return `Not available: prices the ${c.model_families.map((m) => MODEL_NAMES[m] ?? m).join("/")} model`;
+  return `Not available: supports ${c.exercise_styles.join("/")} exercise, ${c.dividend_treatments.join("/").replaceAll("_", " ")}` +
+    (c.zero_volatility ? "" : ", volatility > 0");
+}
 
 interface Props {
   engines: EngineInfo[];
@@ -45,10 +74,7 @@ export function EngineSettings({ engines, supported, config, onChange }: Props) 
               <span>
                 <strong>{ENGINE_LABELS[e.engine_id] ?? e.engine_id}</strong>
                 <small>
-                  {ok
-                    ? e.description
-                    : `Not available: supports ${e.capabilities.exercise_styles.join("/")} exercise` +
-                      (e.capabilities.zero_volatility ? "" : ", volatility > 0")}
+                  {ok ? e.description : unavailableReason(e, supported)}
                 </small>
               </span>
             </label>
@@ -78,6 +104,66 @@ export function EngineSettings({ engines, supported, config, onChange }: Props) 
             />
             Odd/even diagnostic (also prices N+1 steps)
           </label>
+        </div>
+      )}
+      {config.engine === "heston_fourier" && (
+        <div className="grid">
+          <Field label="Absolute tolerance" hint="Adaptive quadrature of the Lewis integral">
+            {(id, d) => (
+              <input id={id} aria-describedby={d} inputMode="decimal" value={config.epsabs ?? ""} onChange={(e) => onChange({ ...config, epsabs: Number(e.target.value) })} />
+            )}
+          </Field>
+          <Field label="Relative tolerance">
+            {(id) => (
+              <input id={id} inputMode="decimal" value={config.epsrel ?? ""} onChange={(e) => onChange({ ...config, epsrel: Number(e.target.value) })} />
+            )}
+          </Field>
+        </div>
+      )}
+      {config.engine === "lsm_american" && (
+        <div className="grid">
+          <Field label="Pricing paths" hint="Independent of the regression set, so the SE is valid">
+            {(id, d) => (
+              <input id={id} aria-describedby={d} inputMode="numeric" value={config.paths ?? ""} onChange={(e) => onChange({ ...config, paths: int(e.target.value) })} />
+            )}
+          </Field>
+          <Field label="Regression paths" hint="Fit the continuation-value regressions">
+            {(id, d) => (
+              <input id={id} aria-describedby={d} inputMode="numeric" value={config.regression_paths ?? ""} onChange={(e) => onChange({ ...config, regression_paths: int(e.target.value) })} />
+            )}
+          </Field>
+          <Field label="Exercise dates" hint="Bermudan approximation of American exercise">
+            {(id, d) => (
+              <input id={id} aria-describedby={d} inputMode="numeric" value={config.exercise_dates ?? ""} onChange={(e) => onChange({ ...config, exercise_dates: int(e.target.value) })} />
+            )}
+          </Field>
+          <Field label="Seed">
+            {(id) => (
+              <input id={id} inputMode="numeric" value={config.seed ?? ""} onChange={(e) => onChange({ ...config, seed: int(e.target.value) })} />
+            )}
+          </Field>
+          <label className="check">
+            <input type="checkbox" checked={config.control_variate !== false} onChange={(e) => onChange({ ...config, control_variate: e.target.checked })} />
+            European-payoff control variate (β from the regression set)
+          </label>
+          <label className="check">
+            <input type="checkbox" checked={!!config.upper_bound} onChange={(e) => onChange({ ...config, upper_bound: e.target.checked })} />
+            Andersen–Broadie upper bound (brackets the price; nested simulation, slower)
+          </label>
+          {config.upper_bound && (
+            <>
+              <Field label="Outer paths" hint="Paths along which the dual martingale is built">
+                {(id, d) => (
+                  <input id={id} aria-describedby={d} inputMode="numeric" value={config.outer_paths ?? ""} onChange={(e) => onChange({ ...config, outer_paths: int(e.target.value) })} />
+                )}
+              </Field>
+              <Field label="Inner paths" hint="Per in-the-money date; the gap shrinks roughly like 1/inner">
+                {(id, d) => (
+                  <input id={id} aria-describedby={d} inputMode="numeric" value={config.inner_paths ?? ""} onChange={(e) => onChange({ ...config, inner_paths: int(e.target.value) })} />
+                )}
+              </Field>
+            </>
+          )}
         </div>
       )}
       {config.engine === "mc_terminal_gbm" && (

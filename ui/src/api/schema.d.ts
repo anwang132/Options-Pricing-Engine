@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/analysis/hedging": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Hedging Experiment */
+        post: operations["hedging_experiment_api_v1_analysis_hedging_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/compare": {
         parameters: {
             query?: never;
@@ -81,6 +98,41 @@ export interface paths {
         };
         /** Health */
         get: operations["health_api_v1_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/heston/calibrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Heston Calibrations */
+        get: operations["heston_calibrations_api_v1_heston_calibrations_get"];
+        put?: never;
+        /** Heston Calibrate */
+        post: operations["heston_calibrate_api_v1_heston_calibrations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/heston/calibrations/{calibration_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Heston Calibration */
+        get: operations["heston_calibration_api_v1_heston_calibrations__calibration_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -483,6 +535,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/visuals/smile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Smile */
+        post: operations["smile_api_v1_visuals_smile_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -534,11 +603,15 @@ export interface components {
              * Engines
              * @description Engines to run; default = all compatible with default settings
              */
-            engines?: (components["schemas"]["AnalyticEngineIn"] | components["schemas"]["CRREngineIn"] | components["schemas"]["MonteCarloEngineIn"])[] | null;
+            engines?: (components["schemas"]["AnalyticEngineIn"] | components["schemas"]["CRREngineIn"] | components["schemas"]["MonteCarloEngineIn"] | components["schemas"]["HestonEngineIn"] | components["schemas"]["LSMEngineIn"])[] | null;
             /** Greeks */
             greeks?: components["schemas"]["GreekName"][];
             market: components["schemas"]["MarketIn-Input"];
-            model: components["schemas"]["ModelIn"];
+            /**
+             * Model
+             * @description Black-Scholes (default) or Heston
+             */
+            model: components["schemas"]["ModelIn"] | components["schemas"]["HestonModelIn"];
             /**
              * Schema Version
              * @default 1
@@ -790,6 +863,237 @@ export interface components {
             /** Value */
             value: number | null;
         };
+        /** HedgingIn */
+        HedgingIn: {
+            /**
+             * Dividend Yield
+             * @default 0.01
+             */
+            dividend_yield?: number;
+            /**
+             * Drift
+             * @description Real-world drift; default the rate
+             */
+            drift?: number | null;
+            /**
+             * Hedge Vol
+             * @description Black-Scholes hedge vol; default: the model's own (implied) vol
+             */
+            hedge_vol?: number | null;
+            /** @description Parameters of the Heston world */
+            heston?: components["schemas"]["HestonModelIn"] | null;
+            /** @default call */
+            option_type?: components["schemas"]["OptionType"];
+            /**
+             * Paths
+             * @default 5000
+             */
+            paths?: number;
+            /**
+             * Rate
+             * @default 0.03
+             */
+            rate?: number;
+            /**
+             * Real Vol
+             * @description Volatility of the GBM world
+             * @default 0.2
+             */
+            real_vol?: number;
+            /** Rebalances */
+            rebalances?: number[];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version?: "1";
+            /**
+             * Seed
+             * @default 20260928
+             */
+            seed?: number;
+            /**
+             * Spot
+             * @default 100
+             */
+            spot?: number;
+            /** Strategies */
+            strategies?: ("bsm" | "heston" | "heston_mv")[];
+            /**
+             * Strike
+             * @default 100
+             */
+            strike?: number;
+            /**
+             * Time
+             * @description Years to expiry
+             * @default 0.5
+             */
+            time?: number;
+            /**
+             * World
+             * @default gbm
+             * @enum {string}
+             */
+            world?: "gbm" | "heston";
+        };
+        /** HedgingResponse */
+        HedgingResponse: {
+            /** Drift */
+            drift: number;
+            /** Grid Steps */
+            grid_steps: number;
+            /** Hedge Vol */
+            hedge_vol: number;
+            /** Histogram Rebalances */
+            histogram_rebalances: number;
+            /** Histograms */
+            histograms: {
+                [key: string]: components["schemas"]["Histogram"];
+            };
+            /** Model Implied Vol */
+            model_implied_vol: number;
+            /** Model Price */
+            model_price: number;
+            /**
+             * Note
+             * @default Short one option, hedged in the underlying at N equal intervals; P&L discounted to t = 0. leading_order_std is the Gamma-based prediction sqrt(0.5 sigma^4 dt^2 sum E[e^{-2rt} Gamma^2 S^4]) on the same paths (GBM world).
+             */
+            note?: string;
+            /** Paths */
+            paths: number;
+            /** Rows */
+            rows: components["schemas"]["HedgingRow"][];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version?: "1";
+            /** Simulation */
+            simulation: {
+                [key: string]: unknown;
+            };
+            /** Slope */
+            slope: {
+                [key: string]: number | null;
+            };
+            /** World */
+            world: string;
+        };
+        /** HedgingRow */
+        HedgingRow: {
+            /** Leading Order Std */
+            leading_order_std?: number | null;
+            /** Mean */
+            mean: number;
+            /** Median */
+            median: number;
+            /** Pnl Minus Identity Mean */
+            pnl_minus_identity_mean?: number | null;
+            /** Pnl Minus Identity Se */
+            pnl_minus_identity_se?: number | null;
+            /** Q01 */
+            q01: number;
+            /** Q05 */
+            q05: number;
+            /** Q95 */
+            q95: number;
+            /** Q99 */
+            q99: number;
+            /** Rebalances */
+            rebalances: number;
+            /** Se Mean */
+            se_mean: number;
+            /** Std */
+            std: number;
+            /** Std Times Sqrt N */
+            std_times_sqrt_n: number;
+            /** Strategy */
+            strategy: string;
+            /** Vol Mismatch Identity Mean */
+            vol_mismatch_identity_mean?: number | null;
+        };
+        /** HestonCalibrationIn */
+        HestonCalibrationIn: {
+            /**
+             * Later Snapshot Id
+             * @description Optional later snapshot: no-refit and v0-only-refit evaluation
+             */
+            later_snapshot_id?: string | null;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version?: "1";
+            /** Snapshot Id */
+            snapshot_id: string;
+        };
+        /** HestonEngineIn */
+        HestonEngineIn: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            engine: "heston_fourier";
+            /**
+             * Epsabs
+             * @default 1e-12
+             */
+            epsabs?: number;
+            /**
+             * Epsrel
+             * @default 1e-10
+             */
+            epsrel?: number;
+            /**
+             * Limit
+             * @default 1000
+             */
+            limit?: number;
+        };
+        /** HestonModelIn */
+        HestonModelIn: {
+            /**
+             * Family
+             * @constant
+             */
+            family: "heston";
+            /**
+             * Kappa
+             * @description Mean-reversion speed per year
+             */
+            kappa: number;
+            /**
+             * Rho
+             * @description Spot/variance correlation, in (-1, 1)
+             */
+            rho: number;
+            /**
+             * Sigma
+             * @description Volatility of variance
+             */
+            sigma: number;
+            /**
+             * Theta
+             * @description Long-run variance
+             */
+            theta: number;
+            /**
+             * V0
+             * @description Initial variance (0.04 = 20% vol squared)
+             */
+            v0: number;
+        };
+        /** Histogram */
+        Histogram: {
+            /** Counts */
+            counts: number[];
+            /** Edges */
+            edges: number[];
+        };
         /** IVOut */
         IVOut: {
             /** Bracket */
@@ -884,6 +1188,72 @@ export interface components {
             /** Time To Expiry */
             time_to_expiry: number;
         };
+        /** LSMEngineIn */
+        LSMEngineIn: {
+            /**
+             * Antithetic
+             * @default true
+             */
+            antithetic?: boolean;
+            /**
+             * Basis Degree
+             * @default 3
+             */
+            basis_degree?: number;
+            /**
+             * Confidence Level
+             * @default 0.95
+             */
+            confidence_level?: number;
+            /**
+             * Control Variate
+             * @default true
+             */
+            control_variate?: boolean;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            engine: "lsm_american";
+            /**
+             * Exercise Dates
+             * @default 50
+             */
+            exercise_dates?: number;
+            /**
+             * Inner Paths
+             * @default 200
+             */
+            inner_paths?: number;
+            /**
+             * Outer Paths
+             * @default 1000
+             */
+            outer_paths?: number;
+            /**
+             * Paths
+             * @description Pricing-set payoff evaluations
+             * @default 100000
+             */
+            paths?: number;
+            /**
+             * Regression Paths
+             * @description Independent fitting set
+             * @default 50000
+             */
+            regression_paths?: number;
+            /**
+             * Seed
+             * @default 20260928
+             */
+            seed?: number;
+            /**
+             * Upper Bound
+             * @description Also compute the Andersen-Broadie dual upper bound
+             * @default false
+             */
+            upper_bound?: boolean;
+        };
         /** LedgerEventOut */
         LedgerEventOut: {
             /** Hash */
@@ -933,7 +1303,11 @@ export interface components {
             /** Greeks */
             greeks?: components["schemas"]["GreekName"][];
             market: components["schemas"]["MarketIn-Input"];
-            model: components["schemas"]["ModelIn"];
+            /**
+             * Model
+             * @description Black-Scholes (default) or Heston
+             */
+            model: components["schemas"]["ModelIn"] | components["schemas"]["HestonModelIn"];
             /** Path Counts */
             path_counts: number[];
             /**
@@ -1444,12 +1818,19 @@ export interface components {
         /** PriceRequestIn */
         "PriceRequestIn-Input": {
             contract: components["schemas"]["ContractIn-Input"];
-            /** Engine */
-            engine?: components["schemas"]["AnalyticEngineIn"] | components["schemas"]["CRREngineIn"] | components["schemas"]["MonteCarloEngineIn"];
+            /**
+             * Engine
+             * @description Defaults to bsm_analytic, or heston_fourier for a Heston model
+             */
+            engine?: components["schemas"]["AnalyticEngineIn"] | components["schemas"]["CRREngineIn"] | components["schemas"]["MonteCarloEngineIn"] | components["schemas"]["HestonEngineIn"] | components["schemas"]["LSMEngineIn"];
             /** Greeks */
             greeks?: components["schemas"]["GreekName"][];
             market: components["schemas"]["MarketIn-Input"];
-            model: components["schemas"]["ModelIn"];
+            /**
+             * Model
+             * @description Black-Scholes (default) or Heston
+             */
+            model: components["schemas"]["ModelIn"] | components["schemas"]["HestonModelIn"];
             /**
              * Schema Version
              * @default 1
@@ -1461,12 +1842,19 @@ export interface components {
         /** PriceRequestIn */
         "PriceRequestIn-Output": {
             contract: components["schemas"]["ContractIn-Output"];
-            /** Engine */
-            engine?: components["schemas"]["AnalyticEngineIn"] | components["schemas"]["CRREngineIn"] | components["schemas"]["MonteCarloEngineIn"];
+            /**
+             * Engine
+             * @description Defaults to bsm_analytic, or heston_fourier for a Heston model
+             */
+            engine?: components["schemas"]["AnalyticEngineIn"] | components["schemas"]["CRREngineIn"] | components["schemas"]["MonteCarloEngineIn"] | components["schemas"]["HestonEngineIn"] | components["schemas"]["LSMEngineIn"];
             /** Greeks */
             greeks?: components["schemas"]["GreekName"][];
             market: components["schemas"]["MarketIn-Output"];
-            model: components["schemas"]["ModelIn"];
+            /**
+             * Model
+             * @description Black-Scholes (default) or Heston
+             */
+            model: components["schemas"]["ModelIn"] | components["schemas"]["HestonModelIn"];
             /**
              * Schema Version
              * @default 1
@@ -1669,6 +2057,47 @@ export interface components {
          * @enum {string}
          */
         SettlementType: "physical" | "cash";
+        /** SmilePoint */
+        SmilePoint: {
+            /** Implied Vol */
+            implied_vol: number | null;
+            /** K */
+            k: number;
+            /** Price */
+            price: number;
+            /** Status */
+            status: string;
+            /** Strike */
+            strike: number;
+        };
+        /** SmileResponse */
+        SmileResponse: {
+            /** Atm Implied Vol */
+            atm_implied_vol: number | null;
+            /** Engine */
+            engine: string;
+            /** Forward */
+            forward: number;
+            /** Model */
+            model: string;
+            /** Note */
+            note: string;
+            /** Points */
+            points: components["schemas"]["SmilePoint"][];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version?: "1";
+            /**
+             * Skew
+             * @description IV at k = -s/2 minus IV at k = +s/2
+             */
+            skew: number | null;
+            /** Time To Expiry */
+            time_to_expiry: number;
+        };
         /** SurfaceFitIn */
         SurfaceFitIn: {
             /**
@@ -1730,7 +2159,11 @@ export interface components {
             /** Greeks */
             greeks?: components["schemas"]["GreekName"][];
             market: components["schemas"]["MarketIn-Input"];
-            model: components["schemas"]["ModelIn"];
+            /**
+             * Model
+             * @description Black-Scholes (default) or Heston
+             */
+            model: components["schemas"]["ModelIn"] | components["schemas"]["HestonModelIn"];
             /**
              * Schema Version
              * @default 1
@@ -1812,6 +2245,48 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    hedging_experiment_api_v1_analysis_hedging_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HedgingIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HedgingResponse"];
+                };
+            };
+            /** @description Content Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     compare_api_v1_compare_post: {
         parameters: {
             query?: never;
@@ -1983,6 +2458,130 @@ export interface operations {
             query?: never;
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Content Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    heston_calibrations_api_v1_heston_calibrations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    }[];
+                };
+            };
+            /** @description Content Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    heston_calibrate_api_v1_heston_calibrations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HestonCalibrationIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Content Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    heston_calibration_api_v1_heston_calibrations__calibration_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                calibration_id: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -3072,6 +3671,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProfileResponse"];
+                };
+            };
+            /** @description Content Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    smile_api_v1_visuals_smile_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PriceRequestIn-Input"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SmileResponse"];
                 };
             };
             /** @description Content Too Large */

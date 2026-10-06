@@ -27,6 +27,13 @@ export function PriceResult({ result }: { result: PriceResponse }) {
               {sig(u.ci_high, 8)}] from {u.independent_observations.toLocaleString()} independent observations
             </div>
           )}
+          {typeof result.diagnostics.upper_bound === "number" && (
+            <div className="hero__sub">
+              Bermudan price bracket [{sig((result.diagnostics.bermudan_interval as number[])[0], 6)},{" "}
+              {sig((result.diagnostics.bermudan_interval as number[])[1], 6)}]: this lower estimate and the Andersen–Broadie
+              upper bound {sig(result.diagnostics.upper_bound, 6)} (duality gap {sig(result.diagnostics.duality_gap as number, 3)})
+            </div>
+          )}
         </div>
         <div>
           <div className="hero__label">One long contract</div>

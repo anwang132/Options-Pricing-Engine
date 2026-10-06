@@ -1,4 +1,4 @@
-import type { FieldErrors, InstrumentForm } from "../lib/instrument";
+import { fellerSatisfied, type FieldErrors, type HestonForm, type InstrumentForm } from "../lib/instrument";
 import { Field } from "./common";
 
 interface Props {
@@ -72,8 +72,11 @@ export function InstrumentPanel({ form, errors, onChange, showVolatility = true 
           {text("spot", "Spot", `${form.currency} per unit`)}
           {text("ratePct", "Risk-free rate", "% per year, continuous", "5 means 0.05; negative allowed")}
           {text("yieldPct", "Dividend yield", "% per year, continuous")}
-          {showVolatility && text("volPct", "Volatility (model)", "% per year", "Model parameter σ; 20 means 0.20")}
         </div>
+      </fieldset>
+      {showVolatility && <ModelInputs form={form} errors={errors} onChange={onChange} />}
+      <fieldset>
+        <legend>Dividends</legend>
         <details className="dividends">
           <summary>Cash dividends ({form.dividends.length}) — escrowed model</summary>
           <p className="note">
@@ -114,5 +117,52 @@ export function InstrumentPanel({ form, errors, onChange, showVolatility = true 
         </details>
       </fieldset>
     </section>
+  );
+}
+
+function ModelInputs({ form, errors, onChange }: Omit<Props, "showVolatility">) {
+  const setH = (k: keyof HestonForm, v: string) => onChange({ ...form, heston: { ...form.heston, [k]: v } });
+  const h = (k: keyof HestonForm, label: string, unit?: string, hint?: string) => (
+    <Field label={label} unit={unit} hint={hint} error={errors[k]}>
+      {(id, d) => (
+        <input id={id} aria-describedby={d} aria-invalid={!!errors[k]} inputMode="decimal" value={form.heston[k]} onChange={(e) => setH(k, e.target.value)} />
+      )}
+    </Field>
+  );
+  const feller = fellerSatisfied(form.heston);
+  return (
+    <fieldset>
+      <legend>Model</legend>
+      <div className="grid">
+        <Field label="Model" hint={form.model === "heston" ? "Stochastic variance; European exercise only" : "Flat volatility (GBM)"}>
+          {(id, d) => (
+            <select id={id} aria-describedby={d} value={form.model} onChange={(e) => onChange({ ...form, model: e.target.value as InstrumentForm["model"] })}>
+              <option value="black_scholes">Black-Scholes</option>
+              <option value="heston">Heston stochastic volatility</option>
+            </select>
+          )}
+        </Field>
+        {form.model === "black_scholes" ? (
+          <Field label="Volatility (model)" unit="% per year" hint="Model parameter σ; 20 means 0.20" error={errors.volPct}>
+            {(id, d) => (
+              <input id={id} aria-describedby={d} aria-invalid={!!errors.volPct} inputMode="decimal" value={form.volPct} onChange={(e) => onChange({ ...form, volPct: e.target.value })} />
+            )}
+          </Field>
+        ) : (
+          <>
+            {h("spotVolPct", "Initial vol √v₀", "% per year", "Today's instantaneous volatility")}
+            {h("longVolPct", "Long-run vol √θ", "% per year", "Variance reverts towards θ")}
+            {h("kappa", "Mean reversion κ", "per year", "Speed of reversion; half-life ln2/κ")}
+            {h("volOfVol", "Vol of vol σ", "per √year", "0 gives Black-Scholes with time-averaged variance")}
+            {h("rho", "Correlation ρ", "spot vs variance", "Negative ρ gives the equity downside skew")}
+          </>
+        )}
+      </div>
+      {form.model === "heston" && feller !== null && (
+        <p className="note">
+          Feller condition 2κθ ≥ σ² is {feller ? "satisfied: variance stays strictly positive." : "violated: variance can touch zero. This is allowed and priced correctly; it is reported, not rejected."}
+        </p>
+      )}
+    </fieldset>
   );
 }

@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { api, type FitArtifact, type FitStats, type FitSummary, type SnapshotSummary } from "../api/client";
 import { Empty, ErrorBox, Field, Loading, StatusBadge } from "../components/common";
+import { HestonCalibrationPanel } from "../components/HestonCalibrationPanel";
 import { SurfaceCharts } from "../components/SurfaceCharts";
 import { pct, sig } from "../lib/decimal";
 import { useAction } from "../lib/useAction";
@@ -95,8 +96,7 @@ export function SurfaceView({ version, onFitsChanged }: { version: number; onFit
               <select id={id} value={snapshotId} onChange={(e) => setSnapshotId(e.target.value)}>
                 {snaps.map((s) => (
                   <option key={s.snapshot_id} value={s.snapshot_id}>
-                    {s.snapshot_id} · {s.as_of.slice(0, 16)}
-                    {s.synthetic ? " · synthetic" : ""}
+                    {s.snapshot_id} · {s.as_of.slice(0, 16)} · {sourceLabel(s)}
                   </option>
                 ))}
               </select>
@@ -110,7 +110,7 @@ export function SurfaceView({ version, onFitsChanged }: { version: number; onFit
                   .filter((s) => s.snapshot_id !== snapshotId)
                   .map((s) => (
                     <option key={s.snapshot_id} value={s.snapshot_id}>
-                      {s.snapshot_id} · {s.as_of.slice(0, 16)}
+                      {s.snapshot_id} · {s.as_of.slice(0, 16)} · {sourceLabel(s)}
                     </option>
                   ))}
               </select>
@@ -288,8 +288,16 @@ export function SurfaceView({ version, onFitsChanged }: { version: number; onFit
           </details>
         </div>
       )}
+      {snaps && snaps.length > 0 && <HestonCalibrationPanel snapshotId={snapshotId} laterId={laterId} />}
     </section>
   );
+}
+
+/** Short provenance label: which generator produced a synthetic snapshot, else its source. */
+function sourceLabel(s: SnapshotSummary): string {
+  const m = /^synthetic: (\w+) generator/.exec(s.source);
+  if (m) return `synthetic ${m[1]}`;
+  return (s.synthetic ? "synthetic · " : "") + s.source.slice(0, 32);
 }
 
 function StatsRow({ label, s }: { label: string; s?: FitStats }) {

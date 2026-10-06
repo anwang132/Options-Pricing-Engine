@@ -12,7 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { api, type ExerciseBoundaryResponse, type PriceRequest, type ProfileResponse } from "../api/client";
+import { api, type ExerciseBoundaryResponse, type PriceRequest, type ProfileResponse, type SmileResponse } from "../api/client";
 import { sig } from "../lib/decimal";
 import { usePalette, type Palette } from "../lib/theme";
 import { useAction } from "../lib/useAction";
@@ -35,17 +35,29 @@ export function ProfileCharts({ body, american }: { body: PriceRequest; american
   const pal = usePalette();
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [boundary, setBoundary] = useState<ExerciseBoundaryResponse | null>(null);
-  const { busy, error, run } = useAction();
+  const [smile, setSmile] = useState<SmileResponse | null>(null);
+  const heston = body.model.family === "heston";
+  const { error, run } = useAction();
+  const [loading, setLoading] = useState(false);
   const key = JSON.stringify(body);
 
   useEffect(() => {
     let live = true;
+    setLoading(true);
+    setSmile(null);
+    setBoundary(null);
     void (async () => {
-      const p = await run("profile", () => api.profile(body));
-      const b = american ? await run("boundary", () => api.exerciseBoundary(body)) : undefined;
+      // Independent requests: issued together so the slowest one sets the wait.
+      const [p, b, s] = await Promise.all([
+        run("profile", () => api.profile(body)),
+        american ? run("boundary", () => api.exerciseBoundary(body)) : undefined,
+        heston ? run("smile", () => api.smile(body)) : undefined,
+      ]);
       if (live) {
         setProfile(p ?? null);
         setBoundary(b ?? null);
+        setSmile(s ?? null);
+        setLoading(false);
       }
     })();
     return () => {
@@ -53,9 +65,9 @@ export function ProfileCharts({ body, american }: { body: PriceRequest; american
     };
     // Recompute only when the request itself changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, american]);
+  }, [key, american, heston]);
 
-  if (busy && !profile) return <Loading label="Computing profiles…" />;
+  if (loading && !profile) return <Loading label="Computing profiles…" />;
   if (error && !profile) return <ErrorBox error={error} />;
   if (!profile) return null;
 
@@ -91,13 +103,17 @@ export function ProfileCharts({ body, american }: { body: PriceRequest; american
           </LineChart>
         </ResponsiveContainer>
       </figure>
+      {heston && smile && <SmileChart s={smile} pal={pal} />}
+      {heston && loading && <Loading label="Pricing the smile…" />}
       <div className="small-multiples">
-        {Object.keys(profile.greeks).map((g) => (
+        {Object.keys(profile.greeks)
+          .filter((g) => profile.greeks[g].some((v) => v !== null))
+          .map((g) => (
           <GreekChart key={g} rows={rows} greek={g} unit={profile.greek_units[g]} strike={profile.strike} spot={profile.current_spot} pal={pal} />
         ))}
       </div>
       {american && boundary && <BoundaryChart b={boundary} pal={pal} />}
-      {american && busy === "boundary" && <Loading label="Extracting the exercise boundary…" />}
+      {american && loading && <Loading label="Extracting the exercise boundary…" />}
       <details>
         <summary>Profile data table</summary>
         <div className="table-wrap">
@@ -145,6 +161,30 @@ function GreekChart(props: { rows: Record<string, number | null>[]; greek: strin
           <Line dataKey={greek} name={GREEK_TITLES[greek] ?? greek} stroke={pal.series[0]} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls={false} />
         </LineChart>
       </ResponsiveContainer>
+    </figure>
+  );
+}
+
+function SmileChart({ s, pal }: { s: SmileResponse; pal: Palette }) {
+  const rows = s.points.map((p) => ({ strike: p.strike, iv: p.implied_vol === null ? null : p.implied_vol * 100 }));
+  const pct = (v: number | null | undefined) => (v === null || v === undefined ? "n/a" : `${sig(v * 100, 4)}%`);
+  return (
+    <figure className="chart">
+      <figcaption>
+        <strong>Implied-volatility smile</strong> implied by the Heston model at this expiry: ATM {pct(s.atm_implied_vol)}, skew{" "}
+        {s.skew === null || s.skew === undefined ? "n/a" : `${sig(s.skew * 100, 3)} vol points`}. A flat line would mean Black-Scholes.
+      </figcaption>
+      <ResponsiveContainer width="100%" height={280}>
+        <LineChart data={rows} margin={{ top: 10, right: 20, bottom: 30, left: 10 }}>
+          <CartesianGrid stroke={pal.grid} />
+          <XAxis type="number" dataKey="strike" domain={["dataMin", "dataMax"]} stroke={pal.ink2} tickFormatter={(v: number) => sig(v, 3)} label={{ value: "strike", position: "bottom", fill: pal.ink2 }} />
+          <YAxis stroke={pal.ink2} tickFormatter={(v: number) => `${sig(v, 3)}%`} width={60} domain={["auto", "auto"]} />
+          <Tooltip formatter={(v) => (v === null ? "not invertible" : `${sig(Number(v), 5)}%`)} labelFormatter={(l) => `strike ${sig(Number(l), 6)}`} />
+          <ReferenceLine x={s.forward} stroke={pal.ink2} label={{ value: "forward", fill: pal.ink2, position: "insideTopRight" }} />
+          <Line dataKey="iv" name="Black-Scholes implied vol" stroke={pal.series[2] ?? pal.series[0]} strokeWidth={2} dot={{ r: 2 }} isAnimationActive={false} connectNulls={false} />
+        </LineChart>
+      </ResponsiveContainer>
+      <p className="small muted">{s.note}</p>
     </figure>
   );
 }

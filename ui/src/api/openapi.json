@@ -86,6 +86,8 @@
           "mapping": {
            "bsm_analytic": "#/components/schemas/AnalyticEngineIn",
            "crr_tree": "#/components/schemas/CRREngineIn",
+           "heston_fourier": "#/components/schemas/HestonEngineIn",
+           "lsm_american": "#/components/schemas/LSMEngineIn",
            "mc_terminal_gbm": "#/components/schemas/MonteCarloEngineIn"
           },
           "propertyName": "engine"
@@ -99,6 +101,12 @@
           },
           {
            "$ref": "#/components/schemas/MonteCarloEngineIn"
+          },
+          {
+           "$ref": "#/components/schemas/HestonEngineIn"
+          },
+          {
+           "$ref": "#/components/schemas/LSMEngineIn"
           }
          ]
         },
@@ -122,7 +130,16 @@
       "$ref": "#/components/schemas/MarketIn-Input"
      },
      "model": {
-      "$ref": "#/components/schemas/ModelIn"
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
      },
      "schema_version": {
       "const": "1",
@@ -757,6 +774,460 @@
     "title": "GreekOut",
     "type": "object"
    },
+   "HedgingIn": {
+    "additionalProperties": false,
+    "properties": {
+     "dividend_yield": {
+      "default": 0.01,
+      "title": "Dividend Yield",
+      "type": "number"
+     },
+     "drift": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Real-world drift; default the rate",
+      "title": "Drift"
+     },
+     "hedge_vol": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Black-Scholes hedge vol; default: the model's own (implied) vol",
+      "title": "Hedge Vol"
+     },
+     "heston": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Parameters of the Heston world"
+     },
+     "option_type": {
+      "$ref": "#/components/schemas/OptionType",
+      "default": "call"
+     },
+     "paths": {
+      "default": 5000,
+      "title": "Paths",
+      "type": "integer"
+     },
+     "rate": {
+      "default": 0.03,
+      "title": "Rate",
+      "type": "number"
+     },
+     "real_vol": {
+      "default": 0.2,
+      "description": "Volatility of the GBM world",
+      "title": "Real Vol",
+      "type": "number"
+     },
+     "rebalances": {
+      "items": {
+       "type": "integer"
+      },
+      "title": "Rebalances",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "seed": {
+      "default": 20260928,
+      "title": "Seed",
+      "type": "integer"
+     },
+     "spot": {
+      "default": 100.0,
+      "title": "Spot",
+      "type": "number"
+     },
+     "strategies": {
+      "items": {
+       "enum": [
+        "bsm",
+        "heston",
+        "heston_mv"
+       ],
+       "type": "string"
+      },
+      "title": "Strategies",
+      "type": "array"
+     },
+     "strike": {
+      "default": 100.0,
+      "title": "Strike",
+      "type": "number"
+     },
+     "time": {
+      "default": 0.5,
+      "description": "Years to expiry",
+      "title": "Time",
+      "type": "number"
+     },
+     "world": {
+      "default": "gbm",
+      "enum": [
+       "gbm",
+       "heston"
+      ],
+      "title": "World",
+      "type": "string"
+     }
+    },
+    "title": "HedgingIn",
+    "type": "object"
+   },
+   "HedgingResponse": {
+    "properties": {
+     "drift": {
+      "title": "Drift",
+      "type": "number"
+     },
+     "grid_steps": {
+      "title": "Grid Steps",
+      "type": "integer"
+     },
+     "hedge_vol": {
+      "title": "Hedge Vol",
+      "type": "number"
+     },
+     "histogram_rebalances": {
+      "title": "Histogram Rebalances",
+      "type": "integer"
+     },
+     "histograms": {
+      "additionalProperties": {
+       "$ref": "#/components/schemas/Histogram"
+      },
+      "title": "Histograms",
+      "type": "object"
+     },
+     "model_implied_vol": {
+      "title": "Model Implied Vol",
+      "type": "number"
+     },
+     "model_price": {
+      "title": "Model Price",
+      "type": "number"
+     },
+     "note": {
+      "default": "Short one option, hedged in the underlying at N equal intervals; P&L discounted to t = 0. leading_order_std is the Gamma-based prediction sqrt(0.5 sigma^4 dt^2 sum E[e^{-2rt} Gamma^2 S^4]) on the same paths (GBM world).",
+      "title": "Note",
+      "type": "string"
+     },
+     "paths": {
+      "title": "Paths",
+      "type": "integer"
+     },
+     "rows": {
+      "items": {
+       "$ref": "#/components/schemas/HedgingRow"
+      },
+      "title": "Rows",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "simulation": {
+      "additionalProperties": true,
+      "title": "Simulation",
+      "type": "object"
+     },
+     "slope": {
+      "additionalProperties": {
+       "anyOf": [
+        {
+         "type": "number"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "title": "Slope",
+      "type": "object"
+     },
+     "world": {
+      "title": "World",
+      "type": "string"
+     }
+    },
+    "required": [
+     "world",
+     "model_price",
+     "model_implied_vol",
+     "hedge_vol",
+     "drift",
+     "paths",
+     "grid_steps",
+     "simulation",
+     "rows",
+     "histograms",
+     "histogram_rebalances",
+     "slope"
+    ],
+    "title": "HedgingResponse",
+    "type": "object"
+   },
+   "HedgingRow": {
+    "properties": {
+     "leading_order_std": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Leading Order Std"
+     },
+     "mean": {
+      "title": "Mean",
+      "type": "number"
+     },
+     "median": {
+      "title": "Median",
+      "type": "number"
+     },
+     "pnl_minus_identity_mean": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pnl Minus Identity Mean"
+     },
+     "pnl_minus_identity_se": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pnl Minus Identity Se"
+     },
+     "q01": {
+      "title": "Q01",
+      "type": "number"
+     },
+     "q05": {
+      "title": "Q05",
+      "type": "number"
+     },
+     "q95": {
+      "title": "Q95",
+      "type": "number"
+     },
+     "q99": {
+      "title": "Q99",
+      "type": "number"
+     },
+     "rebalances": {
+      "title": "Rebalances",
+      "type": "integer"
+     },
+     "se_mean": {
+      "title": "Se Mean",
+      "type": "number"
+     },
+     "std": {
+      "title": "Std",
+      "type": "number"
+     },
+     "std_times_sqrt_n": {
+      "title": "Std Times Sqrt N",
+      "type": "number"
+     },
+     "strategy": {
+      "title": "Strategy",
+      "type": "string"
+     },
+     "vol_mismatch_identity_mean": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vol Mismatch Identity Mean"
+     }
+    },
+    "required": [
+     "strategy",
+     "rebalances",
+     "mean",
+     "std",
+     "se_mean",
+     "q01",
+     "q05",
+     "median",
+     "q95",
+     "q99",
+     "std_times_sqrt_n"
+    ],
+    "title": "HedgingRow",
+    "type": "object"
+   },
+   "HestonCalibrationIn": {
+    "additionalProperties": false,
+    "properties": {
+     "later_snapshot_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Optional later snapshot: no-refit and v0-only-refit evaluation",
+      "title": "Later Snapshot Id"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "snapshot_id": {
+      "title": "Snapshot Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "snapshot_id"
+    ],
+    "title": "HestonCalibrationIn",
+    "type": "object"
+   },
+   "HestonEngineIn": {
+    "additionalProperties": false,
+    "properties": {
+     "engine": {
+      "const": "heston_fourier",
+      "default": "heston_fourier",
+      "title": "Engine",
+      "type": "string"
+     },
+     "epsabs": {
+      "default": 1e-12,
+      "title": "Epsabs",
+      "type": "number"
+     },
+     "epsrel": {
+      "default": 1e-10,
+      "title": "Epsrel",
+      "type": "number"
+     },
+     "limit": {
+      "default": 1000,
+      "title": "Limit",
+      "type": "integer"
+     }
+    },
+    "title": "HestonEngineIn",
+    "type": "object"
+   },
+   "HestonModelIn": {
+    "additionalProperties": false,
+    "properties": {
+     "family": {
+      "const": "heston",
+      "title": "Family",
+      "type": "string"
+     },
+     "kappa": {
+      "description": "Mean-reversion speed per year",
+      "title": "Kappa",
+      "type": "number"
+     },
+     "rho": {
+      "description": "Spot/variance correlation, in (-1, 1)",
+      "title": "Rho",
+      "type": "number"
+     },
+     "sigma": {
+      "description": "Volatility of variance",
+      "title": "Sigma",
+      "type": "number"
+     },
+     "theta": {
+      "description": "Long-run variance",
+      "title": "Theta",
+      "type": "number"
+     },
+     "v0": {
+      "description": "Initial variance (0.04 = 20% vol squared)",
+      "title": "V0",
+      "type": "number"
+     }
+    },
+    "required": [
+     "family",
+     "v0",
+     "kappa",
+     "theta",
+     "sigma",
+     "rho"
+    ],
+    "title": "HestonModelIn",
+    "type": "object"
+   },
+   "Histogram": {
+    "properties": {
+     "counts": {
+      "items": {
+       "type": "integer"
+      },
+      "title": "Counts",
+      "type": "array"
+     },
+     "edges": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Edges",
+      "type": "array"
+     }
+    },
+    "required": [
+     "edges",
+     "counts"
+    ],
+    "title": "Histogram",
+    "type": "object"
+   },
    "IVOut": {
     "properties": {
      "bracket": {
@@ -1093,6 +1564,77 @@
     "title": "ImpliedVolResponse",
     "type": "object"
    },
+   "LSMEngineIn": {
+    "additionalProperties": false,
+    "properties": {
+     "antithetic": {
+      "default": true,
+      "title": "Antithetic",
+      "type": "boolean"
+     },
+     "basis_degree": {
+      "default": 3,
+      "title": "Basis Degree",
+      "type": "integer"
+     },
+     "confidence_level": {
+      "default": 0.95,
+      "title": "Confidence Level",
+      "type": "number"
+     },
+     "control_variate": {
+      "default": true,
+      "title": "Control Variate",
+      "type": "boolean"
+     },
+     "engine": {
+      "const": "lsm_american",
+      "default": "lsm_american",
+      "title": "Engine",
+      "type": "string"
+     },
+     "exercise_dates": {
+      "default": 50,
+      "title": "Exercise Dates",
+      "type": "integer"
+     },
+     "inner_paths": {
+      "default": 200,
+      "title": "Inner Paths",
+      "type": "integer"
+     },
+     "outer_paths": {
+      "default": 1000,
+      "title": "Outer Paths",
+      "type": "integer"
+     },
+     "paths": {
+      "default": 100000,
+      "description": "Pricing-set payoff evaluations",
+      "title": "Paths",
+      "type": "integer"
+     },
+     "regression_paths": {
+      "default": 50000,
+      "description": "Independent fitting set",
+      "title": "Regression Paths",
+      "type": "integer"
+     },
+     "seed": {
+      "default": 20260928,
+      "title": "Seed",
+      "type": "integer"
+     },
+     "upper_bound": {
+      "default": false,
+      "description": "Also compute the Andersen-Broadie dual upper bound",
+      "title": "Upper Bound",
+      "type": "boolean"
+     }
+    },
+    "title": "LSMEngineIn",
+    "type": "object"
+   },
    "LedgerEventOut": {
     "properties": {
      "hash": {
@@ -1206,7 +1748,16 @@
       "$ref": "#/components/schemas/MarketIn-Input"
      },
      "model": {
-      "$ref": "#/components/schemas/ModelIn"
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
      },
      "path_counts": {
       "items": {
@@ -2431,10 +2982,13 @@
       "$ref": "#/components/schemas/ContractIn-Input"
      },
      "engine": {
+      "description": "Defaults to bsm_analytic, or heston_fourier for a Heston model",
       "discriminator": {
        "mapping": {
         "bsm_analytic": "#/components/schemas/AnalyticEngineIn",
         "crr_tree": "#/components/schemas/CRREngineIn",
+        "heston_fourier": "#/components/schemas/HestonEngineIn",
+        "lsm_american": "#/components/schemas/LSMEngineIn",
         "mc_terminal_gbm": "#/components/schemas/MonteCarloEngineIn"
        },
        "propertyName": "engine"
@@ -2448,6 +3002,12 @@
        },
        {
         "$ref": "#/components/schemas/MonteCarloEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/LSMEngineIn"
        }
       ],
       "title": "Engine"
@@ -2463,7 +3023,16 @@
       "$ref": "#/components/schemas/MarketIn-Input"
      },
      "model": {
-      "$ref": "#/components/schemas/ModelIn"
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
      },
      "schema_version": {
       "const": "1",
@@ -2491,10 +3060,13 @@
       "$ref": "#/components/schemas/ContractIn-Output"
      },
      "engine": {
+      "description": "Defaults to bsm_analytic, or heston_fourier for a Heston model",
       "discriminator": {
        "mapping": {
         "bsm_analytic": "#/components/schemas/AnalyticEngineIn",
         "crr_tree": "#/components/schemas/CRREngineIn",
+        "heston_fourier": "#/components/schemas/HestonEngineIn",
+        "lsm_american": "#/components/schemas/LSMEngineIn",
         "mc_terminal_gbm": "#/components/schemas/MonteCarloEngineIn"
        },
        "propertyName": "engine"
@@ -2508,6 +3080,12 @@
        },
        {
         "$ref": "#/components/schemas/MonteCarloEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/LSMEngineIn"
        }
       ],
       "title": "Engine"
@@ -2523,7 +3101,16 @@
       "$ref": "#/components/schemas/MarketIn-Output"
      },
      "model": {
-      "$ref": "#/components/schemas/ModelIn"
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
      },
      "schema_version": {
       "const": "1",
@@ -2995,6 +3582,118 @@
     "title": "SettlementType",
     "type": "string"
    },
+   "SmilePoint": {
+    "properties": {
+     "implied_vol": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Implied Vol"
+     },
+     "k": {
+      "title": "K",
+      "type": "number"
+     },
+     "price": {
+      "title": "Price",
+      "type": "number"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     },
+     "strike": {
+      "title": "Strike",
+      "type": "number"
+     }
+    },
+    "required": [
+     "k",
+     "strike",
+     "price",
+     "implied_vol",
+     "status"
+    ],
+    "title": "SmilePoint",
+    "type": "object"
+   },
+   "SmileResponse": {
+    "properties": {
+     "atm_implied_vol": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Atm Implied Vol"
+     },
+     "engine": {
+      "title": "Engine",
+      "type": "string"
+     },
+     "forward": {
+      "title": "Forward",
+      "type": "number"
+     },
+     "model": {
+      "title": "Model",
+      "type": "string"
+     },
+     "note": {
+      "title": "Note",
+      "type": "string"
+     },
+     "points": {
+      "items": {
+       "$ref": "#/components/schemas/SmilePoint"
+      },
+      "title": "Points",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "skew": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "IV at k = -s/2 minus IV at k = +s/2",
+      "title": "Skew"
+     },
+     "time_to_expiry": {
+      "title": "Time To Expiry",
+      "type": "number"
+     }
+    },
+    "required": [
+     "model",
+     "engine",
+     "time_to_expiry",
+     "forward",
+     "points",
+     "atm_implied_vol",
+     "skew",
+     "note"
+    ],
+    "title": "SmileResponse",
+    "type": "object"
+   },
    "SurfaceFitIn": {
     "additionalProperties": false,
     "properties": {
@@ -3154,7 +3853,16 @@
       "$ref": "#/components/schemas/MarketIn-Input"
      },
      "model": {
-      "$ref": "#/components/schemas/ModelIn"
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
      },
      "schema_version": {
       "const": "1",
@@ -3360,6 +4068,54 @@
  },
  "openapi": "3.1.0",
  "paths": {
+  "/api/v1/analysis/hedging": {
+   "post": {
+    "operationId": "hedging_experiment_api_v1_analysis_hedging_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/HedgingIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HedgingResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Hedging Experiment"
+   }
+  },
   "/api/v1/compare": {
    "post": {
     "operationId": "compare_api_v1_compare_post",
@@ -3585,6 +4341,144 @@
      }
     },
     "summary": "Health"
+   }
+  },
+  "/api/v1/heston/calibrations": {
+   "get": {
+    "operationId": "heston_calibrations_api_v1_heston_calibrations_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Heston Calibrations Api V1 Heston Calibrations Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Heston Calibrations"
+   },
+   "post": {
+    "operationId": "heston_calibrate_api_v1_heston_calibrations_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/HestonCalibrationIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Heston Calibrate"
+   }
+  },
+  "/api/v1/heston/calibrations/{calibration_id}": {
+   "get": {
+    "operationId": "heston_calibration_api_v1_heston_calibrations__calibration_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "calibration_id",
+      "required": true,
+      "schema": {
+       "title": "Calibration Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Heston Calibration Api V1 Heston Calibrations  Calibration Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Heston Calibration"
    }
   },
   "/api/v1/implied-vol": {
@@ -4852,6 +5746,54 @@
      }
     },
     "summary": "Profile"
+   }
+  },
+  "/api/v1/visuals/smile": {
+   "post": {
+    "operationId": "smile_api_v1_visuals_smile_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PriceRequestIn-Input"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SmileResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Smile"
    }
   }
  }

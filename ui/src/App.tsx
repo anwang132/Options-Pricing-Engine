@@ -13,6 +13,7 @@ const CompareView = lazy(() => import("./views/CompareView").then((m) => ({ defa
 const ConvergenceView = lazy(() => import("./views/ConvergenceView").then((m) => ({ default: m.ConvergenceView })));
 const SurfaceView = lazy(() => import("./views/SurfaceView").then((m) => ({ default: m.SurfaceView })));
 const PortfolioView = lazy(() => import("./views/PortfolioView").then((m) => ({ default: m.PortfolioView })));
+const HedgingView = lazy(() => import("./views/HedgingView").then((m) => ({ default: m.HedgingView })));
 const PaperTradingView = lazy(() => import("./views/PaperTradingView").then((m) => ({ default: m.PaperTradingView })));
 
 const TABS = [
@@ -20,6 +21,7 @@ const TABS = [
   { id: "compare", label: "Compare engines" },
   { id: "convergence", label: "Convergence" },
   { id: "iv", label: "Implied volatility" },
+  { id: "hedging", label: "Hedging" },
   { id: "snapshots", label: "Market data" },
   { id: "surface", label: "Surface" },
   { id: "portfolio", label: "Portfolio" },
@@ -46,7 +48,7 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <h1>Options pricing &amp; validation workbench</h1>
-        <p>Black-Scholes-Merton pricing, validation, snapshots, SSVI surfaces and scenarios · offline, synthetic inputs</p>
+        <p>Black-Scholes and Heston pricing, validation, snapshots, SSVI surfaces, scenarios and paper trading · offline, synthetic inputs</p>
       </header>
       <main className="layout">
         {tab !== "snapshots" && tab !== "surface" ? (
@@ -84,6 +86,7 @@ export default function App() {
                 {tab === "compare" && <CompareView form={form} valid={valid} />}
                 {tab === "convergence" && <ConvergenceView form={form} valid={valid} />}
                 {tab === "iv" && <ImpliedVolView form={form} valid={valid} />}
+                {tab === "hedging" && <HedgingView form={form} valid={valid} />}
                 {tab === "snapshots" && <SnapshotsView onSnapshotsChanged={bump} />}
                 {tab === "surface" && <SurfaceView version={dataVersion} onFitsChanged={bump} />}
                 {tab === "portfolio" && <PortfolioView form={form} version={dataVersion} />}
