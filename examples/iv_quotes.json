@@ -1,0 +1,11 @@
+{
+  "schema_version": "1",
+  "contract": {
+    "underlying": "SYNTH", "currency": "USD", "strike": "100", "option_type": "call",
+    "exercise_style": "european", "expiry": "2027-03-29T20:00:00Z", "multiplier": "100"
+  },
+  "valuation": {"as_of": "2026-09-28T20:00:00Z"},
+  "market": {"spot": "100", "rate": "0.04", "dividend_yield": "0.01", "source": "synthetic"},
+  "bid": "6.40",
+  "ask": "6.60"
+}

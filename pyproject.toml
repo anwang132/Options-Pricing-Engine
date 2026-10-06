@@ -1,0 +1,85 @@
+[project]
+name = "options-engine"
+version = "0.1.0"
+description = "Reproducible options pricing and model-validation workbench"
+authors = [
+    { name = "Anthony Wang", email = "tonywang13245@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.5.3",
+    "scipy>=1.18.1",
+    "pydantic>=2.13",
+    "fastapi>=0.141.1",
+    "uvicorn>=0.54.0",
+    "matplotlib>=3.11.2",
+    "tzdata>=2025.2",
+]
+
+[project.scripts]
+options-engine = "options_engine.interfaces.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.28,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "hypothesis>=6.168.3",
+    "mypy>=2.3.1",
+    "pytest>=9.1.1",
+    "ruff>=0.16.9",
+    "scipy-stubs>=1.18.1.1",
+]
+# Independent reference implementations. Pinned exactly: fixture provenance
+# records these versions, and regenerating fixtures with other versions is a
+# deliberate, reviewed change.
+reference = [
+    "mpmath==1.4.1",
+    "quantlib==1.43",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF", "NPY", "PT", "C4", "RET"]
+ignore = ["N803", "N806", "RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PT018", "N802"]
+"scripts/**" = ["N813"]
+# Markdown report templates: long f-string table rows are clearer unwrapped.
+"src/options_engine/validation/report.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+files = ["src", "tests", "scripts"]
+
+[[tool.mypy.overrides]]
+module = ["QuantLib", "QuantLib.*", "mpmath", "mpmath.*", "matplotlib", "matplotlib.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+disallow_untyped_calls = false
+# Tests assert on Optional result fields directly; runtime asserts cover None.
+disable_error_code = ["operator", "union-attr", "index", "arg-type", "misc"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not statistical and not reference' --strict-markers"
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient` is deprecated"]
+markers = [
+    "statistical: slow Monte Carlo replication suites (run with -m statistical)",
+    "reference: requires the pinned reference group (QuantLib, mpmath)",
+]

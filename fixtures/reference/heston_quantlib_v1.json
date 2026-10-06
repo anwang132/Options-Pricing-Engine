@@ -1,0 +1,3616 @@
+{
+ "fixture": "heston_quantlib",
+ "fixture_version": 1,
+ "description": "QuantLib AnalyticHestonEngine (adaptive Gauss-Lobatto, relTolerance 1e-12) over the policy's Heston parameter sets, flat continuous curves, Actual365Fixed.",
+ "generated_at": "2026-09-29T17:41:34+00:00",
+ "generator": "scripts/generate_reference_fixtures.py",
+ "generator_sha256": "29caab70a0c202247717c69c3862af6d94edecb22f0c7e0a12cee164469f98da",
+ "policy_sha256": "e257e0c953f3b0711fd3ac363f8217689ba27f52abd5963247f5eb68084d4a81",
+ "libraries": {
+  "python": "3.13.14",
+  "mpmath": "1.4.1",
+  "QuantLib": "1.43"
+ },
+ "cases": [
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 40.07869036496605
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 40.415011985690164
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 40.95585286812058
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 43.285777617400136
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 20.141745713798752
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 21.248084497605145
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 22.83110056523826
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 27.814037830554568
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 2.5814434716606045
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 5.929664040321553
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 8.54225699307293
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 15.556991709083766
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.00020033453255541923
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.3275181782881693
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 1.47692402706013
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 7.322983904793525
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 7.624617723374977e-16
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.00025545130013066123
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.021408467869782
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 1.6415502514156755
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 2.638654884256674e-08
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.02154649552767568
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.17760150611427208
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 1.077095378823003
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.003964757874799022
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.5576674971876692
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 1.4617598742021127
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 3.883979297401998
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 2.384571898392203
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 4.942295529649086
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 6.581826973006948
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 9.905556881355759
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 19.744238143919706
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 19.043198157360713
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 18.92540467796431
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 19.950172782490082
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 49.65540188337048
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 48.27050816499019
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 46.58325512522921
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 41.68667468724908
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 39.970403691341865
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 39.875330883334726
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 39.915821034092716
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 40.65272680246821
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 19.964873408123335
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 20.43967071575811
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 21.359070750575185
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 24.314241126720827
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 2.454856761050027
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 5.284276642061069
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 7.277822388969468
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 12.221960874119526
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.00015948313505089885
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.2418520708085556
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 1.0444643166438021
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 4.966071776832349
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 9.65675289236912e-16
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.00016070803625827277
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.012009821605858246
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.8446172655745684
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 2.9565174904452973e-08
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.025106553506662216
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.21657228565677472
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 1.5595106794113462
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.004335192421082001
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 0.6393716093206918
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 1.7600724193272645
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 5.523286295978341
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 2.50418399142221
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 5.533902759014298
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 7.779074474909567
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 13.733267335691417
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 20.05935215958167
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 20.54140341115243
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 21.64596681977192
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 26.77963953071862
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 50.07399084555828
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 50.3745998834661
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 50.763887950516
+  },
+  {
+   "parameter_set": "typical_equity",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": -0.005,
+   "dividend_yield": 0.0,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 1.5,
+    "theta": 0.04,
+    "sigma": 0.3,
+    "rho": -0.7
+   },
+   "price": 53.11157695793241
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 40.080471732088995
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 40.949478866259454
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 42.15308045998461
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 44.61714173245627
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 20.305643276472594
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 22.82557695206485
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 24.662565516561838
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 28.411748031701336
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 3.690277228797538
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 7.107983062972436
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 8.879476965217972
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 13.575561903190897
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.00023632131404858543
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.12894406000532563
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.3954022318635923
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 2.5011565625426906
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 1.7411513572767383e-14
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.00021126022032632875
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.004740610350637597
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.05294384328750113
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.0017813935094891534
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.5560133760969702
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 1.3748290979782964
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 2.4084594938791315
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 0.16786232054864209
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 2.135159951647373
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 3.29322482552569
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 4.481689498548766
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 3.4934056555291364
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 6.120614552299969
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 6.9190469451519885
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 7.92412707546289
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 19.7442741307012
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 18.844624039077868
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 17.843882882767772
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 15.128345440239247
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 49.655401883370494
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 48.27046397391038
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 46.56658726771006
+  },
+  {
+   "parameter_set": "feller_violated_high_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.09,
+    "kappa": 0.5,
+    "theta": 0.04,
+    "sigma": 0.9,
+    "rho": -0.9
+   },
+   "price": 40.09806827912091
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 40.0786903385795
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 40.393733205062844
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 40.814617067069655
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 43.25062654879753
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 20.13778406483757
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 20.94479768962768
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 22.65103878615652
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 28.84753835598998
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 2.143504401849649
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 6.236341530801572
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 9.728548064816295
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 18.36372733525282
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 0.0012877606835831972
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 1.0264266812590297
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 3.4145867342301077
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 11.3999740830784
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 2.3306394021580557e-10
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 0.03993032062672189
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 0.5891077255396276
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 5.49290175346295
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": -7.084434153148163e-15
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 0.0002677149003552368
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 0.03636570506334596
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 1.041944310220395
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 3.1089136192847042e-06
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 0.25438068921020424
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 1.2816980951203745
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 4.917479822837407
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 1.946632828581248
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 5.248973020129104
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 7.768118044750312
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 12.712292507524811
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 19.745325570070733
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 19.742106660331572
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 20.863067385134286
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 24.02716296077496
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 49.65540188360354
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 48.31018303431678
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 47.15095438289906
+  },
+  {
+   "parameter_set": "positive_correlation_fast_reversion",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.02,
+    "kappa": 4.0,
+    "theta": 0.06,
+    "sigma": 0.2,
+    "rho": 0.3
+   },
+   "price": 45.53802618929635
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 40.07898403479028
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 40.647916297009154
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 41.493480878343355
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 44.140552187743
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 20.18444995327166
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 21.660632327155067
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 23.094880735963212
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 27.503931052667642
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 2.309577000229272
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 4.5691868475335236
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 6.439491948670616
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 12.417793349031282
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.006153754262767442
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.4854559880699017
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 1.14332050819361
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 3.8943519447922985
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 2.87563579963701e-06
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.08014628173187788
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.3660491557124514
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "call",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 1.6280462324182785
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.00029369621077773915
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.25445080684666926
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.7152295163370492
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 60.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 1.9318699491658604
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.046668997347708054
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 0.9702153267375899
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 1.7255400449270655
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 80.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 3.5738725195150707
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 2.1127054269608707
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 3.581818336861056
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 4.479061928604633
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 100.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 6.766358521303275
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 19.750191563649917
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 19.20113596714244
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 18.59180115909779
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 120.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 16.521540822488856
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 36,
+   "time": 0.09863013698630137,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 49.65540475900628
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 182,
+   "time": 0.4986301369863014,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 48.35039899542194
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 365,
+   "time": 1.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 46.92789581307188
+  },
+  {
+   "parameter_set": "slow_reversion_extreme_volvol",
+   "option_type": "put",
+   "spot": 100.0,
+   "strike": 150.0,
+   "days": 1095,
+   "time": 3.0,
+   "rate": 0.03,
+   "dividend_yield": 0.01,
+   "heston": {
+    "v0": 0.04,
+    "kappa": 0.1,
+    "theta": 0.25,
+    "sigma": 1.2,
+    "rho": -0.5
+   },
+   "price": 41.673170668251686
+  }
+ ]
+}

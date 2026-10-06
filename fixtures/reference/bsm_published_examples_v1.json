@@ -1,0 +1,28 @@
+{
+ "fixture": "bsm_published_examples",
+ "fixture_version": 1,
+ "description": "Worked example values as printed in a standard textbook (rounded to 2 decimals).",
+ "generated_at": "2026-09-29T17:41:33+00:00",
+ "generator": "scripts/generate_reference_fixtures.py",
+ "generator_sha256": "29caab70a0c202247717c69c3862af6d94edecb22f0c7e0a12cee164469f98da",
+ "policy_sha256": "e257e0c953f3b0711fd3ac363f8217689ba27f52abd5963247f5eb68084d4a81",
+ "libraries": {
+  "python": "3.13.14",
+  "mpmath": "1.4.1",
+  "QuantLib": "1.43"
+ },
+ "cases": [
+  {
+   "source": "J. C. Hull, Options, Futures, and Other Derivatives: Black-Scholes-Merton worked example (S0=42, K=40, r=10%, sigma=20%, T=0.5)",
+   "transcription_note": "values transcribed from the textbook example; edition/page not re-verified in this session",
+   "spot": 42.0,
+   "strike": 40.0,
+   "time": 0.5,
+   "vol": 0.2,
+   "rate": 0.1,
+   "dividend_yield": 0.0,
+   "call": "4.76",
+   "put": "0.81"
+  }
+ ]
+}

@@ -1,0 +1,2400 @@
+{
+ "report_version": "1",
+ "generated_at": "2026-09-29T01:31:03+00:00",
+ "quick": false,
+ "environment": {
+  "package_version": "0.1.0",
+  "python": "3.13.14",
+  "implementation": "CPython",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "blas": {
+   "name": "accelerate",
+   "version": "unknown"
+  },
+  "platform": "macOS-15.6.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "cpu": "Apple M4",
+  "logical_cpus": 10,
+  "thread_env": {
+   "OMP_NUM_THREADS": null,
+   "OPENBLAS_NUM_THREADS": null,
+   "MKL_NUM_THREADS": null,
+   "VECLIB_MAXIMUM_THREADS": null,
+   "NUMEXPR_NUM_THREADS": null
+  },
+  "uv_lock_sha256": "11e7e43e7ebd5339e1c3d57867cd8bea8db164de89eccbd06c44775aa784bc21",
+  "git": {
+   "commit": "0848255c56296d311328b703ef726cafa025aad4",
+   "dirty": true,
+   "dirty_state_sha256": "4e1a85a470e109e3244f47cb267be8fd224261dfb671965524a303b9b8a8c058",
+   "state_paths": [
+    "src",
+    "config",
+    "fixtures",
+    "scripts",
+    "tests",
+    "examples",
+    "pyproject.toml",
+    "uv.lock",
+    "ui/src",
+    "ui/package.json",
+    "ui/package-lock.json"
+   ],
+   "untracked_file_count": 118
+  }
+ },
+ "policy_sha256": "6e5ec2ff3d415618c5731b4050e058fbb1ee79997a9ae213edd4eb8abe834aee",
+ "fixture_sha256": {
+  "american_quantlib_fd_v1.json": "5cb85f75defac35737f82e37921fe3a2a68767aee48748ae92cc35f86967b9eb",
+  "bsm_european_mpmath_v1.json": "5007ca6582c90c32720731905f5e9a5ee38ff4d20aff01dcb3eb2f1ca176fef7",
+  "bsm_european_quantlib_v1.json": "f41109a72cf91cc3908ac78485e14affa33b5397a918187431bf83d1bc175645",
+  "bsm_published_examples_v1.json": "a2e3d3c7361e4447272c69cb46336ebfc46f40a735e36f96702c6edf36e9498f",
+  "normalized_black_grid_v1.json": "01095b4471dedd5f2c70e2833f5888c40d6ad9361fb2f81f251e60b42c8b6cfd"
+ },
+ "deterministic": [
+  {
+   "name": "bsm_price_vs_mpmath",
+   "description": "European BSM price vs independent 60-digit mpmath implementation, full stress matrix",
+   "passed": true,
+   "n_cases": 332,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 1.1368683772161603e-13,
+   "max_scaled_error": 0.003955246832667707,
+   "tolerance": {
+    "atol": 1e-12,
+    "rtol": 1e-11
+   },
+   "failures": [],
+   "details": {
+    "max_scaled_error_by_regime": {
+     "ordinary": 0.0013507429079986438,
+     "deep_itm_otm": 0.00011669497205147103,
+     "short_maturity": 0.003955246832667707,
+     "long_maturity": 0.00015861780112826033,
+     "low_vol": 0.000670925786679204,
+     "high_vol": 5.7332412890923484e-05,
+     "negative_rates": 0.0007638329018495544,
+     "high_yield": 0.00015119621452273959
+    }
+   }
+  },
+  {
+   "name": "normalized_black_vs_mpmath",
+   "description": "Normalised OTM Black value b(x, s) on a 70x55 log grid incl. near-ATM-forward (|x| >= 1e-14), tiny total vol and deep tails; relative tolerance only, values below 1e-290 (float64 underflow region) must be <= 1e-280",
+   "passed": true,
+   "n_cases": 3850,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 2.220446049250313e-16,
+   "max_scaled_error": 0.17778577138968454,
+   "tolerance": {
+    "rtol": 1e-11,
+    "underflow_floor": 1e-280
+   },
+   "failures": [],
+   "details": {
+    "fallback_evaluations": 1867
+   }
+  },
+  {
+   "name": "bsm_greeks_vs_mpmath",
+   "description": "Analytic Greeks vs 60-digit numerical derivatives of an independent mpmath price",
+   "passed": true,
+   "n_cases": 1992,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 4.547473508864641e-13,
+   "max_scaled_error": 6.267524941276142e-07,
+   "tolerance": {
+    "atol": 1e-09,
+    "rtol": 1e-08
+   },
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "bsm_price_vs_quantlib",
+   "description": "European price vs QuantLib 1.43 AnalyticEuropeanEngine",
+   "passed": true,
+   "n_cases": 480,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 3.552713678800501e-14,
+   "max_scaled_error": 0.00012843427652876722,
+   "tolerance": {
+    "atol": 1e-10,
+    "rtol": 1e-10
+   },
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "bsm_greeks_vs_quantlib",
+   "description": "Analytic Greeks vs QuantLib (delta, gamma, vega, theta, rho, dividend rho)",
+   "passed": true,
+   "n_cases": 2880,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 5.968558980384842e-13,
+   "max_scaled_error": 9.418801438721155e-06,
+   "tolerance": {
+    "atol": 1e-08,
+    "rtol": 1e-07
+   },
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "bsm_published_examples",
+   "description": "Textbook worked examples, compared at the printed rounding (half unit in last place)",
+   "passed": true,
+   "n_cases": 2,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 0.0014006270999084025,
+   "max_scaled_error": 0.2801254199816805,
+   "tolerance": {
+    "atol": "half unit in the last printed decimal",
+    "rtol": 0.0
+   },
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "identities_bsm_analytic",
+   "description": "C - P = D(F - K); D max(F-K,0) <= C <= D F; D max(K-F,0) <= P <= D K (European, continuous carry)",
+   "passed": true,
+   "n_cases": 498,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 1.4210854715202004e-14,
+   "max_scaled_error": 9.899705514834162e-05,
+   "tolerance": {
+    "atol": 1e-11,
+    "rtol": 1e-12
+   },
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "boundary_behaviour",
+   "description": "T=0, sigma=0 and payoff-kink handling",
+   "passed": true,
+   "n_cases": 8,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 1.7763568394002505e-14,
+   "max_scaled_error": 0.01576742752452952,
+   "tolerance": {},
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "greeks_fd_sweep",
+   "description": "Analytic Greeks vs central finite differences of the price over a bump-size sweep; the best bump must agree (truncation vs rounding trade-off)",
+   "passed": true,
+   "n_cases": 1548,
+   "n_failed": 0,
+   "n_excluded": 74,
+   "exclusions": {
+    "regime deep_itm_otm excluded by policy": 32,
+    "regime short_maturity excluded by policy": 18,
+    "regime low_vol excluded by policy": 24
+   },
+   "max_abs_error": 4.515959517448209e-08,
+   "max_scaled_error": 0.1378076461373991,
+   "tolerance": {
+    "atol": 1e-07,
+    "rtol": 1e-06
+   },
+   "failures": [],
+   "details": {
+    "example_curves": {
+     "case": "ordinary:call:S100:K100:T1:v0.2:r0.03:q0.02",
+     "curves": {
+      "delta": [
+       [
+        10.0,
+        0.005344727644534086
+       ],
+       [
+        1.0,
+        5.635878779264303e-05
+       ],
+       [
+        0.1,
+        5.638879874148017e-07
+       ],
+       [
+        0.01,
+        5.639020361769553e-09
+       ],
+       [
+        0.001,
+        5.35327338013758e-11
+       ],
+       [
+        9.999999999999999e-05,
+        2.6403323971635473e-11
+       ],
+       [
+        9.999999999999999e-06,
+        2.3068436050266428e-10
+       ]
+      ],
+      "gamma": [
+       [
+        10.0,
+        0.0003227389310354288
+       ],
+       [
+        1.0,
+        3.252206899374832e-06
+       ],
+       [
+        0.1,
+        3.252364337222313e-08
+       ],
+       [
+        0.01,
+        2.2592331477833127e-10
+       ],
+       [
+        0.001,
+        1.7910680015498226e-08
+       ],
+       [
+        9.999999999999999e-05,
+        7.090716195104485e-08
+       ],
+       [
+        9.999999999999999e-06,
+        0.00013546511968428807
+       ]
+      ],
+      "vega": [
+       [
+        0.020000000000000004,
+        0.0011290386899958094
+       ],
+       [
+        0.002,
+        1.124205446956239e-05
+       ],
+       [
+        0.0002,
+        1.1241592545729873e-07
+       ],
+       [
+        2e-05,
+        1.0516743031985243e-09
+       ],
+       [
+        2.0000000000000003e-06,
+        6.802665097893623e-10
+       ],
+       [
+        2e-07,
+        1.4447039120568661e-08
+       ],
+       [
+        2e-08,
+        4.7185892526613316e-07
+       ]
+      ],
+      "theta": [
+       [
+        0.1,
+        0.005145002782280805
+       ],
+       [
+        0.01,
+        5.1230349327191504e-05
+       ],
+       [
+        0.001,
+        5.122708790494812e-07
+       ],
+       [
+        0.0001,
+        5.161857608015907e-09
+       ],
+       [
+        1e-05,
+        1.153090956051983e-09
+       ],
+       [
+        1e-06,
+        4.8865222979088685e-09
+       ],
+       [
+        1e-07,
+        5.550961024169965e-08
+       ]
+      ],
+      "rho": [
+       [
+        0.1,
+        0.47388083168405615
+       ],
+       [
+        0.01,
+        0.004861186104761828
+       ],
+       [
+        0.001,
+        4.8624426611354465e-05
+       ],
+       [
+        0.0001,
+        4.862806974870182e-07
+       ],
+       [
+        1e-05,
+        5.785061318874796e-09
+       ],
+       [
+        1e-06,
+        4.896875793747313e-09
+       ],
+       [
+        1e-07,
+        2.976587154535082e-08
+       ]
+      ],
+      "dividend_rho": [
+       [
+        0.1,
+        0.4875694631459453
+       ],
+       [
+        0.01,
+        0.004941341680321898
+       ],
+       [
+        0.001,
+        4.9420129101918064e-05
+       ],
+       [
+        0.0001,
+        4.941582716355697e-07
+       ],
+       [
+        1e-05,
+        3.972594697643217e-09
+       ],
+       [
+        1e-06,
+        3.57691476438049e-09
+       ],
+       [
+        1e-07,
+        2.1340483158382995e-08
+       ]
+      ]
+     }
+    }
+   }
+  },
+  {
+   "name": "implied_vol_round_trip",
+   "description": "Price the stress matrix with mpmath references, invert, compare volatility; cases whose time value is below the bound tolerance must return at_lower_bound",
+   "passed": true,
+   "n_cases": 332,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 1.1484696527119809e-09,
+   "max_scaled_error": 3.8142499595055824e-06,
+   "tolerance": {
+    "vol_atol": 1e-09,
+    "safety": 10.0
+   },
+   "failures": [],
+   "details": {
+    "status_counts": {
+     "ok": 275,
+     "at_lower_bound": 57
+    }
+   }
+  },
+  {
+   "name": "implied_vol_failure_cases",
+   "description": "Adversarial quotes must yield the specific structured status",
+   "passed": true,
+   "n_cases": 10,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 0.0,
+   "max_scaled_error": 0.0,
+   "tolerance": {},
+   "failures": [],
+   "details": {
+    "cases": [
+     {
+      "case": "below_lower_bound",
+      "quote": 1.4788060396937273,
+      "expected": "below_lower_bound",
+      "got": "below_lower_bound",
+      "passed": true
+     },
+     {
+      "case": "at_lower_bound_exact",
+      "quote": 1.4888060396937273,
+      "expected": "at_lower_bound",
+      "got": "at_lower_bound",
+      "passed": true
+     },
+     {
+      "case": "at_upper_bound",
+      "quote": 99.99999999999999,
+      "expected": "at_or_above_upper_bound",
+      "got": "at_or_above_upper_bound",
+      "passed": true
+     },
+     {
+      "case": "above_upper_bound",
+      "quote": 100.99999999999999,
+      "expected": "at_or_above_upper_bound",
+      "got": "at_or_above_upper_bound",
+      "passed": true
+     },
+     {
+      "case": "needs_vol_above_cap",
+      "quote": 99.99999,
+      "expected": "no_bracket",
+      "got": "no_bracket",
+      "passed": true
+     },
+     {
+      "case": "negative_quote",
+      "quote": -1.0,
+      "expected": "invalid_quote",
+      "got": "invalid_quote",
+      "passed": true
+     },
+     {
+      "case": "nan_quote",
+      "quote": "nan",
+      "expected": "invalid_quote",
+      "got": "invalid_quote",
+      "passed": true
+     },
+     {
+      "case": "at_expiry",
+      "quote": 1.0,
+      "expected": "at_expiry",
+      "got": "at_expiry",
+      "passed": true
+     },
+     {
+      "case": "put_below_intrinsic",
+      "quote": 18.0,
+      "expected": "below_lower_bound",
+      "got": "below_lower_bound",
+      "passed": true
+     },
+     {
+      "case": "low_vega_unstable",
+      "quote": 0.01,
+      "expected": "unstable_low_vega",
+      "got": "unstable_low_vega",
+      "passed": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "crr_european_vs_bsm",
+   "description": "CRR European price vs closed-form BSM over the stress matrix at N and N+1 steps; bound k*S*sigma*sqrt(T)/N; invalid-probability setups must be rejected",
+   "passed": true,
+   "n_cases": 664,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 0.008373065192600393,
+   "max_scaled_error": 0.27019023090104455,
+   "tolerance": {
+    "k": 0.5,
+    "steps": [
+     2000,
+     2001
+    ]
+   },
+   "failures": [],
+   "details": {
+    "correctly_rejected_invalid_probability": 16
+   }
+  },
+  {
+   "name": "american_identities",
+   "description": "American >= European on the same tree; American call == European call when q = 0, r >= 0 and no dividends; American put >= intrinsic",
+   "passed": true,
+   "n_cases": 593,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 0.0,
+   "max_scaled_error": 0.0,
+   "tolerance": {},
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "crr_vs_quantlib_fd",
+   "description": "CRR (4000 steps) vs QuantLib 1.43 FdBlackScholesVanillaEngine (American; escrowed cash dividends) and AnalyticDividendEuropeanEngine (European with cash dividends)",
+   "passed": true,
+   "n_cases": 192,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 0.0016488369273801595,
+   "max_scaled_error": 0.10137674504158219,
+   "tolerance": {
+    "atol": 0.005,
+    "rtol": 0.001
+   },
+   "failures": [],
+   "details": {}
+  },
+  {
+   "name": "surface_calibration_gate",
+   "description": "SSVI fit on synthetic snapshots with known generating surface: held-out bid/ask containment, IV recovery vs truth, sampled static-arbitrage diagnostics, guarantee conditions",
+   "passed": true,
+   "n_cases": 8,
+   "n_failed": 0,
+   "n_excluded": 0,
+   "exclusions": {},
+   "max_abs_error": 0.00021634706236622891,
+   "max_scaled_error": 0.04326941247324578,
+   "tolerance": {
+    "min_holdout_bid_ask_containment": 0.9,
+    "max_abs_iv_error_vs_truth": 0.005,
+    "k_range_for_truth": [
+     -0.3,
+     0.2
+    ],
+    "require_no_sampled_violations": true,
+    "require_guarantee_conditions": true
+   },
+   "failures": [],
+   "details": {
+    "fits": [
+     {
+      "fixture": "synthetic_clean_day1.json",
+      "surface": {
+       "family": "ssvi_power_law",
+       "rho": -0.6503206312131282,
+       "eta": 1.103715474856059,
+       "gamma": 0.3989827429783033,
+       "expiries": [
+        0.0821917808219178,
+        0.16712328767123288,
+        0.2493150684931507,
+        0.4986301369863014,
+        0.9972602739726028
+       ],
+       "thetas": [
+        0.0029723754054746393,
+        0.006356653301351666,
+        0.009977878481860807,
+        0.02095969307453365,
+        0.04399532177347885
+       ],
+       "interpolation": "theta piecewise linear in t; theta(0)=0; linear extrapolation beyond the last expiry with the last segment's (non-negative) slope"
+      },
+      "in_sample": {
+       "n": 80,
+       "price_rmse": 0.2380762565198503,
+       "max_abs_price_error": 1.5984008020909073,
+       "weighted_residual_rms": 0.1320757924906777,
+       "max_abs_weighted_residual": 0.3128290928116293,
+       "bid_ask_containment": 1.0
+      },
+      "held_out": {
+       "n": 25,
+       "price_rmse": 0.1322090025154806,
+       "max_abs_price_error": 0.41444215712940036,
+       "weighted_residual_rms": 0.1362962660440047,
+       "max_abs_weighted_residual": 0.28348271540358433,
+       "bid_ask_containment": 1.0
+      },
+      "truth_recovery": {
+       "generating_surface": {
+        "family": "ssvi_power_law",
+        "rho": -0.65,
+        "eta": 1.1,
+        "gamma": 0.4,
+        "expiries": [
+         0.0821917808219178,
+         0.16712328767123288,
+         0.2493150684931507,
+         0.4986301369863014,
+         0.9972602739726028
+        ],
+        "thetas": [
+         0.0029671232876712327,
+         0.006354863013698631,
+         0.00997260273972603,
+         0.020954931506849312,
+         0.043979178082191775
+        ],
+        "interpolation": "theta piecewise linear in t; theta(0)=0; linear extrapolation beyond the last expiry with the last segment's (non-negative) slope"
+       },
+       "k_range": [
+        -0.3,
+        0.2
+       ],
+       "max_abs_iv_error_by_expiry": [
+        0.0002002178119554776,
+        0.000141001814438102,
+        6.389760232689001e-05,
+        2.3468285450356507e-05,
+        7.295768943288428e-05
+       ],
+       "max_abs_iv_error": 0.0002002178119554776,
+       "param_errors": {
+        "rho": -0.0003206312131281974,
+        "eta": 0.0037154748560588313,
+        "gamma": -0.0010172570216967491
+       }
+      },
+      "arbitrage": {
+       "grid": {
+        "k": [
+         -1.5,
+         1.5,
+         301
+        ],
+        "maturities": 65,
+        "t_range": [
+         0.02054794520547945,
+         1.4958904109589042
+        ]
+       },
+       "min_butterfly_density_g": 0.2650183685712503,
+       "calendar_violations": 0,
+       "strike_monotonicity_violations": 0,
+       "strike_convexity_violations": 0,
+       "sampled_violations_total": 0,
+       "statement": "no violations detected on the tested grid"
+      },
+      "exclusions": {
+       "wide_spread": 4,
+       "zero_bid": 16,
+       "quarantined_at_ingestion": 20,
+       "in_the_money_side_not_used": 125
+      }
+     },
+     {
+      "fixture": "synthetic_day1.json",
+      "surface": {
+       "family": "ssvi_power_law",
+       "rho": -0.6499230451322388,
+       "eta": 1.105915673597557,
+       "gamma": 0.39866649066566356,
+       "expiries": [
+        0.0821917808219178,
+        0.16712328767123288,
+        0.2493150684931507,
+        0.4986301369863014,
+        0.9972602739726028
+       ],
+       "thetas": [
+        0.00297217970129389,
+        0.006355982219616905,
+        0.009978274743956335,
+        0.020954206682404775,
+        0.04398149598707105
+       ],
+       "interpolation": "theta piecewise linear in t; theta(0)=0; linear extrapolation beyond the last expiry with the last segment's (non-negative) slope"
+      },
+      "in_sample": {
+       "n": 79,
+       "price_rmse": 0.2548298054122738,
+       "max_abs_price_error": 1.7126549294497408,
+       "weighted_residual_rms": 0.12984884510090156,
+       "max_abs_weighted_residual": 0.30858647377472903,
+       "bid_ask_containment": 1.0
+      },
+      "held_out": {
+       "n": 25,
+       "price_rmse": 0.11703423517972848,
+       "max_abs_price_error": 0.33845842002608606,
+       "weighted_residual_rms": 0.14799856679795997,
+       "max_abs_weighted_residual": 0.3701817735273387,
+       "bid_ask_containment": 1.0
+      },
+      "truth_recovery": {
+       "generating_surface": {
+        "family": "ssvi_power_law",
+        "rho": -0.65,
+        "eta": 1.1,
+        "gamma": 0.4,
+        "expiries": [
+         0.0821917808219178,
+         0.16712328767123288,
+         0.2493150684931507,
+         0.4986301369863014,
+         0.9972602739726028
+        ],
+        "thetas": [
+         0.0029671232876712327,
+         0.006354863013698631,
+         0.00997260273972603,
+         0.020954931506849312,
+         0.043979178082191775
+        ],
+        "interpolation": "theta piecewise linear in t; theta(0)=0; linear extrapolation beyond the last expiry with the last segment's (non-negative) slope"
+       },
+       "k_range": [
+        -0.3,
+        0.2
+       ],
+       "max_abs_iv_error_by_expiry": [
+        0.00021634706236622891,
+        0.00014582444457272858,
+        8.013346693588885e-05,
+        5.873027545538756e-06,
+        7.882546768944731e-05
+       ],
+       "max_abs_iv_error": 0.00021634706236622891,
+       "param_errors": {
+        "rho": 7.69548677612697e-05,
+        "eta": 0.0059156735975569585,
+        "gamma": -0.001333509334336458
+       }
+      },
+      "arbitrage": {
+       "grid": {
+        "k": [
+         -1.5,
+         1.5,
+         301
+        ],
+        "maturities": 65,
+        "t_range": [
+         0.02054794520547945,
+         1.4958904109589042
+        ]
+       },
+       "min_butterfly_density_g": 0.26502411659824404,
+       "calendar_violations": 0,
+       "strike_monotonicity_violations": 0,
+       "strike_convexity_violations": 0,
+       "sampled_violations_total": 0,
+       "statement": "no violations detected on the tested grid"
+      },
+      "exclusions": {
+       "crossed_quote": 1,
+       "duplicate_conflicting_quote": 3,
+       "expired_contract": 1,
+       "missing_bid_or_ask": 2,
+       "negative_price": 1,
+       "nonfinite_value": 1,
+       "stale_quote": 1,
+       "underlying_time_mismatch": 1,
+       "unparseable_field": 1,
+       "unsupported_deliverable": 1,
+       "wide_spread": 5,
+       "zero_bid": 16,
+       "quarantined_at_ingestion": 31,
+       "american_exercise_not_european_observation": 1,
+       "in_the_money_side_not_used": 119
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "statistical": {
+  "replications": 500,
+  "paths": 20000,
+  "master_seed": 918273645,
+  "confidence_level": 0.95,
+  "family_alpha": 0.01,
+  "n_tests": 60,
+  "alpha_per_test": 0.00016666666666666666,
+  "results": [
+   {
+    "case": "atm_call",
+    "method": "plain",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 8.827321225352115,
+    "mean_estimate": 8.83076450780651,
+    "empirical_sd": 0.1005811124090054,
+    "rms_reported_se": 0.09659091771910239,
+    "coverage_count": 473,
+    "coverage_rate": 0.946,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.7654929886289308,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0843270309593451,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0006068390540312975,
+    "variance_per_evaluation": 202.3312034686596,
+    "passed": true,
+    "efficiency_vs_plain": 1.0
+   },
+   {
+    "case": "atm_call",
+    "method": "antithetic",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 8.827321225352115,
+    "mean_estimate": 8.829888765592314,
+    "empirical_sd": 0.07272565193149277,
+    "rms_reported_se": 0.07371988595651834,
+    "coverage_count": 477,
+    "coverage_rate": 0.954,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.7894318386389724,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 0.9732085970858657,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.00048077331273816527,
+    "variance_per_evaluation": 105.78040897721277,
+    "passed": true,
+    "efficiency_vs_plain": 2.414297547512735
+   },
+   {
+    "case": "atm_call",
+    "method": "control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 8.827321225352115,
+    "mean_estimate": 8.8287214780646,
+    "empirical_sd": 0.03954886750672219,
+    "rms_reported_se": 0.04112637727411171,
+    "coverage_count": 479,
+    "coverage_rate": 0.958,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.791694035299687,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 0.9247560756200244,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0010548262470401824,
+    "variance_per_evaluation": 31.28225842128533,
+    "passed": true,
+    "efficiency_vs_plain": 3.720980210490225
+   },
+   {
+    "case": "atm_call",
+    "method": "antithetic_control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 8.827321225352115,
+    "mean_estimate": 8.828261985633347,
+    "empirical_sd": 0.020980527899063524,
+    "rms_reported_se": 0.02054896734869294,
+    "coverage_count": 469,
+    "coverage_rate": 0.938,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 1.002645857857453,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.042444203375602,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0008805231209844351,
+    "variance_per_evaluation": 8.803651018467658,
+    "passed": true,
+    "efficiency_vs_plain": 15.839184024195038
+   },
+   {
+    "case": "otm_call",
+    "method": "plain",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 1.3576701803001276,
+    "mean_estimate": 1.3573412548492068,
+    "empirical_sd": 0.04099665742749,
+    "rms_reported_se": 0.03967441356756794,
+    "coverage_count": 465,
+    "coverage_rate": 0.93,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": -0.17940478905865648,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.067765453561045,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0006065760520286858,
+    "variance_per_evaluation": 33.614518404539425,
+    "passed": true,
+    "efficiency_vs_plain": 1.0
+   },
+   {
+    "case": "otm_call",
+    "method": "antithetic",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 1.3576701803001276,
+    "mean_estimate": 1.3582810108776229,
+    "empirical_sd": 0.03958019137782954,
+    "rms_reported_se": 0.03852717972587959,
+    "coverage_count": 471,
+    "coverage_rate": 0.942,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.3450864299710913,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0554103329679876,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0004789506196975708,
+    "variance_per_evaluation": 31.331830990112238,
+    "passed": true,
+    "efficiency_vs_plain": 1.3587377414104218
+   },
+   {
+    "case": "otm_call",
+    "method": "control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 1.3576701803001276,
+    "mean_estimate": 1.356733099135953,
+    "empirical_sd": 0.03228513895413932,
+    "rms_reported_se": 0.03153083550112909,
+    "coverage_count": 466,
+    "coverage_rate": 0.932,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": -0.6490221976450791,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0484177432835224,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0010524716165382416,
+    "variance_per_evaluation": 20.846603945761686,
+    "passed": true,
+    "efficiency_vs_plain": 0.9293224862479285
+   },
+   {
+    "case": "otm_call",
+    "method": "antithetic_control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 1.3576701803001276,
+    "mean_estimate": 1.3575119802807445,
+    "empirical_sd": 0.01304793938247232,
+    "rms_reported_se": 0.012854089265065318,
+    "coverage_count": 475,
+    "coverage_rate": 0.95,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": -0.27111253893294845,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0303890570652936,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0008906071679666639,
+    "variance_per_evaluation": 3.404974442573442,
+    "passed": true,
+    "efficiency_vs_plain": 6.723758571603134
+   },
+   {
+    "case": "itm_put",
+    "method": "plain",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 20.081321028487846,
+    "mean_estimate": 20.077923230726523,
+    "empirical_sd": 0.12050788384316188,
+    "rms_reported_se": 0.11438920822137406,
+    "coverage_count": 461,
+    "coverage_rate": 0.922,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": -0.6304738350566157,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.1098411225214606,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0006057465418707579,
+    "variance_per_evaluation": 290.4430013671399,
+    "passed": true,
+    "efficiency_vs_plain": 1.0
+   },
+   {
+    "case": "itm_put",
+    "method": "antithetic",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 20.081321028487846,
+    "mean_estimate": 20.08089957386582,
+    "empirical_sd": 0.027838923773692504,
+    "rms_reported_se": 0.02698861642696724,
+    "coverage_count": 474,
+    "coverage_rate": 0.948,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": -0.33851925884048095,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0640049336111457,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0004904119912534953,
+    "variance_per_evaluation": 15.500113537549234,
+    "passed": true,
+    "efficiency_vs_plain": 23.14493147863261
+   },
+   {
+    "case": "itm_put",
+    "method": "control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 20.081321028487846,
+    "mean_estimate": 20.08028101795466,
+    "empirical_sd": 0.04203032981310842,
+    "rms_reported_se": 0.042038185205748674,
+    "coverage_count": 470,
+    "coverage_rate": 0.94,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": -0.5532990723264559,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 0.9996263083832168,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0011858754355926068,
+    "variance_per_evaluation": 35.330972483973405,
+    "passed": true,
+    "efficiency_vs_plain": 4.199109451342918
+   },
+   {
+    "case": "itm_put",
+    "method": "antithetic_control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 20.081321028487846,
+    "mean_estimate": 20.080321258424686,
+    "empirical_sd": 0.009265932595999995,
+    "rms_reported_se": 0.0090500971737635,
+    "coverage_count": 473,
+    "coverage_rate": 0.946,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": -2.4126592762614147,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0482666966814624,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0009812794346362353,
+    "variance_per_evaluation": 1.7171501374723042,
+    "passed": true,
+    "efficiency_vs_plain": 104.41211508583699
+   },
+   {
+    "case": "otm_put_negative_rate",
+    "method": "plain",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 7.7022683451283065,
+    "mean_estimate": 7.702907524834512,
+    "empirical_sd": 0.08663509771665956,
+    "rms_reported_se": 0.08525630047650024,
+    "coverage_count": 474,
+    "coverage_rate": 0.948,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.16497347040425556,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0326063047177456,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0006422388891223818,
+    "variance_per_evaluation": 150.112803127503,
+    "passed": true,
+    "efficiency_vs_plain": 1.0
+   },
+   {
+    "case": "otm_put_negative_rate",
+    "method": "antithetic",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 7.7022683451283065,
+    "mean_estimate": 7.7045542597673276,
+    "empirical_sd": 0.06466773949292927,
+    "rms_reported_se": 0.06556294652465561,
+    "coverage_count": 477,
+    "coverage_rate": 0.954,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.790418926607426,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 0.9728781139849093,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.000516553798224777,
+    "variance_per_evaluation": 83.63833062250728,
+    "passed": true,
+    "efficiency_vs_plain": 2.231482160422395
+   },
+   {
+    "case": "otm_put_negative_rate",
+    "method": "control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 7.7022683451283065,
+    "mean_estimate": 7.704223293363757,
+    "empirical_sd": 0.059418539392442425,
+    "rms_reported_se": 0.06154931091536243,
+    "coverage_count": 480,
+    "coverage_rate": 0.96,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.7356958268679434,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 0.9319606028863064,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0011656702214386315,
+    "variance_per_evaluation": 70.61125647062464,
+    "passed": true,
+    "efficiency_vs_plain": 1.171290694415686
+   },
+   {
+    "case": "otm_put_negative_rate",
+    "method": "antithetic_control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 7.7022683451283065,
+    "mean_estimate": 7.703096627957654,
+    "empirical_sd": 0.031577064702565695,
+    "rms_reported_se": 0.03076741255315417,
+    "coverage_count": 473,
+    "coverage_rate": 0.946,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.5865322595570407,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.0533229921305245,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0008803336594719439,
+    "variance_per_evaluation": 19.942220304600408,
+    "passed": true,
+    "efficiency_vs_plain": 5.491531984098113
+   },
+   {
+    "case": "deep_itm_call",
+    "method": "plain",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 41.789162043312395,
+    "mean_estimate": 41.792485445933885,
+    "empirical_sd": 0.1506988384269527,
+    "rms_reported_se": 0.1426114949061063,
+    "coverage_count": 469,
+    "coverage_rate": 0.938,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.4931261750802779,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.1166337366450743,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0006504037335980684,
+    "variance_per_evaluation": 454.2027980646559,
+    "passed": true,
+    "efficiency_vs_plain": 1.0
+   },
+   {
+    "case": "deep_itm_call",
+    "method": "antithetic",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 41.789162043312395,
+    "mean_estimate": 41.78993388227841,
+    "empirical_sd": 0.029473858758700622,
+    "rms_reported_se": 0.029436865766450875,
+    "coverage_count": 478,
+    "coverage_rate": 0.956,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.5855644521562995,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.002514957732997,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0005264251981861889,
+    "variance_per_evaluation": 17.374167002556668,
+    "passed": true,
+    "efficiency_vs_plain": 32.29923006654234
+   },
+   {
+    "case": "deep_itm_call",
+    "method": "control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 41.789162043312395,
+    "mean_estimate": 41.78924812183152,
+    "empirical_sd": 0.002107370754286845,
+    "rms_reported_se": 0.002195764922707619,
+    "coverage_count": 473,
+    "coverage_rate": 0.946,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 0.9133533801515376,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 0.921107273003215,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0012004448876250535,
+    "variance_per_evaluation": 0.08882022992047013,
+    "passed": true,
+    "efficiency_vs_plain": 2770.631142516508
+   },
+   {
+    "case": "deep_itm_call",
+    "method": "antithetic_control_variate",
+    "replications": 500,
+    "paths": 20000,
+    "reference": 41.789162043312395,
+    "mean_estimate": 41.789311806052545,
+    "empirical_sd": 0.0020345154115858576,
+    "rms_reported_se": 0.0019493032337915338,
+    "coverage_count": 466,
+    "coverage_rate": 0.932,
+    "coverage_region": [
+     455,
+     491
+    ],
+    "bias_z": 1.6459922867442682,
+    "bias_z_critical": 3.764823649533926,
+    "se_ratio": 1.089339273853322,
+    "se_ratio_region": [
+     0.7790491060102425,
+     1.2561244648966414
+    ],
+    "alpha_per_test": 0.00016666666666666666,
+    "passed_coverage": true,
+    "passed_bias": true,
+    "passed_se_calibration": true,
+    "mean_seconds": 0.0009064158017281443,
+    "variance_per_evaluation": 0.08278505919960744,
+    "passed": true,
+    "efficiency_vs_plain": 3936.8910768060236
+   }
+  ],
+  "all_passed": true
+ },
+ "convergence": {
+  "crr": {
+   "atm_call_S100_K100_T1_v0.2_r0.03_q0.01": [
+    {
+     "steps": 10,
+     "price": 8.633910918670969,
+     "error": -0.19341030668114634,
+     "bound": 1.0
+    },
+    {
+     "steps": 11,
+     "price": 9.002637969851762,
+     "error": 0.1753167444996464,
+     "bound": 0.9090909090909091
+    },
+    {
+     "steps": 12,
+     "price": 8.665731765084697,
+     "error": -0.16158946026741816,
+     "bound": 0.8333333333333334
+    },
+    {
+     "steps": 13,
+     "price": 8.975472731681696,
+     "error": 0.1481515063295813,
+     "bound": 0.7692307692307693
+    },
+    {
+     "steps": 16,
+     "price": 8.705754122039705,
+     "error": -0.12156710331240994,
+     "bound": 0.625
+    },
+    {
+     "steps": 17,
+     "price": 8.940411443002628,
+     "error": 0.11309021765051241,
+     "bound": 0.5882352941176471
+    },
+    {
+     "steps": 20,
+     "price": 8.729893403707958,
+     "error": -0.09742782164415686,
+     "bound": 0.5
+    },
+    {
+     "steps": 21,
+     "price": 8.91876425702999,
+     "error": 0.09144303167787449,
+     "bound": 0.47619047619047616
+    },
+    {
+     "steps": 24,
+     "price": 8.74603671559141,
+     "error": -0.08128450976070489,
+     "bound": 0.4166666666666667
+    },
+    {
+     "steps": 25,
+     "price": 8.904070913054191,
+     "error": 0.07674968770207613,
+     "bound": 0.4
+    },
+    {
+     "steps": 31,
+     "price": 8.889163748305586,
+     "error": 0.061842522953471146,
+     "bound": 0.3225806451612903
+    },
+    {
+     "steps": 32,
+     "price": 8.766270888420609,
+     "error": -0.06105033693150652,
+     "bound": 0.3125
+    },
+    {
+     "steps": 38,
+     "price": 8.775876319974163,
+     "error": -0.05144490537795221,
+     "bound": 0.2631578947368421
+    },
+    {
+     "steps": 39,
+     "price": 8.876441748976518,
+     "error": 0.04912052362440278,
+     "bound": 0.2564102564102564
+    },
+    {
+     "steps": 48,
+     "price": 8.78656437268873,
+     "error": -0.040756852663385246,
+     "bound": 0.20833333333333334
+    },
+    {
+     "steps": 49,
+     "price": 8.866393874727649,
+     "error": 0.039072649375533786,
+     "bound": 0.20408163265306123
+    },
+    {
+     "steps": 60,
+     "price": 8.794697925860042,
+     "error": -0.03262329949207299,
+     "bound": 0.16666666666666666
+    },
+    {
+     "steps": 61,
+     "price": 8.858692916332586,
+     "error": 0.0313716909804711,
+     "bound": 0.16393442622950818
+    },
+    {
+     "steps": 75,
+     "price": 8.85282776626077,
+     "error": 0.025506540908654785,
+     "bound": 0.13333333333333333
+    },
+    {
+     "steps": 76,
+     "price": 8.801554250521605,
+     "error": -0.025766974830510492,
+     "bound": 0.13157894736842105
+    },
+    {
+     "steps": 93,
+     "price": 8.847884778137711,
+     "error": 0.020563552785596073,
+     "bound": 0.10752688172043011
+    },
+    {
+     "steps": 94,
+     "price": 8.806481585955318,
+     "error": -0.020839639396797338,
+     "bound": 0.10638297872340426
+    },
+    {
+     "steps": 116,
+     "price": 8.81042956480184,
+     "error": -0.016891660550275134,
+     "bound": 0.08620689655172414
+    },
+    {
+     "steps": 117,
+     "price": 8.843662347312225,
+     "error": 0.016341121960110172,
+     "bound": 0.08547008547008547
+    },
+    {
+     "steps": 146,
+     "price": 8.813897422027933,
+     "error": -0.013423803324181804,
+     "bound": 0.0684931506849315
+    },
+    {
+     "steps": 147,
+     "price": 8.840324724709161,
+     "error": 0.013003499357045811,
+     "bound": 0.06802721088435375
+    },
+    {
+     "steps": 182,
+     "price": 8.816550826683343,
+     "error": -0.010770398668771719,
+     "bound": 0.054945054945054944
+    },
+    {
+     "steps": 183,
+     "price": 8.837764988460874,
+     "error": 0.01044376310875883,
+     "bound": 0.0546448087431694
+    },
+    {
+     "steps": 227,
+     "price": 8.835739577167583,
+     "error": 0.008418351815468128,
+     "bound": 0.04405286343612335
+    },
+    {
+     "steps": 228,
+     "price": 8.818722595134528,
+     "error": -0.008598630217587555,
+     "bound": 0.043859649122807015
+    },
+    {
+     "steps": 284,
+     "price": 8.820417345721388,
+     "error": -0.006903879630726806,
+     "bound": 0.035211267605633804
+    },
+    {
+     "steps": 285,
+     "price": 8.834025645782052,
+     "error": 0.00670442042993713,
+     "bound": 0.03508771929824561
+    },
+    {
+     "steps": 355,
+     "price": 8.832703198521882,
+     "error": 0.005381973169766852,
+     "bound": 0.028169014084507043
+    },
+    {
+     "steps": 356,
+     "price": 8.821813141671687,
+     "error": -0.005508083680428655,
+     "bound": 0.028089887640449437
+    },
+    {
+     "steps": 444,
+     "price": 8.822904524567429,
+     "error": -0.004416700784686256,
+     "bound": 0.02252252252252252
+    },
+    {
+     "steps": 445,
+     "price": 8.831614414208815,
+     "error": 0.0042931888566997145,
+     "bound": 0.02247191011235955
+    },
+    {
+     "steps": 555,
+     "price": 8.830763326521147,
+     "error": 0.003442101169031986,
+     "bound": 0.018018018018018018
+    },
+    {
+     "steps": 556,
+     "price": 8.823794018620507,
+     "error": -0.0035272067316078903,
+     "bound": 0.017985611510791366
+    },
+    {
+     "steps": 694,
+     "price": 8.82449526716724,
+     "error": -0.002825958184875077,
+     "bound": 0.01440922190201729
+    },
+    {
+     "steps": 695,
+     "price": 8.830069832848968,
+     "error": 0.0027486074968532392,
+     "bound": 0.014388489208633094
+    },
+    {
+     "steps": 867,
+     "price": 8.829524473493674,
+     "error": 0.002203248141558589,
+     "bound": 0.011534025374855825
+    },
+    {
+     "steps": 868,
+     "price": 8.825061679238722,
+     "error": -0.002259546113393185,
+     "bound": 0.01152073732718894
+    },
+    {
+     "steps": 1084,
+     "price": 8.825511868843586,
+     "error": -0.001809356508529092,
+     "bound": 0.00922509225092251
+    },
+    {
+     "steps": 1085,
+     "price": 8.829081743749649,
+     "error": 0.0017605183975337724,
+     "bound": 0.009216589861751152
+    },
+    {
+     "steps": 1355,
+     "price": 8.828730907935238,
+     "error": 0.0014096825831231286,
+     "bound": 0.007380073800738007
+    },
+    {
+     "steps": 1356,
+     "price": 8.825874774086497,
+     "error": -0.0014464512656182649,
+     "bound": 0.007374631268436578
+    },
+    {
+     "steps": 1694,
+     "price": 8.826163359913991,
+     "error": -0.0011578654381239062,
+     "bound": 0.0059031877213695395
+    },
+    {
+     "steps": 1695,
+     "price": 8.828448119497013,
+     "error": 0.0011268941448978609,
+     "bound": 0.0058997050147492625
+    },
+    {
+     "steps": 2118,
+     "price": 8.826395137975155,
+     "error": -0.0009260873769605382,
+     "bound": 0.004721435316336166
+    },
+    {
+     "steps": 2119,
+     "price": 8.828222621385532,
+     "error": 0.0009013960334165461,
+     "bound": 0.004719207173194903
+    },
+    {
+     "steps": 2647,
+     "price": 8.82804281067774,
+     "error": 0.0007215853256248295,
+     "bound": 0.0037778617302606727
+    },
+    {
+     "steps": 2648,
+     "price": 8.826580486585016,
+     "error": -0.0007407387670994581,
+     "bound": 0.0037764350453172208
+    }
+   ],
+   "otm_put_S100_K90_T0.5_v0.25_r0.03_q0": [
+    {
+     "steps": 10,
+     "price": 2.3717133333578175,
+     "error": -0.07921019268729301,
+     "bound": 0.8838834764831844
+    },
+    {
+     "steps": 11,
+     "price": 2.5596422290608865,
+     "error": 0.10871870301577591,
+     "bound": 0.8035304331665313
+    },
+    {
+     "steps": 12,
+     "price": 2.355823536706108,
+     "error": -0.09509998933900254,
+     "bound": 0.736569563735987
+    },
+    {
+     "steps": 13,
+     "price": 2.5425177966101615,
+     "error": 0.09159427056505098,
+     "bound": 0.6799103665255265
+    },
+    {
+     "steps": 16,
+     "price": 2.456274097411386,
+     "error": 0.005350571366275592,
+     "bound": 0.5524271728019903
+    },
+    {
+     "steps": 17,
+     "price": 2.49491312438842,
+     "error": 0.0439895983433094,
+     "bound": 0.5199314567548143
+    },
+    {
+     "steps": 20,
+     "price": 2.492102883728591,
+     "error": 0.041179357683480244,
+     "bound": 0.4419417382415922
+    },
+    {
+     "steps": 21,
+     "price": 2.4449089145386353,
+     "error": -0.006014611506475198,
+     "bound": 0.42089689356342114
+    },
+    {
+     "steps": 24,
+     "price": 2.499246234950497,
+     "error": 0.04832270890538659,
+     "bound": 0.3682847818679935
+    },
+    {
+     "steps": 25,
+     "price": 2.3981151059596746,
+     "error": -0.05280842008543596,
+     "bound": 0.3535533905932738
+    },
+    {
+     "steps": 31,
+     "price": 2.4474958030880876,
+     "error": -0.003427722957022983,
+     "bound": 0.2851237020913498
+    },
+    {
+     "steps": 32,
+     "price": 2.4789422217354935,
+     "error": 0.028018695690382955,
+     "bound": 0.27621358640099514
+    },
+    {
+     "steps": 38,
+     "price": 2.4527012109159143,
+     "error": 0.001777684870803764,
+     "bound": 0.2326009148639959
+    },
+    {
+     "steps": 39,
+     "price": 2.4750429752764487,
+     "error": 0.02411944923133813,
+     "bound": 0.22663678884184216
+    },
+    {
+     "steps": 48,
+     "price": 2.433502745091331,
+     "error": -0.017420780953779413,
+     "bound": 0.18414239093399676
+    },
+    {
+     "steps": 49,
+     "price": 2.474228527082991,
+     "error": 0.02330500103788058,
+     "bound": 0.18038438295575193
+    },
+    {
+     "steps": 60,
+     "price": 2.463497000907908,
+     "error": 0.012573474862797251,
+     "bound": 0.1473139127471974
+    },
+    {
+     "steps": 61,
+     "price": 2.452889151055602,
+     "error": 0.0019656250104915785,
+     "bound": 0.14489893057101383
+    },
+    {
+     "steps": 75,
+     "price": 2.4417259342308153,
+     "error": -0.009197591814295247,
+     "bound": 0.11785113019775792
+    },
+    {
+     "steps": 76,
+     "price": 2.465594003651109,
+     "error": 0.014670477605998489,
+     "bound": 0.11630045743199795
+    },
+    {
+     "steps": 93,
+     "price": 2.461604987738534,
+     "error": 0.010681461693423433,
+     "bound": 0.09504123403044994
+    },
+    {
+     "steps": 94,
+     "price": 2.447047346705666,
+     "error": -0.0038761793394446187,
+     "bound": 0.0940301570726792
+    },
+    {
+     "steps": 116,
+     "price": 2.4531739196537714,
+     "error": 0.002250393608660861,
+     "bound": 0.07619685142096418
+    },
+    {
+     "steps": 117,
+     "price": 2.4569419162622017,
+     "error": 0.006018390217091163,
+     "bound": 0.07554559628061405
+    },
+    {
+     "steps": 146,
+     "price": 2.4584662426157267,
+     "error": 0.007542716570616115,
+     "bound": 0.060539964142683866
+    },
+    {
+     "steps": 147,
+     "price": 2.4481136022950327,
+     "error": -0.002809923750077825,
+     "bound": 0.06012812765191731
+    },
+    {
+     "steps": 182,
+     "price": 2.444147602223282,
+     "error": -0.006775923821828567,
+     "bound": 0.04856502618039475
+    },
+    {
+     "steps": 183,
+     "price": 2.457392698992198,
+     "error": 0.006469172947087376,
+     "bound": 0.04829964352367128
+    },
+    {
+     "steps": 227,
+     "price": 2.4450771726567737,
+     "error": -0.0058463533883368335,
+     "bound": 0.038937598082959664
+    },
+    {
+     "steps": 228,
+     "price": 2.456135945372007,
+     "error": 0.0052124193268965335,
+     "bound": 0.03876681914399932
+    },
+    {
+     "steps": 284,
+     "price": 2.4466462880260593,
+     "error": -0.004277238019051222,
+     "bound": 0.031122657622647338
+    },
+    {
+     "steps": 285,
+     "price": 2.455073032764089,
+     "error": 0.004149506718978291,
+     "bound": 0.031013455315199456
+    },
+    {
+     "steps": 355,
+     "price": 2.4498288404597317,
+     "error": -0.0010946855853788406,
+     "bound": 0.02489812609811787
+    },
+    {
+     "steps": 356,
+     "price": 2.4538576811593584,
+     "error": 0.0029341551142478828,
+     "bound": 0.024828187541662484
+    },
+    {
+     "steps": 444,
+     "price": 2.4524031311610237,
+     "error": 0.001479605115913163,
+     "bound": 0.019907285506378027
+    },
+    {
+     "steps": 445,
+     "price": 2.451707288427809,
+     "error": 0.0007837623826985052,
+     "bound": 0.019862550033329988
+    },
+    {
+     "steps": 555,
+     "price": 2.4530597495100785,
+     "error": 0.002136223464968001,
+     "bound": 0.015925828405102423
+    },
+    {
+     "steps": 556,
+     "price": 2.4488258944252763,
+     "error": -0.002097631619834228,
+     "bound": 0.015897184828834253
+    },
+    {
+     "steps": 694,
+     "price": 2.450799724996108,
+     "error": -0.00012380104900255873,
+     "bound": 0.012736073148172686
+    },
+    {
+     "steps": 695,
+     "price": 2.4523035383461984,
+     "error": 0.0013800123010878629,
+     "bound": 0.012717747863067402
+    },
+    {
+     "steps": 867,
+     "price": 2.4516624418285016,
+     "error": 0.0007389157833910254,
+     "bound": 0.010194734446172832
+    },
+    {
+     "steps": 868,
+     "price": 2.4513636434708355,
+     "error": 0.0004401174257249174,
+     "bound": 0.010182989360405351
+    },
+    {
+     "steps": 1084,
+     "price": 2.451092377947588,
+     "error": 0.000168851902477396,
+     "bound": 0.008153906609623472
+    },
+    {
+     "steps": 1085,
+     "price": 2.4516804699095966,
+     "error": 0.0007569438644861037,
+     "bound": 0.00814639148832428
+    },
+    {
+     "steps": 1355,
+     "price": 2.451791508792075,
+     "error": 0.0008679827469646462,
+     "bound": 0.006523125287698778
+    },
+    {
+     "steps": 1356,
+     "price": 2.450065475001111,
+     "error": -0.0008580510439997191,
+     "bound": 0.006518314723327319
+    },
+    {
+     "steps": 1694,
+     "price": 2.4512773133623957,
+     "error": 0.0003537873172851924,
+     "bound": 0.005217730085496956
+    },
+    {
+     "steps": 1695,
+     "price": 2.4511829356118904,
+     "error": 0.0002594095667798335,
+     "bound": 0.005214651778661855
+    },
+    {
+     "steps": 2118,
+     "price": 2.4512602232510177,
+     "error": 0.0003366972059071216,
+     "bound": 0.0041731986613936945
+    },
+    {
+     "steps": 2119,
+     "price": 2.4510853218929736,
+     "error": 0.00016179584786302215,
+     "bound": 0.004171229242487893
+    },
+    {
+     "steps": 2647,
+     "price": 2.450938430044224,
+     "error": 1.490399911352469e-05,
+     "bound": 0.0033391895598155817
+    },
+    {
+     "steps": 2648,
+     "price": 2.4512615026813913,
+     "error": 0.0003379766362807679,
+     "bound": 0.0033379285365679173
+    }
+   ]
+  }
+ },
+ "benchmarks": {
+  "cold_start": {
+   "runs": 5,
+   "import_seconds_median": 0.16204574995208532,
+   "first_price_seconds_median": 0.00011795805767178535,
+   "note": "No JIT compilation is used; cold cost is module import plus first-call setup."
+  },
+  "bsm_scalar_price_and_greeks": {
+   "first_call_seconds": 0.00022574991453438997,
+   "repeats": 2000,
+   "median_seconds": 3.641692455857992e-05,
+   "p10_seconds": 3.616698086261749e-05,
+   "p90_seconds": 3.683299291878939e-05,
+   "min_seconds": 3.341690171509981e-05
+  },
+  "bsm_batch_price_1m": {
+   "first_call_seconds": 0.29314937500748783,
+   "repeats": 10,
+   "median_seconds": 0.27449595846701413,
+   "p10_seconds": 0.27218651252333076,
+   "p90_seconds": 0.28515583360567687,
+   "min_seconds": 0.27180300001055,
+   "options_per_call": 1000000,
+   "options_per_second_median": 3643040.8869577907
+  },
+  "crr_single_tree": [
+   {
+    "first_call_seconds": 0.0006274159532040358,
+    "repeats": 30,
+    "median_seconds": 0.00054424989502877,
+    "p10_seconds": 0.0005387954763136805,
+    "p90_seconds": 0.0005495667457580567,
+    "min_seconds": 0.0005360000068321824,
+    "steps": 500,
+    "exercise": "european",
+    "peak_bytes": 24632
+   },
+   {
+    "first_call_seconds": 0.0010612079640850425,
+    "repeats": 30,
+    "median_seconds": 0.0010532289743423462,
+    "p10_seconds": 0.001044645917136222,
+    "p90_seconds": 0.001061533100437373,
+    "min_seconds": 0.001041332958266139,
+    "steps": 500,
+    "exercise": "american",
+    "peak_bytes": 24632
+   },
+   {
+    "first_call_seconds": 0.0012106670765206218,
+    "repeats": 15,
+    "median_seconds": 0.0011847909772768617,
+    "p10_seconds": 0.0011806996073573828,
+    "p90_seconds": 0.0011959751835092902,
+    "min_seconds": 0.0011794170131906867,
+    "steps": 1000,
+    "exercise": "european",
+    "peak_bytes": 48632
+   },
+   {
+    "first_call_seconds": 0.0023872499587014318,
+    "repeats": 15,
+    "median_seconds": 0.0023573330836370587,
+    "p10_seconds": 0.0023448666092008353,
+    "p90_seconds": 0.0024538332130759955,
+    "min_seconds": 0.002341332961805165,
+    "steps": 1000,
+    "exercise": "american",
+    "peak_bytes": 48632
+   },
+   {
+    "first_call_seconds": 0.0026987920282408595,
+    "repeats": 7,
+    "median_seconds": 0.0026475839549675584,
+    "p10_seconds": 0.002630883129313588,
+    "p90_seconds": 0.0026602919911965727,
+    "min_seconds": 0.002622457919642329,
+    "steps": 2000,
+    "exercise": "european",
+    "peak_bytes": 96632
+   },
+   {
+    "first_call_seconds": 0.005501459003426135,
+    "repeats": 7,
+    "median_seconds": 0.005496957921423018,
+    "p10_seconds": 0.005454300041310489,
+    "p90_seconds": 0.0055942584061995145,
+    "min_seconds": 0.005451375036500394,
+    "steps": 2000,
+    "exercise": "american",
+    "peak_bytes": 96632
+   },
+   {
+    "first_call_seconds": 0.060358624905347824,
+    "repeats": 3,
+    "median_seconds": 0.05973295902367681,
+    "p10_seconds": 0.059691824647597966,
+    "p90_seconds": 0.059778325422666964,
+    "min_seconds": 0.05968154105357826,
+    "steps": 5000,
+    "exercise": "european",
+    "peak_bytes": 240632
+   },
+   {
+    "first_call_seconds": 0.0963009160477668,
+    "repeats": 3,
+    "median_seconds": 0.09618229209445417,
+    "p10_seconds": 0.09618225838057697,
+    "p90_seconds": 0.09619325841777027,
+    "min_seconds": 0.09618224995210767,
+    "steps": 5000,
+    "exercise": "american",
+    "peak_bytes": 240632
+   }
+  ],
+  "crr_engine_price_all_greeks_1000": {
+   "first_call_seconds": 0.009552083909511566,
+   "repeats": 30,
+   "median_seconds": 0.00944404152687639,
+   "p10_seconds": 0.009344758931547403,
+   "p90_seconds": 0.009546062408480794,
+   "min_seconds": 0.009309082990512252
+  },
+  "mc_terminal": [
+   {
+    "first_call_seconds": 0.004959041019901633,
+    "repeats": 10,
+    "median_seconds": 0.003578728996217251,
+    "p10_seconds": 0.0035336666158400478,
+    "p90_seconds": 0.003875349997542798,
+    "min_seconds": 0.003530665999278426,
+    "paths": 100000,
+    "chunk_size": 131072,
+    "peak_bytes": 8404330
+   },
+   {
+    "first_call_seconds": 0.03154366696253419,
+    "repeats": 10,
+    "median_seconds": 0.03021977050229907,
+    "p10_seconds": 0.029729033634066582,
+    "p90_seconds": 0.031018191878683866,
+    "min_seconds": 0.029573709005489945,
+    "paths": 1000000,
+    "chunk_size": 131072,
+    "peak_bytes": 13636328
+   }
+  ],
+  "release_b": {
+   "surface_fit_incl_ingest": {
+    "first_call_seconds": 0.26822858303785324,
+    "repeats": 5,
+    "median_seconds": 0.26790341606829315,
+    "p10_seconds": 0.2657312578521669,
+    "p90_seconds": 0.2685797416139394,
+    "min_seconds": 0.26523504103533924
+   },
+   "portfolio_typical": {
+    "first_call_seconds": 0.22891441697720438,
+    "repeats": 5,
+    "median_seconds": 0.2290330829564482,
+    "p10_seconds": 0.2278130088467151,
+    "p90_seconds": 0.229333433159627,
+    "min_seconds": 0.2276322920806706,
+    "description": "10 European + 5 American (400 steps) positions x 45 scenarios"
+   },
+   "portfolio_worst_case_seconds": {
+    "american_2000_steps_1000_repricings": 6.819245958933607,
+    "american_400_steps_10000_repricings": 8.446446499903686,
+    "european_50000_repricings": 1.9576928329188377
+   }
+  },
+  "improvements": [
+   {
+    "name": "exact_terminal_vs_time_stepped",
+    "comparison": "200000 paths each; identical terminal distribution => equal sampling accuracy per path",
+    "before": {
+     "method": "252-step log-Euler (exact increments)",
+     "first_call_seconds": 0.6957935410318896,
+     "repeats": 5,
+     "median_seconds": 0.6708665830083191,
+     "p10_seconds": 0.6705406582448632,
+     "p90_seconds": 0.6945883664302528,
+     "min_seconds": 0.6703248750418425
+    },
+    "after": {
+     "method": "exact terminal sampling (engine)",
+     "first_call_seconds": 0.008609459036961198,
+     "repeats": 20,
+     "median_seconds": 0.007289728964678943,
+     "p10_seconds": 0.007146470504812897,
+     "p90_seconds": 0.007807945529930293,
+     "min_seconds": 0.007131958031095564
+    },
+    "speedup_median": 92.02901592897092
+   },
+   {
+    "name": "variance_reduction_equal_accuracy",
+    "comparison": "path counts sized from an independent pilot so the 95% CI half-width is ~0.01; ATM call",
+    "before": {
+     "method": "plain",
+     "paths": 7349200,
+     "achieved_ci_half_width": 0.009870666868538379,
+     "first_call_seconds": 0.29270824999548495,
+     "repeats": 10,
+     "median_seconds": 0.28034789551747963,
+     "p10_seconds": 0.27570938335265965,
+     "p90_seconds": 0.3043174960883334,
+     "min_seconds": 0.27568695903755724
+    },
+    "after": {
+     "method": "antithetic + control variate",
+     "paths": 319698,
+     "achieved_ci_half_width": 0.010052320874519098,
+     "first_call_seconds": 0.010544624994508922,
+     "repeats": 10,
+     "median_seconds": 0.010666083020623773,
+     "p10_seconds": 0.010619392059743405,
+     "p90_seconds": 0.010715879418421536,
+     "min_seconds": 0.010614666971378028
+    },
+    "speedup_median": 26.28405338449019
+   }
+  ],
+  "error_vs_runtime": {
+   "crr_tree_abs_error": [
+    {
+     "setting": 50,
+     "seconds": 5.283299833536148e-05,
+     "abs_error": 0.03913087144987237
+    },
+    {
+     "setting": 100,
+     "seconds": 0.00010166701395064592,
+     "abs_error": 0.019590866155910547
+    },
+    {
+     "setting": 200,
+     "seconds": 0.0002087079919874668,
+     "abs_error": 0.009801676915913049
+    },
+    {
+     "setting": 400,
+     "seconds": 0.0004351659445092082,
+     "abs_error": 0.004902385118544572
+    },
+    {
+     "setting": 800,
+     "seconds": 0.000943250022828579,
+     "abs_error": 0.002451577432552199
+    },
+    {
+     "setting": 1600,
+     "seconds": 0.0020548750180751085,
+     "abs_error": 0.0012258847111858984
+    },
+    {
+     "setting": 3200,
+     "seconds": 0.004949582973495126,
+     "abs_error": 0.0006129663248479744
+    }
+   ],
+   "mc_plain_ci_half_width": [
+    {
+     "setting": 10000,
+     "seconds": 0.0003280829405412078,
+     "abs_error": 0.2703299072027539
+    },
+    {
+     "setting": 40000,
+     "seconds": 0.0016508749686181545,
+     "abs_error": 0.1343669204626904
+    },
+    {
+     "setting": 160000,
+     "seconds": 0.006018124986439943,
+     "abs_error": 0.06722278597758961
+    },
+    {
+     "setting": 640000,
+     "seconds": 0.024253457901068032,
+     "abs_error": 0.03345787153063801
+    }
+   ],
+   "mc_antithetic_cv_ci_half_width": [
+    {
+     "setting": 10000,
+     "seconds": 0.0009735829662531614,
+     "abs_error": 0.05551961770166348
+    },
+    {
+     "setting": 40000,
+     "seconds": 0.002061540959402919,
+     "abs_error": 0.028821133879481663
+    },
+    {
+     "setting": 160000,
+     "seconds": 0.005978832952678204,
+     "abs_error": 0.01428232510477067
+    },
+    {
+     "setting": 640000,
+     "seconds": 0.020445458008907735,
+     "abs_error": 0.00710898685235373
+    }
+   ]
+  }
+ },
+ "all_gates_passed": true,
+ "elapsed_seconds": 50.472716375021264,
+ "plots": [
+  "crr_convergence.svg",
+  "mc_coverage.svg",
+  "error_vs_runtime.svg",
+  "fd_sweep.svg"
+ ]
+}

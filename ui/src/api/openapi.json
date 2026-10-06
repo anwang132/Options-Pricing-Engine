@@ -1,0 +1,5800 @@
+{
+ "components": {
+  "schemas": {
+   "AnalyticEngineIn": {
+    "additionalProperties": false,
+    "properties": {
+     "engine": {
+      "const": "bsm_analytic",
+      "default": "bsm_analytic",
+      "title": "Engine",
+      "type": "string"
+     }
+    },
+    "title": "AnalyticEngineIn",
+    "type": "object"
+   },
+   "BoundaryPoint": {
+    "properties": {
+     "boundary_spot": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Boundary Spot"
+     },
+     "days_from_now": {
+      "title": "Days From Now",
+      "type": "number"
+     },
+     "time_years": {
+      "title": "Time Years",
+      "type": "number"
+     }
+    },
+    "required": [
+     "time_years",
+     "days_from_now",
+     "boundary_spot"
+    ],
+    "title": "BoundaryPoint",
+    "type": "object"
+   },
+   "CRREngineIn": {
+    "additionalProperties": false,
+    "properties": {
+     "allow_step_refinement": {
+      "default": false,
+      "title": "Allow Step Refinement",
+      "type": "boolean"
+     },
+     "engine": {
+      "const": "crr_tree",
+      "default": "crr_tree",
+      "title": "Engine",
+      "type": "string"
+     },
+     "odd_even_diagnostic": {
+      "default": true,
+      "title": "Odd Even Diagnostic",
+      "type": "boolean"
+     },
+     "steps": {
+      "default": 1000,
+      "title": "Steps",
+      "type": "integer"
+     }
+    },
+    "title": "CRREngineIn",
+    "type": "object"
+   },
+   "CompareRequestIn": {
+    "additionalProperties": false,
+    "properties": {
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Input"
+     },
+     "engines": {
+      "anyOf": [
+       {
+        "items": {
+         "discriminator": {
+          "mapping": {
+           "bsm_analytic": "#/components/schemas/AnalyticEngineIn",
+           "crr_tree": "#/components/schemas/CRREngineIn",
+           "heston_fourier": "#/components/schemas/HestonEngineIn",
+           "lsm_american": "#/components/schemas/LSMEngineIn",
+           "mc_terminal_gbm": "#/components/schemas/MonteCarloEngineIn"
+          },
+          "propertyName": "engine"
+         },
+         "oneOf": [
+          {
+           "$ref": "#/components/schemas/AnalyticEngineIn"
+          },
+          {
+           "$ref": "#/components/schemas/CRREngineIn"
+          },
+          {
+           "$ref": "#/components/schemas/MonteCarloEngineIn"
+          },
+          {
+           "$ref": "#/components/schemas/HestonEngineIn"
+          },
+          {
+           "$ref": "#/components/schemas/LSMEngineIn"
+          }
+         ]
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Engines to run; default = all compatible with default settings",
+      "title": "Engines"
+     },
+     "greeks": {
+      "items": {
+       "$ref": "#/components/schemas/GreekName"
+      },
+      "title": "Greeks",
+      "type": "array"
+     },
+     "market": {
+      "$ref": "#/components/schemas/MarketIn-Input"
+     },
+     "model": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "valuation": {
+      "$ref": "#/components/schemas/ValuationIn"
+     }
+    },
+    "required": [
+     "contract",
+     "valuation",
+     "market",
+     "model"
+    ],
+    "title": "CompareRequestIn",
+    "type": "object"
+   },
+   "CompareResponse": {
+    "properties": {
+     "comparisons": {
+      "items": {
+       "$ref": "#/components/schemas/EngineComparison"
+      },
+      "title": "Comparisons",
+      "type": "array"
+     },
+     "reference_engine": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reference Engine"
+     },
+     "reference_note": {
+      "title": "Reference Note",
+      "type": "string"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     }
+    },
+    "required": [
+     "reference_engine",
+     "reference_note",
+     "comparisons"
+    ],
+    "title": "CompareResponse",
+    "type": "object"
+   },
+   "ContractIn-Input": {
+    "additionalProperties": false,
+    "properties": {
+     "contract_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Contract Id"
+     },
+     "currency": {
+      "default": "USD",
+      "pattern": "^[A-Z]{3}$",
+      "title": "Currency",
+      "type": "string"
+     },
+     "deliverable": {
+      "default": "standard",
+      "title": "Deliverable",
+      "type": "string"
+     },
+     "exercise_style": {
+      "$ref": "#/components/schemas/ExerciseStyle",
+      "default": "european"
+     },
+     "expiry": {
+      "description": "Exercise/expiration timestamp (timezone required)",
+      "format": "date-time",
+      "title": "Expiry",
+      "type": "string"
+     },
+     "last_trade": {
+      "anyOf": [
+       {
+        "format": "date-time",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Trade"
+     },
+     "multiplier": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "description": "Units of underlying per contract",
+      "title": "Multiplier"
+     },
+     "option_type": {
+      "$ref": "#/components/schemas/OptionType"
+     },
+     "settlement_lag_days": {
+      "default": 0,
+      "title": "Settlement Lag Days",
+      "type": "integer"
+     },
+     "settlement_type": {
+      "$ref": "#/components/schemas/SettlementType",
+      "default": "physical"
+     },
+     "strike": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "description": "Strike per underlying unit",
+      "title": "Strike"
+     },
+     "underlying": {
+      "default": "DEMO",
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Underlying",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strike",
+     "option_type",
+     "expiry",
+     "multiplier"
+    ],
+    "title": "ContractIn",
+    "type": "object"
+   },
+   "ContractIn-Output": {
+    "additionalProperties": false,
+    "properties": {
+     "contract_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Contract Id"
+     },
+     "currency": {
+      "default": "USD",
+      "pattern": "^[A-Z]{3}$",
+      "title": "Currency",
+      "type": "string"
+     },
+     "deliverable": {
+      "default": "standard",
+      "title": "Deliverable",
+      "type": "string"
+     },
+     "exercise_style": {
+      "$ref": "#/components/schemas/ExerciseStyle",
+      "default": "european"
+     },
+     "expiry": {
+      "description": "Exercise/expiration timestamp (timezone required)",
+      "format": "date-time",
+      "title": "Expiry",
+      "type": "string"
+     },
+     "last_trade": {
+      "anyOf": [
+       {
+        "format": "date-time",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Trade"
+     },
+     "multiplier": {
+      "description": "Units of underlying per contract",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Multiplier",
+      "type": "string"
+     },
+     "option_type": {
+      "$ref": "#/components/schemas/OptionType"
+     },
+     "settlement_lag_days": {
+      "default": 0,
+      "title": "Settlement Lag Days",
+      "type": "integer"
+     },
+     "settlement_type": {
+      "$ref": "#/components/schemas/SettlementType",
+      "default": "physical"
+     },
+     "strike": {
+      "description": "Strike per underlying unit",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Strike",
+      "type": "string"
+     },
+     "underlying": {
+      "default": "DEMO",
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Underlying",
+      "type": "string"
+     }
+    },
+    "required": [
+     "strike",
+     "option_type",
+     "expiry",
+     "multiplier"
+    ],
+    "title": "ContractIn",
+    "type": "object"
+   },
+   "ControlVariate": {
+    "enum": [
+     "none",
+     "terminal_underlying"
+    ],
+    "title": "ControlVariate",
+    "type": "string"
+   },
+   "DayCount": {
+    "enum": [
+     "ACT/365F"
+    ],
+    "title": "DayCount",
+    "type": "string"
+   },
+   "DensitySlice": {
+    "properties": {
+     "T": {
+      "title": "T",
+      "type": "number"
+     },
+     "density": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Density",
+      "type": "array"
+     },
+     "mass_on_grid": {
+      "title": "Mass On Grid",
+      "type": "number"
+     },
+     "mean_forward_ratio_on_grid": {
+      "title": "Mean Forward Ratio On Grid",
+      "type": "number"
+     },
+     "min_density": {
+      "title": "Min Density",
+      "type": "number"
+     }
+    },
+    "required": [
+     "T",
+     "density",
+     "min_density",
+     "mass_on_grid",
+     "mean_forward_ratio_on_grid"
+    ],
+    "title": "DensitySlice",
+    "type": "object"
+   },
+   "DividendIn-Input": {
+    "additionalProperties": false,
+    "properties": {
+     "amount": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "title": "Amount"
+     },
+     "ex_date": {
+      "format": "date-time",
+      "title": "Ex Date",
+      "type": "string"
+     }
+    },
+    "required": [
+     "ex_date",
+     "amount"
+    ],
+    "title": "DividendIn",
+    "type": "object"
+   },
+   "DividendIn-Output": {
+    "additionalProperties": false,
+    "properties": {
+     "amount": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Amount",
+      "type": "string"
+     },
+     "ex_date": {
+      "format": "date-time",
+      "title": "Ex Date",
+      "type": "string"
+     }
+    },
+    "required": [
+     "ex_date",
+     "amount"
+    ],
+    "title": "DividendIn",
+    "type": "object"
+   },
+   "EngineComparison": {
+    "properties": {
+     "difference_vs_reference": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Difference Vs Reference"
+     },
+     "engine_id": {
+      "title": "Engine Id",
+      "type": "string"
+     },
+     "error": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ErrorOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "interpretation": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Interpretation"
+     },
+     "result": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/PriceResponse"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "engine_id",
+     "result",
+     "error",
+     "difference_vs_reference",
+     "interpretation"
+    ],
+    "title": "EngineComparison",
+    "type": "object"
+   },
+   "ErrorOut": {
+    "properties": {
+     "code": {
+      "title": "Code",
+      "type": "string"
+     },
+     "details": {
+      "additionalProperties": true,
+      "title": "Details",
+      "type": "object"
+     },
+     "message": {
+      "title": "Message",
+      "type": "string"
+     }
+    },
+    "required": [
+     "code",
+     "message"
+    ],
+    "title": "ErrorOut",
+    "type": "object"
+   },
+   "ErrorResponse": {
+    "properties": {
+     "error": {
+      "$ref": "#/components/schemas/ErrorOut"
+     }
+    },
+    "required": [
+     "error"
+    ],
+    "title": "ErrorResponse",
+    "type": "object"
+   },
+   "ExerciseBoundaryResponse": {
+    "properties": {
+     "current_spot": {
+      "title": "Current Spot",
+      "type": "number"
+     },
+     "exercise_optimal_now": {
+      "title": "Exercise Optimal Now",
+      "type": "boolean"
+     },
+     "exercise_region": {
+      "title": "Exercise Region",
+      "type": "string"
+     },
+     "gap_note": {
+      "title": "Gap Note",
+      "type": "string"
+     },
+     "no_node_exercised": {
+      "title": "No Node Exercised",
+      "type": "boolean"
+     },
+     "option_type": {
+      "title": "Option Type",
+      "type": "string"
+     },
+     "points": {
+      "items": {
+       "$ref": "#/components/schemas/BoundaryPoint"
+      },
+      "title": "Points",
+      "type": "array"
+     },
+     "price": {
+      "title": "Price",
+      "type": "number"
+     },
+     "resolution_note": {
+      "title": "Resolution Note",
+      "type": "string"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "steps": {
+      "title": "Steps",
+      "type": "integer"
+     },
+     "strike": {
+      "title": "Strike",
+      "type": "number"
+     }
+    },
+    "required": [
+     "points",
+     "strike",
+     "current_spot",
+     "option_type",
+     "steps",
+     "price",
+     "exercise_region",
+     "no_node_exercised",
+     "exercise_optimal_now",
+     "gap_note",
+     "resolution_note"
+    ],
+    "title": "ExerciseBoundaryResponse",
+    "type": "object"
+   },
+   "ExerciseStyle": {
+    "enum": [
+     "european",
+     "american"
+    ],
+    "title": "ExerciseStyle",
+    "type": "string"
+   },
+   "GreekName": {
+    "enum": [
+     "delta",
+     "gamma",
+     "vega",
+     "theta",
+     "rho",
+     "dividend_rho"
+    ],
+    "title": "GreekName",
+    "type": "string"
+   },
+   "GreekOut": {
+    "properties": {
+     "display_standard_error": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Display Standard Error"
+     },
+     "display_unit": {
+      "title": "Display Unit",
+      "type": "string"
+     },
+     "display_value": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Display Value"
+     },
+     "method": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Method"
+     },
+     "name": {
+      "$ref": "#/components/schemas/GreekName"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "standard_error": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Standard Error"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     },
+     "unit": {
+      "title": "Unit",
+      "type": "string"
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Value"
+     }
+    },
+    "required": [
+     "name",
+     "status",
+     "value",
+     "unit",
+     "display_value",
+     "display_unit",
+     "method",
+     "standard_error",
+     "display_standard_error",
+     "note"
+    ],
+    "title": "GreekOut",
+    "type": "object"
+   },
+   "HedgingIn": {
+    "additionalProperties": false,
+    "properties": {
+     "dividend_yield": {
+      "default": 0.01,
+      "title": "Dividend Yield",
+      "type": "number"
+     },
+     "drift": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Real-world drift; default the rate",
+      "title": "Drift"
+     },
+     "hedge_vol": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Black-Scholes hedge vol; default: the model's own (implied) vol",
+      "title": "Hedge Vol"
+     },
+     "heston": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Parameters of the Heston world"
+     },
+     "option_type": {
+      "$ref": "#/components/schemas/OptionType",
+      "default": "call"
+     },
+     "paths": {
+      "default": 5000,
+      "title": "Paths",
+      "type": "integer"
+     },
+     "rate": {
+      "default": 0.03,
+      "title": "Rate",
+      "type": "number"
+     },
+     "real_vol": {
+      "default": 0.2,
+      "description": "Volatility of the GBM world",
+      "title": "Real Vol",
+      "type": "number"
+     },
+     "rebalances": {
+      "items": {
+       "type": "integer"
+      },
+      "title": "Rebalances",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "seed": {
+      "default": 20260928,
+      "title": "Seed",
+      "type": "integer"
+     },
+     "spot": {
+      "default": 100.0,
+      "title": "Spot",
+      "type": "number"
+     },
+     "strategies": {
+      "items": {
+       "enum": [
+        "bsm",
+        "heston",
+        "heston_mv"
+       ],
+       "type": "string"
+      },
+      "title": "Strategies",
+      "type": "array"
+     },
+     "strike": {
+      "default": 100.0,
+      "title": "Strike",
+      "type": "number"
+     },
+     "time": {
+      "default": 0.5,
+      "description": "Years to expiry",
+      "title": "Time",
+      "type": "number"
+     },
+     "world": {
+      "default": "gbm",
+      "enum": [
+       "gbm",
+       "heston"
+      ],
+      "title": "World",
+      "type": "string"
+     }
+    },
+    "title": "HedgingIn",
+    "type": "object"
+   },
+   "HedgingResponse": {
+    "properties": {
+     "drift": {
+      "title": "Drift",
+      "type": "number"
+     },
+     "grid_steps": {
+      "title": "Grid Steps",
+      "type": "integer"
+     },
+     "hedge_vol": {
+      "title": "Hedge Vol",
+      "type": "number"
+     },
+     "histogram_rebalances": {
+      "title": "Histogram Rebalances",
+      "type": "integer"
+     },
+     "histograms": {
+      "additionalProperties": {
+       "$ref": "#/components/schemas/Histogram"
+      },
+      "title": "Histograms",
+      "type": "object"
+     },
+     "model_implied_vol": {
+      "title": "Model Implied Vol",
+      "type": "number"
+     },
+     "model_price": {
+      "title": "Model Price",
+      "type": "number"
+     },
+     "note": {
+      "default": "Short one option, hedged in the underlying at N equal intervals; P&L discounted to t = 0. leading_order_std is the Gamma-based prediction sqrt(0.5 sigma^4 dt^2 sum E[e^{-2rt} Gamma^2 S^4]) on the same paths (GBM world).",
+      "title": "Note",
+      "type": "string"
+     },
+     "paths": {
+      "title": "Paths",
+      "type": "integer"
+     },
+     "rows": {
+      "items": {
+       "$ref": "#/components/schemas/HedgingRow"
+      },
+      "title": "Rows",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "simulation": {
+      "additionalProperties": true,
+      "title": "Simulation",
+      "type": "object"
+     },
+     "slope": {
+      "additionalProperties": {
+       "anyOf": [
+        {
+         "type": "number"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "title": "Slope",
+      "type": "object"
+     },
+     "world": {
+      "title": "World",
+      "type": "string"
+     }
+    },
+    "required": [
+     "world",
+     "model_price",
+     "model_implied_vol",
+     "hedge_vol",
+     "drift",
+     "paths",
+     "grid_steps",
+     "simulation",
+     "rows",
+     "histograms",
+     "histogram_rebalances",
+     "slope"
+    ],
+    "title": "HedgingResponse",
+    "type": "object"
+   },
+   "HedgingRow": {
+    "properties": {
+     "leading_order_std": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Leading Order Std"
+     },
+     "mean": {
+      "title": "Mean",
+      "type": "number"
+     },
+     "median": {
+      "title": "Median",
+      "type": "number"
+     },
+     "pnl_minus_identity_mean": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pnl Minus Identity Mean"
+     },
+     "pnl_minus_identity_se": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Pnl Minus Identity Se"
+     },
+     "q01": {
+      "title": "Q01",
+      "type": "number"
+     },
+     "q05": {
+      "title": "Q05",
+      "type": "number"
+     },
+     "q95": {
+      "title": "Q95",
+      "type": "number"
+     },
+     "q99": {
+      "title": "Q99",
+      "type": "number"
+     },
+     "rebalances": {
+      "title": "Rebalances",
+      "type": "integer"
+     },
+     "se_mean": {
+      "title": "Se Mean",
+      "type": "number"
+     },
+     "std": {
+      "title": "Std",
+      "type": "number"
+     },
+     "std_times_sqrt_n": {
+      "title": "Std Times Sqrt N",
+      "type": "number"
+     },
+     "strategy": {
+      "title": "Strategy",
+      "type": "string"
+     },
+     "vol_mismatch_identity_mean": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vol Mismatch Identity Mean"
+     }
+    },
+    "required": [
+     "strategy",
+     "rebalances",
+     "mean",
+     "std",
+     "se_mean",
+     "q01",
+     "q05",
+     "median",
+     "q95",
+     "q99",
+     "std_times_sqrt_n"
+    ],
+    "title": "HedgingRow",
+    "type": "object"
+   },
+   "HestonCalibrationIn": {
+    "additionalProperties": false,
+    "properties": {
+     "later_snapshot_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Optional later snapshot: no-refit and v0-only-refit evaluation",
+      "title": "Later Snapshot Id"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "snapshot_id": {
+      "title": "Snapshot Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "snapshot_id"
+    ],
+    "title": "HestonCalibrationIn",
+    "type": "object"
+   },
+   "HestonEngineIn": {
+    "additionalProperties": false,
+    "properties": {
+     "engine": {
+      "const": "heston_fourier",
+      "default": "heston_fourier",
+      "title": "Engine",
+      "type": "string"
+     },
+     "epsabs": {
+      "default": 1e-12,
+      "title": "Epsabs",
+      "type": "number"
+     },
+     "epsrel": {
+      "default": 1e-10,
+      "title": "Epsrel",
+      "type": "number"
+     },
+     "limit": {
+      "default": 1000,
+      "title": "Limit",
+      "type": "integer"
+     }
+    },
+    "title": "HestonEngineIn",
+    "type": "object"
+   },
+   "HestonModelIn": {
+    "additionalProperties": false,
+    "properties": {
+     "family": {
+      "const": "heston",
+      "title": "Family",
+      "type": "string"
+     },
+     "kappa": {
+      "description": "Mean-reversion speed per year",
+      "title": "Kappa",
+      "type": "number"
+     },
+     "rho": {
+      "description": "Spot/variance correlation, in (-1, 1)",
+      "title": "Rho",
+      "type": "number"
+     },
+     "sigma": {
+      "description": "Volatility of variance",
+      "title": "Sigma",
+      "type": "number"
+     },
+     "theta": {
+      "description": "Long-run variance",
+      "title": "Theta",
+      "type": "number"
+     },
+     "v0": {
+      "description": "Initial variance (0.04 = 20% vol squared)",
+      "title": "V0",
+      "type": "number"
+     }
+    },
+    "required": [
+     "family",
+     "v0",
+     "kappa",
+     "theta",
+     "sigma",
+     "rho"
+    ],
+    "title": "HestonModelIn",
+    "type": "object"
+   },
+   "Histogram": {
+    "properties": {
+     "counts": {
+      "items": {
+       "type": "integer"
+      },
+      "title": "Counts",
+      "type": "array"
+     },
+     "edges": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Edges",
+      "type": "array"
+     }
+    },
+    "required": [
+     "edges",
+     "counts"
+    ],
+    "title": "Histogram",
+    "type": "object"
+   },
+   "IVOut": {
+    "properties": {
+     "bracket": {
+      "anyOf": [
+       {
+        "maxItems": 2,
+        "minItems": 2,
+        "prefixItems": [
+         {
+          "type": "number"
+         },
+         {
+          "type": "number"
+         }
+        ],
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Bracket"
+     },
+     "explanation": {
+      "title": "Explanation",
+      "type": "string"
+     },
+     "function_calls": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Function Calls"
+     },
+     "implied_vol": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Implied Vol"
+     },
+     "iterations": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Iterations"
+     },
+     "iv_interval": {
+      "anyOf": [
+       {
+        "maxItems": 2,
+        "minItems": 2,
+        "prefixItems": [
+         {
+          "anyOf": [
+           {
+            "type": "number"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         {
+          "anyOf": [
+           {
+            "type": "number"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         }
+        ],
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Iv Interval"
+     },
+     "label": {
+      "title": "Label",
+      "type": "string"
+     },
+     "lower_bound": {
+      "title": "Lower Bound",
+      "type": "number"
+     },
+     "notes": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+     },
+     "price_residual": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Price Residual"
+     },
+     "price_resolution": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Price Resolution"
+     },
+     "quote": {
+      "title": "Quote",
+      "type": "number"
+     },
+     "solved": {
+      "title": "Solved",
+      "type": "boolean"
+     },
+     "status": {
+      "$ref": "#/components/schemas/IVStatus"
+     },
+     "upper_bound": {
+      "title": "Upper Bound",
+      "type": "number"
+     },
+     "vega": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vega"
+     },
+     "vol_uncertainty": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vol Uncertainty"
+     }
+    },
+    "required": [
+     "label",
+     "quote",
+     "status",
+     "solved",
+     "implied_vol",
+     "explanation",
+     "lower_bound",
+     "upper_bound",
+     "price_resolution",
+     "price_residual",
+     "bracket",
+     "iterations",
+     "function_calls",
+     "vega",
+     "vol_uncertainty",
+     "iv_interval",
+     "notes"
+    ],
+    "title": "IVOut",
+    "type": "object"
+   },
+   "IVStatus": {
+    "enum": [
+     "ok",
+     "unstable_low_vega",
+     "below_lower_bound",
+     "at_lower_bound",
+     "at_or_above_upper_bound",
+     "no_bracket",
+     "max_iterations",
+     "residual_check_failed",
+     "at_expiry",
+     "invalid_quote"
+    ],
+    "title": "IVStatus",
+    "type": "string"
+   },
+   "ImpliedVolIn": {
+    "additionalProperties": false,
+    "properties": {
+     "ask": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ask"
+     },
+     "bid": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Bid"
+     },
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Input"
+     },
+     "market": {
+      "$ref": "#/components/schemas/MarketIn-Input"
+     },
+     "price_resolution": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Quote uncertainty used for stability checks; default is half the last supplied decimal place",
+      "title": "Price Resolution"
+     },
+     "quote": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Option price per underlying unit",
+      "title": "Quote"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "valuation": {
+      "$ref": "#/components/schemas/ValuationIn"
+     }
+    },
+    "required": [
+     "contract",
+     "valuation",
+     "market"
+    ],
+    "title": "ImpliedVolIn",
+    "type": "object"
+   },
+   "ImpliedVolResponse": {
+    "properties": {
+     "assumptions": {
+      "additionalProperties": true,
+      "title": "Assumptions",
+      "type": "object"
+     },
+     "discount_factor": {
+      "title": "Discount Factor",
+      "type": "number"
+     },
+     "forward": {
+      "title": "Forward",
+      "type": "number"
+     },
+     "results": {
+      "items": {
+       "$ref": "#/components/schemas/IVOut"
+      },
+      "title": "Results",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "time_to_expiry": {
+      "title": "Time To Expiry",
+      "type": "number"
+     }
+    },
+    "required": [
+     "time_to_expiry",
+     "forward",
+     "discount_factor",
+     "results",
+     "assumptions"
+    ],
+    "title": "ImpliedVolResponse",
+    "type": "object"
+   },
+   "LSMEngineIn": {
+    "additionalProperties": false,
+    "properties": {
+     "antithetic": {
+      "default": true,
+      "title": "Antithetic",
+      "type": "boolean"
+     },
+     "basis_degree": {
+      "default": 3,
+      "title": "Basis Degree",
+      "type": "integer"
+     },
+     "confidence_level": {
+      "default": 0.95,
+      "title": "Confidence Level",
+      "type": "number"
+     },
+     "control_variate": {
+      "default": true,
+      "title": "Control Variate",
+      "type": "boolean"
+     },
+     "engine": {
+      "const": "lsm_american",
+      "default": "lsm_american",
+      "title": "Engine",
+      "type": "string"
+     },
+     "exercise_dates": {
+      "default": 50,
+      "title": "Exercise Dates",
+      "type": "integer"
+     },
+     "inner_paths": {
+      "default": 200,
+      "title": "Inner Paths",
+      "type": "integer"
+     },
+     "outer_paths": {
+      "default": 1000,
+      "title": "Outer Paths",
+      "type": "integer"
+     },
+     "paths": {
+      "default": 100000,
+      "description": "Pricing-set payoff evaluations",
+      "title": "Paths",
+      "type": "integer"
+     },
+     "regression_paths": {
+      "default": 50000,
+      "description": "Independent fitting set",
+      "title": "Regression Paths",
+      "type": "integer"
+     },
+     "seed": {
+      "default": 20260928,
+      "title": "Seed",
+      "type": "integer"
+     },
+     "upper_bound": {
+      "default": false,
+      "description": "Also compute the Andersen-Broadie dual upper bound",
+      "title": "Upper Bound",
+      "type": "boolean"
+     }
+    },
+    "title": "LSMEngineIn",
+    "type": "object"
+   },
+   "LedgerEventOut": {
+    "properties": {
+     "hash": {
+      "title": "Hash",
+      "type": "string"
+     },
+     "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+     },
+     "prev_hash": {
+      "title": "Prev Hash",
+      "type": "string"
+     },
+     "recorded_at": {
+      "format": "date-time",
+      "title": "Recorded At",
+      "type": "string"
+     },
+     "seq": {
+      "title": "Seq",
+      "type": "integer"
+     },
+     "timestamp": {
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+     },
+     "type": {
+      "title": "Type",
+      "type": "string"
+     }
+    },
+    "required": [
+     "seq",
+     "type",
+     "timestamp",
+     "recorded_at",
+     "payload",
+     "prev_hash",
+     "hash"
+    ],
+    "title": "LedgerEventOut",
+    "type": "object"
+   },
+   "LedgerIntegrityOut": {
+    "properties": {
+     "events": {
+      "title": "Events",
+      "type": "integer"
+     },
+     "first_bad_seq": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "First Bad Seq"
+     },
+     "head_hash": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Head Hash"
+     },
+     "intact": {
+      "title": "Intact",
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "intact",
+     "events",
+     "first_bad_seq"
+    ],
+    "title": "LedgerIntegrityOut",
+    "type": "object"
+   },
+   "MCConvergenceIn": {
+    "additionalProperties": false,
+    "properties": {
+     "antithetic": {
+      "default": true,
+      "title": "Antithetic",
+      "type": "boolean"
+     },
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Input"
+     },
+     "control_variate": {
+      "$ref": "#/components/schemas/ControlVariate",
+      "default": "none"
+     },
+     "greeks": {
+      "items": {
+       "$ref": "#/components/schemas/GreekName"
+      },
+      "title": "Greeks",
+      "type": "array"
+     },
+     "market": {
+      "$ref": "#/components/schemas/MarketIn-Input"
+     },
+     "model": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
+     },
+     "path_counts": {
+      "items": {
+       "type": "integer"
+      },
+      "maxItems": 40,
+      "minItems": 1,
+      "title": "Path Counts",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "seed": {
+      "default": 20260928,
+      "title": "Seed",
+      "type": "integer"
+     },
+     "valuation": {
+      "$ref": "#/components/schemas/ValuationIn"
+     }
+    },
+    "required": [
+     "contract",
+     "valuation",
+     "market",
+     "model",
+     "path_counts"
+    ],
+    "title": "MCConvergenceIn",
+    "type": "object"
+   },
+   "MCConvergenceResponse": {
+    "properties": {
+     "confidence_level": {
+      "title": "Confidence Level",
+      "type": "number"
+     },
+     "elapsed_seconds": {
+      "title": "Elapsed Seconds",
+      "type": "number"
+     },
+     "note": {
+      "title": "Note",
+      "type": "string"
+     },
+     "points": {
+      "items": {
+       "$ref": "#/components/schemas/MCPoint"
+      },
+      "title": "Points",
+      "type": "array"
+     },
+     "reference_price": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reference Price"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "seed": {
+      "title": "Seed",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "reference_price",
+     "confidence_level",
+     "seed",
+     "note",
+     "points",
+     "elapsed_seconds"
+    ],
+    "title": "MCConvergenceResponse",
+    "type": "object"
+   },
+   "MCPoint": {
+    "properties": {
+     "ci_high": {
+      "title": "Ci High",
+      "type": "number"
+     },
+     "ci_low": {
+      "title": "Ci Low",
+      "type": "number"
+     },
+     "covers_reference": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Covers Reference"
+     },
+     "paths": {
+      "title": "Paths",
+      "type": "integer"
+     },
+     "price": {
+      "title": "Price",
+      "type": "number"
+     },
+     "standard_error": {
+      "title": "Standard Error",
+      "type": "number"
+     }
+    },
+    "required": [
+     "paths",
+     "price",
+     "standard_error",
+     "ci_low",
+     "ci_high",
+     "covers_reference"
+    ],
+    "title": "MCPoint",
+    "type": "object"
+   },
+   "MarkInputIn": {
+    "additionalProperties": false,
+    "properties": {
+     "observed_price": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Market price per unit",
+      "title": "Observed Price"
+     },
+     "volatility": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Model volatility (decimal)",
+      "title": "Volatility"
+     }
+    },
+    "title": "MarkInputIn",
+    "type": "object"
+   },
+   "MarkResultOut": {
+    "properties": {
+     "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+     },
+     "cash": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Cash",
+      "type": "string"
+     },
+     "equity": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Equity",
+      "type": "string"
+     },
+     "fees": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Fees",
+      "type": "string"
+     },
+     "net_realized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Net Realized",
+      "type": "string"
+     },
+     "positions": {
+      "items": {
+       "$ref": "#/components/schemas/MarkRowOut"
+      },
+      "title": "Positions",
+      "type": "array"
+     },
+     "positions_value": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Positions Value",
+      "type": "string"
+     },
+     "realized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Realized",
+      "type": "string"
+     },
+     "total_pnl": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Total Pnl",
+      "type": "string"
+     },
+     "unrealized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Unrealized",
+      "type": "string"
+     }
+    },
+    "required": [
+     "as_of",
+     "cash",
+     "positions_value",
+     "equity",
+     "realized",
+     "fees",
+     "net_realized",
+     "unrealized",
+     "total_pnl",
+     "positions"
+    ],
+    "title": "MarkResultOut",
+    "type": "object"
+   },
+   "MarkRowOut": {
+    "properties": {
+     "average_price": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Average Price",
+      "type": "string"
+     },
+     "key": {
+      "title": "Key",
+      "type": "string"
+     },
+     "mark_basis": {
+      "enum": [
+       "market",
+       "model",
+       "intrinsic"
+      ],
+      "title": "Mark Basis",
+      "type": "string"
+     },
+     "model_minus_market": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model Minus Market"
+     },
+     "model_price": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model Price"
+     },
+     "observed_price": {
+      "anyOf": [
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Observed Price"
+     },
+     "quantity": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Quantity",
+      "type": "string"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     },
+     "unrealized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Unrealized",
+      "type": "string"
+     },
+     "value": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Value",
+      "type": "string"
+     },
+     "volatility": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Volatility"
+     }
+    },
+    "required": [
+     "key",
+     "quantity",
+     "average_price",
+     "mark_basis",
+     "observed_price",
+     "model_price",
+     "model_minus_market",
+     "volatility",
+     "value",
+     "unrealized",
+     "status"
+    ],
+    "title": "MarkRowOut",
+    "type": "object"
+   },
+   "MarketIn-Input": {
+    "additionalProperties": false,
+    "properties": {
+     "cash_dividends": {
+      "items": {
+       "$ref": "#/components/schemas/DividendIn-Input"
+      },
+      "maxItems": 100,
+      "title": "Cash Dividends",
+      "type": "array"
+     },
+     "dividend_yield": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "default": "0",
+      "description": "Continuous annual yield",
+      "title": "Dividend Yield"
+     },
+     "observed_at": {
+      "anyOf": [
+       {
+        "format": "date-time",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Observed At"
+     },
+     "rate": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "description": "Continuously compounded annual rate, decimal (0.05 = 5%)",
+      "title": "Rate"
+     },
+     "snapshot_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Snapshot Id"
+     },
+     "source": {
+      "default": "user_input",
+      "title": "Source",
+      "type": "string"
+     },
+     "spot": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "title": "Spot"
+     }
+    },
+    "required": [
+     "spot",
+     "rate"
+    ],
+    "title": "MarketIn",
+    "type": "object"
+   },
+   "MarketIn-Output": {
+    "additionalProperties": false,
+    "properties": {
+     "cash_dividends": {
+      "items": {
+       "$ref": "#/components/schemas/DividendIn-Output"
+      },
+      "maxItems": 100,
+      "title": "Cash Dividends",
+      "type": "array"
+     },
+     "dividend_yield": {
+      "default": "0",
+      "description": "Continuous annual yield",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Dividend Yield",
+      "type": "string"
+     },
+     "observed_at": {
+      "anyOf": [
+       {
+        "format": "date-time",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Observed At"
+     },
+     "rate": {
+      "description": "Continuously compounded annual rate, decimal (0.05 = 5%)",
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Rate",
+      "type": "string"
+     },
+     "snapshot_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Snapshot Id"
+     },
+     "source": {
+      "default": "user_input",
+      "title": "Source",
+      "type": "string"
+     },
+     "spot": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Spot",
+      "type": "string"
+     }
+    },
+    "required": [
+     "spot",
+     "rate"
+    ],
+    "title": "MarketIn",
+    "type": "object"
+   },
+   "ModelIn": {
+    "additionalProperties": false,
+    "properties": {
+     "family": {
+      "const": "black_scholes",
+      "default": "black_scholes",
+      "title": "Family",
+      "type": "string"
+     },
+     "volatility": {
+      "description": "Decimal annualised volatility (0.2 = 20%)",
+      "title": "Volatility",
+      "type": "number"
+     }
+    },
+    "required": [
+     "volatility"
+    ],
+    "title": "ModelIn",
+    "type": "object"
+   },
+   "MonteCarloEngineIn": {
+    "additionalProperties": false,
+    "properties": {
+     "antithetic": {
+      "default": true,
+      "title": "Antithetic",
+      "type": "boolean"
+     },
+     "chunk_size": {
+      "default": 131072,
+      "title": "Chunk Size",
+      "type": "integer"
+     },
+     "confidence_level": {
+      "default": 0.95,
+      "title": "Confidence Level",
+      "type": "number"
+     },
+     "control_variate": {
+      "$ref": "#/components/schemas/ControlVariate",
+      "default": "none"
+     },
+     "engine": {
+      "const": "mc_terminal_gbm",
+      "default": "mc_terminal_gbm",
+      "title": "Engine",
+      "type": "string"
+     },
+     "paths": {
+      "default": 200000,
+      "title": "Paths",
+      "type": "integer"
+     },
+     "pilot_paths": {
+      "default": 20000,
+      "title": "Pilot Paths",
+      "type": "integer"
+     },
+     "seed": {
+      "default": 20260928,
+      "title": "Seed",
+      "type": "integer"
+     }
+    },
+    "title": "MonteCarloEngineIn",
+    "type": "object"
+   },
+   "OptionType": {
+    "enum": [
+     "call",
+     "put"
+    ],
+    "title": "OptionType",
+    "type": "string"
+   },
+   "PaperAccountIn": {
+    "additionalProperties": false,
+    "properties": {
+     "currency": {
+      "default": "USD",
+      "pattern": "^[A-Z]{3}$",
+      "title": "Currency",
+      "type": "string"
+     },
+     "name": {
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+     },
+     "opened_at": {
+      "format": "date-time",
+      "title": "Opened At",
+      "type": "string"
+     },
+     "starting_cash": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "title": "Starting Cash"
+     }
+    },
+    "required": [
+     "name",
+     "starting_cash",
+     "opened_at"
+    ],
+    "title": "PaperAccountIn",
+    "type": "object"
+   },
+   "PaperAccountRow": {
+    "properties": {
+     "account_id": {
+      "title": "Account Id",
+      "type": "string"
+     },
+     "currency": {
+      "title": "Currency",
+      "type": "string"
+     },
+     "name": {
+      "title": "Name",
+      "type": "string"
+     }
+    },
+    "required": [
+     "account_id",
+     "name",
+     "currency"
+    ],
+    "title": "PaperAccountRow",
+    "type": "object"
+   },
+   "PaperHistoryPoint": {
+    "properties": {
+     "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+     },
+     "cash": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Cash",
+      "type": "string"
+     },
+     "equity": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Equity",
+      "type": "string"
+     },
+     "net_realized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Net Realized",
+      "type": "string"
+     },
+     "total_pnl": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Total Pnl",
+      "type": "string"
+     },
+     "unrealized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Unrealized",
+      "type": "string"
+     }
+    },
+    "required": [
+     "as_of",
+     "equity",
+     "cash",
+     "net_realized",
+     "unrealized",
+     "total_pnl"
+    ],
+    "title": "PaperHistoryPoint",
+    "type": "object"
+   },
+   "PaperMarkIn": {
+    "additionalProperties": false,
+    "properties": {
+     "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+     },
+     "inputs": {
+      "additionalProperties": {
+       "$ref": "#/components/schemas/MarkInputIn"
+      },
+      "description": "Per position key",
+      "title": "Inputs",
+      "type": "object"
+     },
+     "markets": {
+      "additionalProperties": {
+       "$ref": "#/components/schemas/MarketIn-Input"
+      },
+      "description": "Market inputs per underlying",
+      "title": "Markets",
+      "type": "object"
+     }
+    },
+    "required": [
+     "as_of",
+     "markets"
+    ],
+    "title": "PaperMarkIn",
+    "type": "object"
+   },
+   "PaperPositionOut": {
+    "properties": {
+     "average_price": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Average Price",
+      "type": "string"
+     },
+     "contract": {
+      "additionalProperties": true,
+      "title": "Contract",
+      "type": "object"
+     },
+     "key": {
+      "title": "Key",
+      "type": "string"
+     },
+     "quantity": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Quantity",
+      "type": "string"
+     },
+     "realized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Realized",
+      "type": "string"
+     }
+    },
+    "required": [
+     "key",
+     "contract",
+     "quantity",
+     "average_price",
+     "realized"
+    ],
+    "title": "PaperPositionOut",
+    "type": "object"
+   },
+   "PaperSettlementIn": {
+    "additionalProperties": false,
+    "properties": {
+     "expiry": {
+      "format": "date-time",
+      "title": "Expiry",
+      "type": "string"
+     },
+     "settlement_price": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "title": "Settlement Price"
+     },
+     "timestamp": {
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+     },
+     "underlying": {
+      "title": "Underlying",
+      "type": "string"
+     }
+    },
+    "required": [
+     "underlying",
+     "expiry",
+     "settlement_price",
+     "timestamp"
+    ],
+    "title": "PaperSettlementIn",
+    "type": "object"
+   },
+   "PaperSummaryOut": {
+    "properties": {
+     "account_id": {
+      "title": "Account Id",
+      "type": "string"
+     },
+     "cash": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Cash",
+      "type": "string"
+     },
+     "currency": {
+      "title": "Currency",
+      "type": "string"
+     },
+     "fees": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Fees",
+      "type": "string"
+     },
+     "integrity": {
+      "$ref": "#/components/schemas/LedgerIntegrityOut"
+     },
+     "last_mark": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/MarkResultOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "name": {
+      "title": "Name",
+      "type": "string"
+     },
+     "net_realized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Net Realized",
+      "type": "string"
+     },
+     "notice": {
+      "default": "Paper trading only: no real money moves and nothing here is investment advice.",
+      "title": "Notice",
+      "type": "string"
+     },
+     "opened_at": {
+      "format": "date-time",
+      "title": "Opened At",
+      "type": "string"
+     },
+     "positions": {
+      "items": {
+       "$ref": "#/components/schemas/PaperPositionOut"
+      },
+      "title": "Positions",
+      "type": "array"
+     },
+     "realized": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Realized",
+      "type": "string"
+     },
+     "starting_cash": {
+      "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+      "title": "Starting Cash",
+      "type": "string"
+     },
+     "trades": {
+      "title": "Trades",
+      "type": "integer"
+     },
+     "voided_trades": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Voided Trades",
+      "type": "array"
+     }
+    },
+    "required": [
+     "account_id",
+     "name",
+     "currency",
+     "starting_cash",
+     "opened_at",
+     "cash",
+     "realized",
+     "fees",
+     "net_realized",
+     "trades",
+     "voided_trades",
+     "positions",
+     "last_mark",
+     "integrity"
+    ],
+    "title": "PaperSummaryOut",
+    "type": "object"
+   },
+   "PaperTradeIn": {
+    "additionalProperties": false,
+    "properties": {
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Input"
+     },
+     "fees": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "default": "0",
+      "title": "Fees"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 200,
+      "title": "Note",
+      "type": "string"
+     },
+     "price": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "description": "Fill price per underlying unit",
+      "title": "Price"
+     },
+     "quantity": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "description": "Whole number of contracts, positive",
+      "title": "Quantity"
+     },
+     "side": {
+      "enum": [
+       "buy",
+       "sell"
+      ],
+      "title": "Side",
+      "type": "string"
+     },
+     "timestamp": {
+      "description": "When the (paper) trade happened",
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+     }
+    },
+    "required": [
+     "timestamp",
+     "contract",
+     "side",
+     "quantity",
+     "price"
+    ],
+    "title": "PaperTradeIn",
+    "type": "object"
+   },
+   "PaperVoidIn": {
+    "additionalProperties": false,
+    "properties": {
+     "reason": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Reason",
+      "type": "string"
+     },
+     "timestamp": {
+      "format": "date-time",
+      "title": "Timestamp",
+      "type": "string"
+     },
+     "trade_id": {
+      "title": "Trade Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "trade_id",
+     "reason",
+     "timestamp"
+    ],
+    "title": "PaperVoidIn",
+    "type": "object"
+   },
+   "PortfolioRequestIn": {
+    "additionalProperties": false,
+    "properties": {
+     "fit_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Surface fit supplying volatilities",
+      "title": "Fit Id"
+     },
+     "include_position_detail": {
+      "default": false,
+      "title": "Include Position Detail",
+      "type": "boolean"
+     },
+     "market": {
+      "$ref": "#/components/schemas/MarketIn-Input"
+     },
+     "positions": {
+      "items": {
+       "$ref": "#/components/schemas/PositionIn"
+      },
+      "maxItems": 50,
+      "minItems": 1,
+      "title": "Positions",
+      "type": "array"
+     },
+     "scenarios": {
+      "$ref": "#/components/schemas/ScenarioIn"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "valuation": {
+      "$ref": "#/components/schemas/ValuationIn"
+     }
+    },
+    "required": [
+     "valuation",
+     "market",
+     "positions"
+    ],
+    "title": "PortfolioRequestIn",
+    "type": "object"
+   },
+   "PortfolioResponse": {
+    "properties": {
+     "assumptions": {
+      "additionalProperties": true,
+      "title": "Assumptions",
+      "type": "object"
+     },
+     "base": {
+      "additionalProperties": true,
+      "title": "Base",
+      "type": "object"
+     },
+     "engines_used": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "title": "Engines Used",
+      "type": "object"
+     },
+     "fit_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Fit Id"
+     },
+     "positions": {
+      "items": {
+       "$ref": "#/components/schemas/PositionOut"
+      },
+      "title": "Positions",
+      "type": "array"
+     },
+     "scenarios": {
+      "items": {
+       "$ref": "#/components/schemas/ScenarioOut"
+      },
+      "title": "Scenarios",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "work": {
+      "additionalProperties": {
+       "type": "integer"
+      },
+      "title": "Work",
+      "type": "object"
+     }
+    },
+    "required": [
+     "base",
+     "positions",
+     "scenarios",
+     "assumptions",
+     "engines_used",
+     "work"
+    ],
+    "title": "PortfolioResponse",
+    "type": "object"
+   },
+   "PositionIn": {
+    "additionalProperties": false,
+    "properties": {
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Input"
+     },
+     "position_id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Position Id",
+      "type": "string"
+     },
+     "quantity": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+        "type": "string"
+       }
+      ],
+      "description": "Signed number of contracts (negative = short)",
+      "title": "Quantity"
+     },
+     "volatility": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Flat model volatility (decimal); omit to read from fit_id",
+      "title": "Volatility"
+     }
+    },
+    "required": [
+     "position_id",
+     "contract",
+     "quantity"
+    ],
+    "title": "PositionIn",
+    "type": "object"
+   },
+   "PositionOut": {
+    "properties": {
+     "contract": {
+      "title": "Contract",
+      "type": "string"
+     },
+     "engine": {
+      "title": "Engine",
+      "type": "string"
+     },
+     "greeks_position_raw": {
+      "additionalProperties": {
+       "anyOf": [
+        {
+         "type": "number"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "title": "Greeks Position Raw",
+      "type": "object"
+     },
+     "multiplier": {
+      "title": "Multiplier",
+      "type": "string"
+     },
+     "position_id": {
+      "title": "Position Id",
+      "type": "string"
+     },
+     "price_per_unit": {
+      "title": "Price Per Unit",
+      "type": "number"
+     },
+     "quantity": {
+      "title": "Quantity",
+      "type": "string"
+     },
+     "value": {
+      "title": "Value",
+      "type": "number"
+     },
+     "volatility": {
+      "title": "Volatility",
+      "type": "number"
+     }
+    },
+    "required": [
+     "position_id",
+     "contract",
+     "quantity",
+     "multiplier",
+     "volatility",
+     "engine",
+     "price_per_unit",
+     "value",
+     "greeks_position_raw"
+    ],
+    "title": "PositionOut",
+    "type": "object"
+   },
+   "PriceRequestIn-Input": {
+    "additionalProperties": false,
+    "properties": {
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Input"
+     },
+     "engine": {
+      "description": "Defaults to bsm_analytic, or heston_fourier for a Heston model",
+      "discriminator": {
+       "mapping": {
+        "bsm_analytic": "#/components/schemas/AnalyticEngineIn",
+        "crr_tree": "#/components/schemas/CRREngineIn",
+        "heston_fourier": "#/components/schemas/HestonEngineIn",
+        "lsm_american": "#/components/schemas/LSMEngineIn",
+        "mc_terminal_gbm": "#/components/schemas/MonteCarloEngineIn"
+       },
+       "propertyName": "engine"
+      },
+      "oneOf": [
+       {
+        "$ref": "#/components/schemas/AnalyticEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/CRREngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/MonteCarloEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/LSMEngineIn"
+       }
+      ],
+      "title": "Engine"
+     },
+     "greeks": {
+      "items": {
+       "$ref": "#/components/schemas/GreekName"
+      },
+      "title": "Greeks",
+      "type": "array"
+     },
+     "market": {
+      "$ref": "#/components/schemas/MarketIn-Input"
+     },
+     "model": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "valuation": {
+      "$ref": "#/components/schemas/ValuationIn"
+     }
+    },
+    "required": [
+     "contract",
+     "valuation",
+     "market",
+     "model"
+    ],
+    "title": "PriceRequestIn",
+    "type": "object"
+   },
+   "PriceRequestIn-Output": {
+    "additionalProperties": false,
+    "properties": {
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Output"
+     },
+     "engine": {
+      "description": "Defaults to bsm_analytic, or heston_fourier for a Heston model",
+      "discriminator": {
+       "mapping": {
+        "bsm_analytic": "#/components/schemas/AnalyticEngineIn",
+        "crr_tree": "#/components/schemas/CRREngineIn",
+        "heston_fourier": "#/components/schemas/HestonEngineIn",
+        "lsm_american": "#/components/schemas/LSMEngineIn",
+        "mc_terminal_gbm": "#/components/schemas/MonteCarloEngineIn"
+       },
+       "propertyName": "engine"
+      },
+      "oneOf": [
+       {
+        "$ref": "#/components/schemas/AnalyticEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/CRREngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/MonteCarloEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonEngineIn"
+       },
+       {
+        "$ref": "#/components/schemas/LSMEngineIn"
+       }
+      ],
+      "title": "Engine"
+     },
+     "greeks": {
+      "items": {
+       "$ref": "#/components/schemas/GreekName"
+      },
+      "title": "Greeks",
+      "type": "array"
+     },
+     "market": {
+      "$ref": "#/components/schemas/MarketIn-Output"
+     },
+     "model": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "valuation": {
+      "$ref": "#/components/schemas/ValuationIn"
+     }
+    },
+    "required": [
+     "contract",
+     "valuation",
+     "market",
+     "model"
+    ],
+    "title": "PriceRequestIn",
+    "type": "object"
+   },
+   "PriceResponse": {
+    "properties": {
+     "assumptions": {
+      "additionalProperties": true,
+      "title": "Assumptions",
+      "type": "object"
+     },
+     "contract_value": {
+      "title": "Contract Value",
+      "type": "number"
+     },
+     "currency": {
+      "title": "Currency",
+      "type": "string"
+     },
+     "diagnostics": {
+      "additionalProperties": true,
+      "title": "Diagnostics",
+      "type": "object"
+     },
+     "dividend_treatment": {
+      "title": "Dividend Treatment",
+      "type": "string"
+     },
+     "elapsed_seconds": {
+      "title": "Elapsed Seconds",
+      "type": "number"
+     },
+     "engine_id": {
+      "title": "Engine Id",
+      "type": "string"
+     },
+     "engine_version": {
+      "title": "Engine Version",
+      "type": "string"
+     },
+     "greeks": {
+      "items": {
+       "$ref": "#/components/schemas/GreekOut"
+      },
+      "title": "Greeks",
+      "type": "array"
+     },
+     "model_family": {
+      "title": "Model Family",
+      "type": "string"
+     },
+     "multiplier": {
+      "title": "Multiplier",
+      "type": "string"
+     },
+     "package_version": {
+      "title": "Package Version",
+      "type": "string"
+     },
+     "price": {
+      "title": "Price",
+      "type": "number"
+     },
+     "quote_basis": {
+      "title": "Quote Basis",
+      "type": "string"
+     },
+     "request_hash": {
+      "title": "Request Hash",
+      "type": "string"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "time_to_expiry": {
+      "title": "Time To Expiry",
+      "type": "number"
+     },
+     "uncertainty": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/UncertaintyOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "warnings": {
+      "items": {
+       "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+     }
+    },
+    "required": [
+     "request_hash",
+     "engine_id",
+     "engine_version",
+     "package_version",
+     "model_family",
+     "currency",
+     "quote_basis",
+     "price",
+     "contract_value",
+     "multiplier",
+     "time_to_expiry",
+     "dividend_treatment",
+     "greeks",
+     "uncertainty",
+     "diagnostics",
+     "warnings",
+     "assumptions",
+     "elapsed_seconds"
+    ],
+    "title": "PriceResponse",
+    "type": "object"
+   },
+   "ProfileHorizon": {
+    "properties": {
+     "elapsed_fraction": {
+      "title": "Elapsed Fraction",
+      "type": "number"
+     },
+     "remaining_days": {
+      "title": "Remaining Days",
+      "type": "number"
+     },
+     "values": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Values",
+      "type": "array"
+     }
+    },
+    "required": [
+     "elapsed_fraction",
+     "remaining_days",
+     "values"
+    ],
+    "title": "ProfileHorizon",
+    "type": "object"
+   },
+   "ProfileResponse": {
+    "properties": {
+     "assumptions": {
+      "title": "Assumptions",
+      "type": "string"
+     },
+     "current_spot": {
+      "title": "Current Spot",
+      "type": "number"
+     },
+     "engine": {
+      "title": "Engine",
+      "type": "string"
+     },
+     "greek_units": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "title": "Greek Units",
+      "type": "object"
+     },
+     "greeks": {
+      "additionalProperties": {
+       "items": {
+        "anyOf": [
+         {
+          "type": "number"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "type": "array"
+      },
+      "title": "Greeks",
+      "type": "object"
+     },
+     "horizons": {
+      "items": {
+       "$ref": "#/components/schemas/ProfileHorizon"
+      },
+      "title": "Horizons",
+      "type": "array"
+     },
+     "payoff": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Payoff",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "spots": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Spots",
+      "type": "array"
+     },
+     "strike": {
+      "title": "Strike",
+      "type": "number"
+     }
+    },
+    "required": [
+     "spots",
+     "current_spot",
+     "strike",
+     "horizons",
+     "payoff",
+     "greeks",
+     "greek_units",
+     "engine",
+     "assumptions"
+    ],
+    "title": "ProfileResponse",
+    "type": "object"
+   },
+   "RunManifest-Input": {
+    "properties": {
+     "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+     },
+     "environment": {
+      "additionalProperties": true,
+      "title": "Environment",
+      "type": "object"
+     },
+     "kind": {
+      "const": "price",
+      "default": "price",
+      "title": "Kind",
+      "type": "string"
+     },
+     "manifest_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Manifest Version",
+      "type": "string"
+     },
+     "request": {
+      "$ref": "#/components/schemas/PriceRequestIn-Input"
+     },
+     "result": {
+      "$ref": "#/components/schemas/PriceResponse"
+     }
+    },
+    "required": [
+     "created_at",
+     "request",
+     "result",
+     "environment"
+    ],
+    "title": "RunManifest",
+    "type": "object"
+   },
+   "RunManifest-Output": {
+    "properties": {
+     "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+     },
+     "environment": {
+      "additionalProperties": true,
+      "title": "Environment",
+      "type": "object"
+     },
+     "kind": {
+      "const": "price",
+      "default": "price",
+      "title": "Kind",
+      "type": "string"
+     },
+     "manifest_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Manifest Version",
+      "type": "string"
+     },
+     "request": {
+      "$ref": "#/components/schemas/PriceRequestIn-Output"
+     },
+     "result": {
+      "$ref": "#/components/schemas/PriceResponse"
+     }
+    },
+    "required": [
+     "created_at",
+     "request",
+     "result",
+     "environment"
+    ],
+    "title": "RunManifest",
+    "type": "object"
+   },
+   "ScenarioIn": {
+    "additionalProperties": false,
+    "properties": {
+     "american_steps": {
+      "default": 400,
+      "title": "American Steps",
+      "type": "integer"
+     },
+     "rate_shocks_bp": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Rate Shocks Bp",
+      "type": "array"
+     },
+     "spot_shocks_pct": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Spot Shocks Pct",
+      "type": "array"
+     },
+     "surface_dynamics": {
+      "default": "sticky_strike",
+      "enum": [
+       "sticky_strike",
+       "sticky_moneyness"
+      ],
+      "title": "Surface Dynamics",
+      "type": "string"
+     },
+     "time_roll_days": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Time Roll Days",
+      "type": "array"
+     },
+     "vol_shocks_pts": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Vol Shocks Pts",
+      "type": "array"
+     }
+    },
+    "title": "ScenarioIn",
+    "type": "object"
+   },
+   "ScenarioOut": {
+    "properties": {
+     "approx_pnl": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Approx Pnl"
+     },
+     "pnl": {
+      "title": "Pnl",
+      "type": "number"
+     },
+     "position_values": {
+      "anyOf": [
+       {
+        "additionalProperties": {
+         "type": "number"
+        },
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Position Values"
+     },
+     "positions_settled": {
+      "title": "Positions Settled",
+      "type": "integer"
+     },
+     "rate_shock_bp": {
+      "title": "Rate Shock Bp",
+      "type": "number"
+     },
+     "spot": {
+      "title": "Spot",
+      "type": "number"
+     },
+     "spot_shock_pct": {
+      "title": "Spot Shock Pct",
+      "type": "number"
+     },
+     "time_roll_days": {
+      "title": "Time Roll Days",
+      "type": "number"
+     },
+     "unexplained": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Unexplained"
+     },
+     "value": {
+      "title": "Value",
+      "type": "number"
+     },
+     "vol_shock_pts": {
+      "title": "Vol Shock Pts",
+      "type": "number"
+     }
+    },
+    "required": [
+     "spot_shock_pct",
+     "vol_shock_pts",
+     "rate_shock_bp",
+     "time_roll_days",
+     "spot",
+     "value",
+     "pnl",
+     "approx_pnl",
+     "unexplained",
+     "positions_settled"
+    ],
+    "title": "ScenarioOut",
+    "type": "object"
+   },
+   "SettlementType": {
+    "enum": [
+     "physical",
+     "cash"
+    ],
+    "title": "SettlementType",
+    "type": "string"
+   },
+   "SmilePoint": {
+    "properties": {
+     "implied_vol": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Implied Vol"
+     },
+     "k": {
+      "title": "K",
+      "type": "number"
+     },
+     "price": {
+      "title": "Price",
+      "type": "number"
+     },
+     "status": {
+      "title": "Status",
+      "type": "string"
+     },
+     "strike": {
+      "title": "Strike",
+      "type": "number"
+     }
+    },
+    "required": [
+     "k",
+     "strike",
+     "price",
+     "implied_vol",
+     "status"
+    ],
+    "title": "SmilePoint",
+    "type": "object"
+   },
+   "SmileResponse": {
+    "properties": {
+     "atm_implied_vol": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Atm Implied Vol"
+     },
+     "engine": {
+      "title": "Engine",
+      "type": "string"
+     },
+     "forward": {
+      "title": "Forward",
+      "type": "number"
+     },
+     "model": {
+      "title": "Model",
+      "type": "string"
+     },
+     "note": {
+      "title": "Note",
+      "type": "string"
+     },
+     "points": {
+      "items": {
+       "$ref": "#/components/schemas/SmilePoint"
+      },
+      "title": "Points",
+      "type": "array"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "skew": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "IV at k = -s/2 minus IV at k = +s/2",
+      "title": "Skew"
+     },
+     "time_to_expiry": {
+      "title": "Time To Expiry",
+      "type": "number"
+     }
+    },
+    "required": [
+     "model",
+     "engine",
+     "time_to_expiry",
+     "forward",
+     "points",
+     "atm_implied_vol",
+     "skew",
+     "note"
+    ],
+    "title": "SmileResponse",
+    "type": "object"
+   },
+   "SurfaceFitIn": {
+    "additionalProperties": false,
+    "properties": {
+     "later_snapshot_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "description": "Optional later snapshot for out-of-sample-in-time evaluation",
+      "title": "Later Snapshot Id"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "snapshot_id": {
+      "title": "Snapshot Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "snapshot_id"
+    ],
+    "title": "SurfaceFitIn",
+    "type": "object"
+   },
+   "SurfaceViewsResponse": {
+    "properties": {
+     "densities": {
+      "items": {
+       "$ref": "#/components/schemas/DensitySlice"
+      },
+      "title": "Densities",
+      "type": "array"
+     },
+     "density_k": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Density K",
+      "type": "array"
+     },
+     "fit_id": {
+      "title": "Fit Id",
+      "type": "string"
+     },
+     "fitted_expiries": {
+      "items": {
+       "type": "number"
+      },
+      "title": "Fitted Expiries",
+      "type": "array"
+     },
+     "implied_vol": {
+      "items": {
+       "items": {
+        "type": "number"
+       },
+       "type": "array"
+      },
+      "title": "Implied Vol",
+      "type": "array"
+     },
+     "k_grid": {
+      "items": {
+       "type": "number"
+      },
+      "title": "K Grid",
+      "type": "array"
+     },
+     "notes": {
+      "title": "Notes",
+      "type": "string"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "t_grid": {
+      "items": {
+       "type": "number"
+      },
+      "title": "T Grid",
+      "type": "array"
+     },
+     "term_structure": {
+      "items": {
+       "$ref": "#/components/schemas/TermPoint"
+      },
+      "title": "Term Structure",
+      "type": "array"
+     }
+    },
+    "required": [
+     "fit_id",
+     "k_grid",
+     "t_grid",
+     "fitted_expiries",
+     "implied_vol",
+     "term_structure",
+     "density_k",
+     "densities",
+     "notes"
+    ],
+    "title": "SurfaceViewsResponse",
+    "type": "object"
+   },
+   "TermPoint": {
+    "properties": {
+     "T": {
+      "title": "T",
+      "type": "number"
+     },
+     "atm_vol": {
+      "title": "Atm Vol",
+      "type": "number"
+     },
+     "region": {
+      "enum": [
+       "interpolated",
+       "extrapolated"
+      ],
+      "title": "Region",
+      "type": "string"
+     }
+    },
+    "required": [
+     "T",
+     "atm_vol",
+     "region"
+    ],
+    "title": "TermPoint",
+    "type": "object"
+   },
+   "TreeConvergenceIn": {
+    "additionalProperties": false,
+    "properties": {
+     "contract": {
+      "$ref": "#/components/schemas/ContractIn-Input"
+     },
+     "greeks": {
+      "items": {
+       "$ref": "#/components/schemas/GreekName"
+      },
+      "title": "Greeks",
+      "type": "array"
+     },
+     "market": {
+      "$ref": "#/components/schemas/MarketIn-Input"
+     },
+     "model": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/ModelIn"
+       },
+       {
+        "$ref": "#/components/schemas/HestonModelIn"
+       }
+      ],
+      "description": "Black-Scholes (default) or Heston",
+      "title": "Model"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     },
+     "steps": {
+      "items": {
+       "type": "integer"
+      },
+      "maxItems": 400,
+      "minItems": 1,
+      "title": "Steps",
+      "type": "array"
+     },
+     "valuation": {
+      "$ref": "#/components/schemas/ValuationIn"
+     }
+    },
+    "required": [
+     "contract",
+     "valuation",
+     "market",
+     "model",
+     "steps"
+    ],
+    "title": "TreeConvergenceIn",
+    "type": "object"
+   },
+   "TreeConvergenceResponse": {
+    "properties": {
+     "elapsed_seconds": {
+      "title": "Elapsed Seconds",
+      "type": "number"
+     },
+     "points": {
+      "items": {
+       "$ref": "#/components/schemas/TreePoint"
+      },
+      "title": "Points",
+      "type": "array"
+     },
+     "reference_engine": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reference Engine"
+     },
+     "reference_price": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reference Price"
+     },
+     "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+     }
+    },
+    "required": [
+     "reference_price",
+     "reference_engine",
+     "points",
+     "elapsed_seconds"
+    ],
+    "title": "TreeConvergenceResponse",
+    "type": "object"
+   },
+   "TreePoint": {
+    "properties": {
+     "error_vs_reference": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Error Vs Reference"
+     },
+     "failure": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Failure"
+     },
+     "parity": {
+      "enum": [
+       "odd",
+       "even"
+      ],
+      "title": "Parity",
+      "type": "string"
+     },
+     "price": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Price"
+     },
+     "steps": {
+      "title": "Steps",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "steps",
+     "price",
+     "error_vs_reference",
+     "parity",
+     "failure"
+    ],
+    "title": "TreePoint",
+    "type": "object"
+   },
+   "UncertaintyOut": {
+    "properties": {
+     "ci_high": {
+      "title": "Ci High",
+      "type": "number"
+     },
+     "ci_low": {
+      "title": "Ci Low",
+      "type": "number"
+     },
+     "confidence_level": {
+      "title": "Confidence Level",
+      "type": "number"
+     },
+     "independent_observations": {
+      "title": "Independent Observations",
+      "type": "integer"
+     },
+     "kind": {
+      "const": "monte_carlo_sampling",
+      "default": "monte_carlo_sampling",
+      "title": "Kind",
+      "type": "string"
+     },
+     "standard_error": {
+      "title": "Standard Error",
+      "type": "number"
+     }
+    },
+    "required": [
+     "standard_error",
+     "confidence_level",
+     "ci_low",
+     "ci_high",
+     "independent_observations"
+    ],
+    "title": "UncertaintyOut",
+    "type": "object"
+   },
+   "ValuationIn": {
+    "additionalProperties": false,
+    "properties": {
+     "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+     },
+     "day_count": {
+      "$ref": "#/components/schemas/DayCount",
+      "default": "ACT/365F"
+     }
+    },
+    "required": [
+     "as_of"
+    ],
+    "title": "ValuationIn",
+    "type": "object"
+   }
+  }
+ },
+ "info": {
+  "title": "Options Pricing & Validation Workbench",
+  "version": "0.1.0"
+ },
+ "openapi": "3.1.0",
+ "paths": {
+  "/api/v1/analysis/hedging": {
+   "post": {
+    "operationId": "hedging_experiment_api_v1_analysis_hedging_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/HedgingIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HedgingResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Hedging Experiment"
+   }
+  },
+  "/api/v1/compare": {
+   "post": {
+    "operationId": "compare_api_v1_compare_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CompareRequestIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CompareResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Compare"
+   }
+  },
+  "/api/v1/convergence/mc": {
+   "post": {
+    "operationId": "mc_convergence_api_v1_convergence_mc_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MCConvergenceIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MCConvergenceResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Mc Convergence"
+   }
+  },
+  "/api/v1/convergence/tree": {
+   "post": {
+    "operationId": "tree_convergence_api_v1_convergence_tree_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TreeConvergenceIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TreeConvergenceResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Tree Convergence"
+   }
+  },
+  "/api/v1/engines": {
+   "get": {
+    "operationId": "engines_api_v1_engines_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Engines Api V1 Engines Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Engines"
+   }
+  },
+  "/api/v1/health": {
+   "get": {
+    "operationId": "health_api_v1_health_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Health Api V1 Health Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Health"
+   }
+  },
+  "/api/v1/heston/calibrations": {
+   "get": {
+    "operationId": "heston_calibrations_api_v1_heston_calibrations_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Heston Calibrations Api V1 Heston Calibrations Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Heston Calibrations"
+   },
+   "post": {
+    "operationId": "heston_calibrate_api_v1_heston_calibrations_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/HestonCalibrationIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Heston Calibrate"
+   }
+  },
+  "/api/v1/heston/calibrations/{calibration_id}": {
+   "get": {
+    "operationId": "heston_calibration_api_v1_heston_calibrations__calibration_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "calibration_id",
+      "required": true,
+      "schema": {
+       "title": "Calibration Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Heston Calibration Api V1 Heston Calibrations  Calibration Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Heston Calibration"
+   }
+  },
+  "/api/v1/implied-vol": {
+   "post": {
+    "operationId": "implied_vol_api_v1_implied_vol_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ImpliedVolIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ImpliedVolResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Implied Vol"
+   }
+  },
+  "/api/v1/metrics": {
+   "get": {
+    "operationId": "get_metrics_api_v1_metrics_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": {
+          "type": "integer"
+         },
+         "title": "Response Get Metrics Api V1 Metrics Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Get Metrics"
+   }
+  },
+  "/api/v1/paper/accounts": {
+   "get": {
+    "operationId": "paper_accounts_api_v1_paper_accounts_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/PaperAccountRow"
+         },
+         "title": "Response Paper Accounts Api V1 Paper Accounts Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Accounts"
+   },
+   "post": {
+    "operationId": "paper_open_api_v1_paper_accounts_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PaperAccountIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PaperSummaryOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Open"
+   }
+  },
+  "/api/v1/paper/accounts/{account_id}": {
+   "get": {
+    "operationId": "paper_summary_api_v1_paper_accounts__account_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "account_id",
+      "required": true,
+      "schema": {
+       "title": "Account Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PaperSummaryOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Summary"
+   }
+  },
+  "/api/v1/paper/accounts/{account_id}/events": {
+   "get": {
+    "operationId": "paper_events_api_v1_paper_accounts__account_id__events_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "account_id",
+      "required": true,
+      "schema": {
+       "title": "Account Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/LedgerEventOut"
+         },
+         "title": "Response Paper Events Api V1 Paper Accounts  Account Id  Events Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Events"
+   }
+  },
+  "/api/v1/paper/accounts/{account_id}/history": {
+   "get": {
+    "operationId": "paper_history_api_v1_paper_accounts__account_id__history_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "account_id",
+      "required": true,
+      "schema": {
+       "title": "Account Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/PaperHistoryPoint"
+         },
+         "title": "Response Paper History Api V1 Paper Accounts  Account Id  History Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper History"
+   }
+  },
+  "/api/v1/paper/accounts/{account_id}/marks": {
+   "post": {
+    "operationId": "paper_mark_api_v1_paper_accounts__account_id__marks_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "account_id",
+      "required": true,
+      "schema": {
+       "title": "Account Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PaperMarkIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MarkResultOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Mark"
+   }
+  },
+  "/api/v1/paper/accounts/{account_id}/settlements": {
+   "post": {
+    "operationId": "paper_settle_api_v1_paper_accounts__account_id__settlements_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "account_id",
+      "required": true,
+      "schema": {
+       "title": "Account Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PaperSettlementIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PaperSummaryOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Settle"
+   }
+  },
+  "/api/v1/paper/accounts/{account_id}/trades": {
+   "post": {
+    "operationId": "paper_trade_api_v1_paper_accounts__account_id__trades_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "account_id",
+      "required": true,
+      "schema": {
+       "title": "Account Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PaperTradeIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PaperSummaryOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Trade"
+   }
+  },
+  "/api/v1/paper/accounts/{account_id}/voids": {
+   "post": {
+    "operationId": "paper_void_api_v1_paper_accounts__account_id__voids_post",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "account_id",
+      "required": true,
+      "schema": {
+       "title": "Account Id",
+       "type": "string"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PaperVoidIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PaperSummaryOut"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Paper Void"
+   }
+  },
+  "/api/v1/portfolio/scenarios": {
+   "post": {
+    "operationId": "portfolio_api_v1_portfolio_scenarios_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PortfolioRequestIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PortfolioResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Portfolio"
+   }
+  },
+  "/api/v1/price": {
+   "post": {
+    "operationId": "price_api_v1_price_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PriceRequestIn-Input"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PriceResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Price"
+   }
+  },
+  "/api/v1/price/manifest": {
+   "post": {
+    "operationId": "manifest_api_v1_price_manifest_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PriceRequestIn-Input"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RunManifest-Output"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Manifest"
+   }
+  },
+  "/api/v1/replay": {
+   "post": {
+    "operationId": "replay_api_v1_replay_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RunManifest-Input"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Replay"
+   }
+  },
+  "/api/v1/snapshots": {
+   "get": {
+    "operationId": "list_snapshots_api_v1_snapshots_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response List Snapshots Api V1 Snapshots Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "List Snapshots"
+   },
+   "post": {
+    "operationId": "ingest_snapshot_api_v1_snapshots_post",
+    "responses": {
+     "201": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Ingest Snapshot"
+   }
+  },
+  "/api/v1/snapshots/bundled": {
+   "post": {
+    "operationId": "ingest_bundled_api_v1_snapshots_bundled_post",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Ingest Bundled Api V1 Snapshots Bundled Post",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Ingest Bundled"
+   }
+  },
+  "/api/v1/snapshots/{snapshot_id}": {
+   "get": {
+    "operationId": "snapshot_manifest_api_v1_snapshots__snapshot_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "snapshot_id",
+      "required": true,
+      "schema": {
+       "title": "Snapshot Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Snapshot Manifest Api V1 Snapshots  Snapshot Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Snapshot Manifest"
+   }
+  },
+  "/api/v1/snapshots/{snapshot_id}/quotes": {
+   "get": {
+    "operationId": "snapshot_quotes_api_v1_snapshots__snapshot_id__quotes_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "snapshot_id",
+      "required": true,
+      "schema": {
+       "title": "Snapshot Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Snapshot Quotes Api V1 Snapshots  Snapshot Id  Quotes Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Snapshot Quotes"
+   }
+  },
+  "/api/v1/surface/fits": {
+   "get": {
+    "operationId": "surface_fits_api_v1_surface_fits_get",
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "title": "Response Surface Fits Api V1 Surface Fits Get",
+         "type": "array"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Surface Fits"
+   },
+   "post": {
+    "operationId": "surface_fit_api_v1_surface_fits_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SurfaceFitIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Surface Fit"
+   }
+  },
+  "/api/v1/surface/fits/{fit_id}": {
+   "get": {
+    "operationId": "surface_artifact_api_v1_surface_fits__fit_id__get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "fit_id",
+      "required": true,
+      "schema": {
+       "title": "Fit Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "title": "Response Surface Artifact Api V1 Surface Fits  Fit Id  Get",
+         "type": "object"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Surface Artifact"
+   }
+  },
+  "/api/v1/surface/fits/{fit_id}/views": {
+   "get": {
+    "operationId": "surface_views_api_v1_surface_fits__fit_id__views_get",
+    "parameters": [
+     {
+      "in": "path",
+      "name": "fit_id",
+      "required": true,
+      "schema": {
+       "title": "Fit Id",
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SurfaceViewsResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Surface Views"
+   }
+  },
+  "/api/v1/visuals/exercise-boundary": {
+   "post": {
+    "operationId": "exercise_boundary_api_v1_visuals_exercise_boundary_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PriceRequestIn-Input"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ExerciseBoundaryResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Exercise Boundary"
+   }
+  },
+  "/api/v1/visuals/profile": {
+   "post": {
+    "operationId": "profile_api_v1_visuals_profile_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PriceRequestIn-Input"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProfileResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Profile"
+   }
+  },
+  "/api/v1/visuals/smile": {
+   "post": {
+    "operationId": "smile_api_v1_visuals_smile_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PriceRequestIn-Input"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SmileResponse"
+        }
+       }
+      },
+      "description": "Successful Response"
+     },
+     "413": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Content Too Large"
+     },
+     "422": {
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ErrorResponse"
+        }
+       }
+      },
+      "description": "Unprocessable Content"
+     }
+    },
+    "summary": "Smile"
+   }
+  }
+ }
+}

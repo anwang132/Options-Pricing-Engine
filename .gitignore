@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+*.egg-info/
+dist/
+build/
+
+# Frontend
+ui/node_modules/
+ui/dist/
+
+# Local runtime data (snapshots imported by users, fit artifacts, private portfolios)
+data/
+artifacts/
+*.private.json
+
+# Scratch report runs (committed evidence lives in reports/release-*)
+reports/scratch*/
+.DS_Store
+
+# TypeScript incremental build cache
+*.tsbuildinfo
