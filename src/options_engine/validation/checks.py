@@ -11,7 +11,8 @@ import json
 import math
 import tempfile
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -21,11 +22,13 @@ from options_engine.analytics.implied_vol import SOLVED, IVStatus, implied_volat
 from options_engine.application.surface import SurfaceService
 from options_engine.domain.conventions import ExerciseStyle, GreekName, OptionType
 from options_engine.domain.errors import DomainError, ErrorCode
-from options_engine.domain.numerics import AnalyticConfig
+from options_engine.domain.numerics import AnalyticConfig, HestonConfig
 from options_engine.domain.results import GreekStatus
 from options_engine.engines.base import PricingProblem
 from options_engine.engines.bsm_analytic import BlackScholesAnalyticEngine, normalized_otm_price
 from options_engine.engines.crr import build_tree, up_probability
+from options_engine.engines.heston_fourier import heston_price
+from options_engine.models.heston import HestonModel
 from options_engine.validation.policy import (
     FIXTURE_DIR,
     StressCase,
@@ -725,4 +728,135 @@ def check_surface_gate() -> CheckResult:
                 }
             )
     res.details["fits"] = fits
+    return res
+
+
+# --- Heston --------------------------------------------------------------------------------------
+
+HestonPriceFn = Callable[[PricingProblem, HestonConfig], float]
+
+
+def heston_engine_price(problem: PricingProblem, cfg: HestonConfig) -> float:
+    return heston_price(problem, cfg)[0]
+
+
+def _heston_problem(c: dict[str, Any]) -> PricingProblem:
+    return replace(
+        _problem({**c, "vol": math.sqrt(c["heston"]["v0"])}), heston=HestonModel(**c["heston"])
+    )
+
+
+def check_heston_vs_quantlib(price_fn: HestonPriceFn = heston_engine_price) -> CheckResult:
+    tol = load_policy()["tolerance"]["heston_vs_quantlib"]
+    fx = load_fixture("heston_quantlib_v1.json")
+    res = CheckResult(
+        "heston_price_vs_quantlib",
+        f"Heston European prices vs QuantLib {fx['libraries']['QuantLib']} AnalyticHestonEngine "
+        "(4 parameter sets incl. two Feller violations, negative rates)",
+        tolerance=tol,
+    )
+    cfg = HestonConfig()
+    worst: dict[str, float] = {}
+    for c in fx["cases"]:
+        cid = f"{c['parameter_set']}:{c['option_type']}:K{c['strike']}:d{c['days']}:r{c['rate']}"
+        got = price_fn(_heston_problem(c), cfg)
+        res.record(cid, got - c["price"], c["price"], tol["atol"] * _scale(c["spot"]), tol["rtol"])
+        worst[c["parameter_set"]] = max(worst.get(c["parameter_set"], 0.0), abs(got - c["price"]))
+    res.details["max_abs_error_by_parameter_set"] = worst
+    return res
+
+
+def _heston_limit_gap(
+    price_fn: HestonPriceFn,
+    cfg: HestonConfig,
+    v0: float,
+    kappa: float,
+    theta: float,
+    rho: float,
+    sign: float,
+    K: float,
+    T: float,
+    s: float,
+) -> float:
+    """Heston price minus BSM with the deterministic-variance effective volatility."""
+    m = HestonModel(v0, kappa, theta, s, rho)
+    p = PricingProblem(
+        OptionType.CALL if sign > 0 else OptionType.PUT,
+        ExerciseStyle.EUROPEAN,
+        100.0,
+        K,
+        T,
+        0.03,
+        0.01,
+        math.sqrt(v0),
+        heston=m,
+    )
+    bs = analytic_price(p.with_changes(volatility=m.effective_volatility(T), heston=None))
+    return price_fn(p, cfg) - bs
+
+
+def check_heston_limit(price_fn: HestonPriceFn = heston_engine_price) -> CheckResult:
+    """vol-of-vol -> 0 against BSM with the deterministic integrated variance."""
+    tol = load_policy()["tolerance"]["heston_deterministic_limit"]
+    res = CheckResult(
+        "heston_deterministic_variance_limit",
+        "sigma -> 0: rho = 0 must match BSM(sqrt(I(T)/T)) at sigma = 1e-7 (second-order gap); "
+        "rho != 0 must converge at first order (gap/sigma stable between 1e-5 and 1e-7)",
+        tolerance=tol,
+    )
+    cfg = HestonConfig()
+    ratios = []
+    for rho in (0.0, -0.7, 0.4):
+        for v0, kappa, theta in ((0.04, 1.5, 0.09), (0.09, 0.3, 0.04), (0.04, 1e-10, 0.2)):
+            for sign, K, T in ((1, 80.0, 0.5), (1, 110.0, 1.0), (-1, 95.0, 2.0)):
+                gap = partial(
+                    _heston_limit_gap, price_fn, cfg, v0, kappa, theta, rho, float(sign), K, T
+                )
+                cid = f"rho{rho}:v0{v0}:k{kappa}:th{theta}:{'C' if sign > 0 else 'P'}K{K}:T{T}"
+                if rho == 0.0:
+                    res.record(cid, gap(1e-7), 1.0, tol["atol"], tol["rtol"])
+                else:
+                    r5, r7 = gap(1e-5) / 1e-5, gap(1e-7) / 1e-7
+                    ratios.append(
+                        {"case": cid, "gap_over_sigma_1e-5": r5, "gap_over_sigma_1e-7": r7}
+                    )
+                    res.record(cid + ":order", r7 - r5, r5, 1e-12, tol["first_order_ratio_rtol"])
+    res.details["first_order_ratios"] = ratios[:6]
+    return res
+
+
+def check_heston_parity(price_fn: HestonPriceFn = heston_engine_price) -> CheckResult:
+    tol = load_policy()["tolerance"]["heston_parity"]
+    res = CheckResult("heston_put_call_parity", "C - P = D(F - K) under Heston", tolerance=tol)
+    cfg = HestonConfig()
+    for c in load_fixture("heston_quantlib_v1.json")["cases"]:
+        if c["option_type"] != "call":
+            continue
+        call = _heston_problem(c)
+        put = call.with_changes(option_type=OptionType.PUT)
+        D = math.exp(-c["rate"] * c["time"])
+        F = c["spot"] * math.exp((c["rate"] - c["dividend_yield"]) * c["time"])
+        target = D * (F - c["strike"])
+        cid = f"{c['parameter_set']}:K{c['strike']}:d{c['days']}:r{c['rate']}"
+        res.record(
+            cid, price_fn(call, cfg) - price_fn(put, cfg) - target, target, tol["atol"], tol["rtol"]
+        )
+    return res
+
+
+def check_heston_integration_settings() -> CheckResult:
+    """Default quadrature tolerances vs much tighter ones: an estimate of integration error."""
+    tol = load_policy()["tolerance"]["heston_integration_settings"]
+    res = CheckResult(
+        "heston_integration_settings",
+        "Prices with the default quadrature (epsabs 1e-12, epsrel 1e-10) vs a tight setting "
+        "(epsabs 1e-14, epsrel 1e-13, limit 5000)",
+        tolerance=tol,
+    )
+    default, tight = HestonConfig(), HestonConfig(epsabs=1e-14, epsrel=1e-13, limit=5000)
+    for c in load_fixture("heston_quantlib_v1.json")["cases"][::3]:
+        p = _heston_problem(c)
+        a, b = heston_engine_price(p, default), heston_engine_price(p, tight)
+        cid = f"{c['parameter_set']}:{c['option_type']}:K{c['strike']}:d{c['days']}"
+        res.record(cid, a - b, b, tol["atol"], tol["rtol"])
     return res

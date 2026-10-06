@@ -220,3 +220,294 @@ k_range_for_truth = [-0.3, 0.2]
 # sufficient conditions of the parametric guarantee must hold.
 require_no_sampled_violations = true
 require_guarantee_conditions = true
+
+# ---------------------------------------------------------------------------
+# Heston engine (added before any Heston code was written).
+# ---------------------------------------------------------------------------
+[tolerance.heston_vs_quantlib]
+# Reference: QuantLib AnalyticHestonEngine, adaptive Gauss-Lobatto, relTolerance 1e-12.
+# Price units at spot 100.
+atol = 1e-8
+rtol = 1e-7
+
+[tolerance.heston_deterministic_limit]
+# vol-of-vol -> 0 against BSM with effective vol sqrt(I(T)/T),
+# I(T) = theta*T + (v0 - theta)*(1 - exp(-kappa*T))/kappa.
+# rho = 0: the gap is second order in sigma; at sigma = 1e-7 it must meet atol/rtol.
+atol = 1e-9
+rtol = 1e-9
+# rho != 0: the gap is first order in sigma (skew term ~ rho*sigma). The ratio gap/sigma at
+# sigma = 1e-5 and 1e-7 must agree to this relative tolerance (convergence at that order).
+first_order_ratio_rtol = 1e-3
+
+[tolerance.heston_parity]
+atol = 1e-9
+rtol = 1e-11
+
+[tolerance.heston_integration_settings]
+# Two quadrature settings (tight vs default) must agree to this level.
+atol = 1e-9
+rtol = 1e-9
+
+[heston_parameter_sets]
+# (v0, kappa, theta, sigma, rho); B and D violate the Feller condition 2*kappa*theta >= sigma^2.
+typical_equity = [0.04, 1.5, 0.04, 0.3, -0.7]
+feller_violated_high_volvol = [0.09, 0.5, 0.04, 0.9, -0.9]
+positive_correlation_fast_reversion = [0.02, 4.0, 0.06, 0.2, 0.3]
+slow_reversion_extreme_volvol = [0.04, 0.1, 0.25, 1.2, -0.5]
+
+# ---------------------------------------------------------------------------
+# Longstaff-Schwartz American Monte Carlo (added before any LSM code was written).
+# The pricing estimate applies an exercise rule fitted on an independent regression
+# set, so its mean is a lower bound on the Bermudan price with the same exercise dates.
+# Reference B: CRR tree with exercise allowed only on those dates (exact Bermudan up to
+# tree error eps_tree = crr_vs_bsm.k * spot * vol * sqrt(T) / N).
+# Per case, with SE s of the LSM estimate L:
+#   upper:  L - B <= z * s + eps_tree                                  (no upward bias)
+#   lower:  B - L <= z * s + eps_tree + regression_atol*spot/100 + regression_rtol * B
+# The lower criterion bounds the loss from the regression rule being suboptimal.
+# ---------------------------------------------------------------------------
+[lsm]
+seed = 314159265
+paths = 200000
+regression_paths = 100000
+exercise_dates = 50
+basis_degree = 3
+tree_steps_per_date = 200
+z = 4.0
+regression_atol = 5e-3
+regression_rtol = 5e-3
+
+# Puts (early exercise from rates), calls with yield above the rate (from dividends).
+[lsm.puts]
+spot = [100.0]
+strike = [90.0, 100.0, 110.0]
+time = [0.5, 1.0, 2.0]
+vol = [0.2, 0.4]
+rate = [0.05]
+dividend_yield = [0.0]
+
+[lsm.calls_high_yield]
+spot = [100.0]
+strike = [90.0, 100.0, 110.0]
+time = [1.0]
+vol = [0.25]
+rate = [0.03]
+dividend_yield = [0.06]
+
+# Escrowed cash dividends, both option types: S=100, K=100, T=1, vol 0.25, r 0.05,
+# 2.0 paid at t = 0.25 and 0.75.
+[lsm.cash_dividends]
+dividends = [[0.25, 2.0], [0.75, 2.0]]
+
+# Calls without dividends: early exercise is never optimal, so the reference is the
+# closed-form European price (same two criteria with eps_tree = 0).
+[lsm.no_early_exercise_calls]
+spot = [100.0]
+strike = [90.0, 100.0, 110.0]
+time = [1.0]
+vol = [0.2]
+rate = [0.05]
+dividend_yield = [0.0]
+
+# Statistical tier: spread of R independent estimates vs their mean reported SE.
+# The spread includes regression-coefficient randomness, which moves the value only
+# at second order near the optimal rule; the ratio must lie in the band.
+[lsm.se_calibration]
+replications = 200
+paths = 20000
+regression_paths = 10000
+exercise_dates = 25
+case = { option_type = "put", spot = 100.0, strike = 100.0, time = 1.0, vol = 0.2, rate = 0.05, dividend_yield = 0.0 }
+ratio_band = [0.8, 1.25]
+
+# ---------------------------------------------------------------------------
+# Heston batch pricer (fixed composite Gauss-Legendre quadrature, vectorised over
+# strikes and variance states; used by calibration and hedging). Added before code.
+# ---------------------------------------------------------------------------
+[heston_batch]
+# Fourier pricing is used where the expected remaining integrated variance
+# I(tau; v) >= fourier_min_total_variance and |ln(F/K)| <= max_abs_x_in_sd * sqrt(I);
+# elsewhere the deterministic-variance limit (BSM at sqrt(I/tau)) is used and its
+# error is reported, not gated.
+# Amended from 4e-4 before the formal check ran: the adaptive node rule was accurate on the
+# whole sweep, so less is routed to the approximation and more points face the 1e-7 gate.
+fourier_min_total_variance = 1e-5
+max_abs_x_in_sd = 10.0
+
+[tolerance.heston_batch_vs_quantlib]
+# All 200 fixture prices.
+atol = 1e-8
+rtol = 1e-7
+
+[tolerance.heston_batch_vs_adaptive_sweep]
+# Grid: tau x v x x for three parameter sets; Fourier-routed points only.
+tau = [0.004, 0.02, 0.1, 0.5, 2.0]
+v = [0.0025, 0.01, 0.04, 0.16]
+x_points = 9
+parameter_sets = ["typical_equity", "feller_violated_high_volvol", "slow_reversion_extreme_volvol"]
+atol = 1e-7
+rtol = 1e-7
+
+[tolerance.heston_batch_greeks]
+# Analytic dC/dS and dC/dv vs central differences of the adaptive pricer
+# (every 4th QuantLib fixture case).
+atol = 1e-6
+rtol = 1e-5
+
+# ---------------------------------------------------------------------------
+# Heston calibration (added before code).
+# ---------------------------------------------------------------------------
+[heston_calibration]
+restarts = 5
+# (v0, kappa, theta, sigma, rho) generating the noisy synthetic snapshots.
+truth_day1 = [0.035, 2.0, 0.05, 0.6, -0.75]
+# Day 2: same structural parameters, new variance state, spot -1%.
+truth_day2_v0 = 0.045
+
+[heston_calibration.exact_recovery]
+# Calibrate to exact model prices on the synthetic chain grid (OTM side, 5 expiries).
+parameter_sets = ["typical_equity", "feller_violated_high_volvol"]
+max_relative_parameter_error = 1e-3
+
+[heston_calibration.noisy_snapshot]
+fixtures = ["synthetic_heston_day1.json", "synthetic_heston_day2.json"]
+min_holdout_bid_ask_containment = 0.90
+max_abs_iv_error_vs_truth = 0.005
+# Each parameter: |estimate - truth| <= se_multiple * (Gauss-Newton standard error).
+se_multiple = 3.0
+# Day 2 with kappa, theta, sigma, rho held at their day-1 estimates, v0 refitted:
+min_day2_v0_refit_containment = 0.90
+
+# ---------------------------------------------------------------------------
+# Delta-hedging experiment (added before code). Short one call, hedged in the
+# underlying at N equally spaced times, P&L discounted to t = 0.
+# ---------------------------------------------------------------------------
+[hedging]
+seed = 271828
+spot = 100.0
+strike = 100.0
+time = 0.5
+rate = 0.03
+dividend_yield = 0.01
+paths = 20000
+rebalances = [16, 32, 64, 128, 256]
+z = 4.0
+
+[hedging.gbm_correct_vol]
+vol = 0.2
+# OLS slope of log(std P&L) on log(N) over N >= 32:
+slope_band = [-0.55, -0.45]
+# std(P&L) at N = 256 over the leading-order prediction
+# sqrt(0.5 * vol^4 * dt^2 * sum_i mean(e^{-2 r t_i} Gamma_i^2 S_i^4)) on the same paths:
+leading_order_ratio_band = [0.9, 1.1]
+
+[hedging.gbm_misspecified_vol]
+# Priced and hedged at hedge_vol while the path has real_vol. Continuous-time identity:
+# P&L = sum_i e^{-r t_i} 0.5 Gamma_i(hedge_vol) S_i^2 (hedge_vol^2 - real_vol^2) dt + noise.
+real_vol = 0.2
+hedge_vol = 0.25
+rebalances = 256
+# |mean(P&L - identity)| <= z * SE + atol:
+atol = 0.01
+
+[hedging.heston_simulator]
+# Andersen QE scheme; 200 steps per year; T = 1.
+parameter_sets = ["typical_equity", "feller_violated_high_volvol"]
+steps_per_year = 200
+paths = 100000
+strikes = [80.0, 100.0, 120.0]
+# |mean(D S_T) - S0 e^{-qT}| <= z * SE + martingale_atol
+martingale_atol = 0.01
+# |MC call - Fourier| <= z * SE + price_atol (QE discretisation allowance)
+price_atol = 0.02
+
+[hedging.heston_min_variance]
+# Under Heston (typical_equity), the minimum-variance delta dC/dS + rho*sigma/S * dC/dv
+# must beat the Heston delta dC/dS: paired z-statistic of mean(PnL_delta^2 - PnL_mv^2).
+parameter_set = "typical_equity"
+rebalances = 64
+paths = 10000
+min_z = 3.0
+
+# ---------------------------------------------------------------------------
+# Andersen-Broadie dual upper bound for Longstaff-Schwartz (added before code).
+# Reference B: CRR tree exercising on the same dates.
+#   valid:  U >= B - z * SE_U - eps_tree
+#   tight:  U - B <= gap_atol * spot/100 + gap_rtol * B + z * SE_U + eps_tree
+# ---------------------------------------------------------------------------
+[lsm.upper_bound]
+seed = 161803398
+exercise_dates = 25
+paths = 100000
+regression_paths = 100000
+outer_paths = 1500
+inner_paths = 500
+tree_steps_per_date = 400
+z = 4.0
+gap_atol = 0.01
+gap_rtol = 0.01
+# (option_type, strike, time, vol, rate, dividend_yield); spot 100
+cases = [
+  ["put", 90.0, 1.0, 0.2, 0.05, 0.0],
+  ["put", 100.0, 1.0, 0.2, 0.05, 0.0],
+  ["put", 110.0, 1.0, 0.2, 0.05, 0.0],
+  ["put", 100.0, 1.0, 0.4, 0.05, 0.0],
+  ["call", 100.0, 1.0, 0.25, 0.03, 0.06],
+]
+# plus the cash-dividend call of [lsm.cash_dividends] (K = 100, T = 1, vol 0.25, r 0.05)
+include_cash_dividend_call = true
+
+# ---------------------------------------------------------------------------
+# Real-data study (added before code). No pass/fail thresholds: real data has no
+# known truth. These are the only metrics reported and compared, fixed in advance
+# so that no metric is chosen after seeing results. Models are compared on
+# held-out and next-day metrics only, never in-sample.
+# ---------------------------------------------------------------------------
+[real_data_study]
+# Amended after the first real-data run, before the term-structure models existed: two models
+# added; metrics and comparison metrics unchanged.
+models = ["ssvi", "heston", "svi_slices", "heston_ts"]
+metrics = [
+  "in_sample_weighted_rmse",
+  "held_out_bid_ask_containment",
+  "held_out_iv_rmse_vol_points",
+  "day2_bid_ask_containment_no_refit",
+  "day2_iv_rmse_vol_points_no_refit",
+  "day2_bid_ask_containment_heston_v0_refit",
+]
+comparison_metrics = ["held_out_bid_ask_containment", "day2_bid_ask_containment_no_refit"]
+
+# ---------------------------------------------------------------------------
+# Term-structure models (added before code), motivated by the first real-data run:
+# global SSVI and constant-parameter Heston missed SPXW by 2-4 vol points.
+# ---------------------------------------------------------------------------
+[svi_slices]
+# Raw SVI per expiry, w(k) = a + b (rho (k - m) + sqrt((k - m)^2 + s^2)), fitted in price
+# space with the surface pipeline's quotes, weights and held-out strikes.
+restarts = 5
+fixtures = ["synthetic_clean_day1.json", "synthetic_heston_day1.json"]
+min_holdout_bid_ask_containment = 0.90
+# Sampled no-arbitrage diagnostics on the synthetic fixtures (arbitrage-free generators):
+max_butterfly_violations = 0
+max_calendar_violations = 0
+
+[heston_term_structure]
+# theta piecewise constant in calendar time between these pillars (days from valuation):
+# buckets [0, 7], (7, 30], (30, 91], (91, 182], (182, inf).
+pillars_days = [7, 30, 91, 182]
+# 1. All theta_i equal must reproduce constant-parameter Heston:
+reduction_atol = 1e-12
+# 2. Independent check of the characteristic function: QE Monte Carlo with theta(t)
+#    switching at the pillars (steps aligned with them).
+mc_parameters = { v0 = 0.04, kappa = 1.5, sigma = 0.3, rho = -0.7, thetas = [0.02, 0.03, 0.05, 0.06, 0.08] }
+mc_times = [0.25, 1.0]
+mc_strikes = [80.0, 100.0, 120.0]
+mc_paths = 200000
+mc_steps_per_year = 365
+mc_z = 4.0
+mc_price_atol = 0.02
+# 3. Calibration to exact term-structure prices on the synthetic chain grid recovers the
+#    parameters. Looser than the constant model's 1e-3: nine parameters, and the first
+#    bucket (0-7 days) is seen only through every expiry's first week.
+exact_recovery_max_relative_error = 1e-2

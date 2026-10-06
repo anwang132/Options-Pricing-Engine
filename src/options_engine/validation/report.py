@@ -16,7 +16,14 @@ from typing import Any
 from options_engine.adapters.environment import environment_info
 from options_engine.application.hashing import to_jsonable
 from options_engine.domain.conventions import OptionType
-from options_engine.validation import checks
+from options_engine.validation import (
+    calibration,
+    checks,
+    hedging,
+    heston_batch,
+    lsm,
+    term_structure,
+)
 from options_engine.validation.benchmarks import run_benchmarks
 from options_engine.validation.policy import load_policy, policy_sha256
 from options_engine.validation.statistical import run_suite
@@ -44,6 +51,25 @@ def _deterministic() -> list[checks.CheckResult]:
         checks.check_american_identities(),
         checks.check_american_vs_quantlib(),
         checks.check_surface_gate(),
+        checks.check_heston_vs_quantlib(),
+        checks.check_heston_limit(),
+        checks.check_heston_parity(),
+        checks.check_heston_integration_settings(),
+        lsm.check_lsm_vs_bermudan(),
+        lsm.check_lsm_se_calibration(),
+        lsm.check_lsm_upper_bound(),
+        heston_batch.check_heston_batch_vs_quantlib(),
+        heston_batch.check_heston_batch_sweep(),
+        heston_batch.check_heston_batch_greeks(),
+        calibration.check_heston_calibration_exact(),
+        calibration.check_heston_calibration_noisy(),
+        hedging.check_hedging_gbm(),
+        hedging.check_heston_simulator(),
+        hedging.check_heston_min_variance_hedge(),
+        term_structure.check_heston_ts_reduction(),
+        term_structure.check_heston_ts_monte_carlo(),
+        term_structure.check_heston_ts_exact_recovery(),
+        term_structure.check_svi_slices_synthetic(),
     ]
 
 

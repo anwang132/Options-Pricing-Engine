@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from options_engine.validation import checks
+from options_engine.validation import calibration, checks, heston_batch, term_structure
 
 
 @pytest.mark.parametrize(
@@ -22,6 +22,16 @@ from options_engine.validation import checks
         checks.check_boundaries,
         checks.check_american_identities,
         checks.check_surface_gate,
+        checks.check_heston_vs_quantlib,
+        checks.check_heston_limit,
+        checks.check_heston_parity,
+        checks.check_heston_integration_settings,
+        heston_batch.check_heston_batch_vs_quantlib,
+        calibration.check_heston_calibration_exact,
+        calibration.check_heston_calibration_noisy,
+        term_structure.check_heston_ts_reduction,
+        term_structure.check_heston_ts_exact_recovery,
+        term_structure.check_svi_slices_synthetic,
     ],
     ids=lambda f: f.__name__,
 )
@@ -48,6 +58,7 @@ def test_fixture_provenance_recorded():
         "american_quantlib_fd_v1.json",
         "bsm_published_examples_v1.json",
         "normalized_black_grid_v1.json",
+        "heston_quantlib_v1.json",
     ):
         fx = checks.load_fixture(name)
         assert fx["libraries"]["QuantLib"] == "1.43"

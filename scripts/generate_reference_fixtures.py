@@ -311,6 +311,58 @@ def build_normalized_grid() -> dict[str, Any]:
     return out
 
 
+def build_quantlib_heston() -> dict[str, Any]:
+    """QuantLib AnalyticHestonEngine prices over the policy's Heston parameter sets."""
+    sets = load_policy()["heston_parameter_sets"]
+    cases = []
+    markets = [(0.03, 0.01)]
+    for name, (v0, kappa, theta, sigma, rho) in sets.items():
+        for r, q in markets + ([(-0.005, 0.0)] if name == "typical_equity" else []):
+            proc = ql.HestonProcess(
+                ql.YieldTermStructureHandle(ql.FlatForward(EVAL, r, DC, ql.Continuous)),
+                ql.YieldTermStructureHandle(ql.FlatForward(EVAL, q, DC, ql.Continuous)),
+                ql.QuoteHandle(ql.SimpleQuote(100.0)),
+                v0,
+                kappa,
+                theta,
+                sigma,
+                rho,
+            )
+            engine = ql.AnalyticHestonEngine(ql.HestonModel(proc), 1e-12, 1_000_000)
+            for w in (1, -1):
+                for K in (60.0, 80.0, 100.0, 120.0, 150.0):
+                    for days in (36, 182, 365, 1095):
+                        opt = _option(w, K, days, american=False)
+                        opt.setPricingEngine(engine)
+                        cases.append(
+                            {
+                                "parameter_set": name,
+                                "option_type": "call" if w > 0 else "put",
+                                "spot": 100.0,
+                                "strike": K,
+                                "days": days,
+                                "time": days / 365.0,
+                                "rate": r,
+                                "dividend_yield": q,
+                                "heston": {
+                                    "v0": v0,
+                                    "kappa": kappa,
+                                    "theta": theta,
+                                    "sigma": sigma,
+                                    "rho": rho,
+                                },
+                                "price": opt.NPV(),
+                            }
+                        )
+    out = provenance(
+        "heston_quantlib",
+        "QuantLib AnalyticHestonEngine (adaptive Gauss-Lobatto, relTolerance 1e-12) over the "
+        "policy's Heston parameter sets, flat continuous curves, Actual365Fixed.",
+    )
+    out["cases"] = cases
+    return out
+
+
 def build_published() -> dict[str, Any]:
     out = provenance(
         "bsm_published_examples",
@@ -343,6 +395,7 @@ def main() -> None:
         "american_quantlib_fd_v1.json": build_quantlib_american,
         "bsm_published_examples_v1.json": build_published,
         "normalized_black_grid_v1.json": build_normalized_grid,
+        "heston_quantlib_v1.json": build_quantlib_heston,
     }
     only = set(sys.argv[1:])
     for name, builder in targets.items():

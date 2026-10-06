@@ -2,10 +2,10 @@
  "fixture": "bsm_european_mpmath",
  "fixture_version": 1,
  "description": "European BSM prices and Greeks at 60-digit working precision over the policy stress matrix. Greeks are numerical derivatives (mpmath.diff) of the price.",
- "generated_at": "2026-09-28T17:49:49+00:00",
+ "generated_at": "2026-09-29T17:41:20+00:00",
  "generator": "scripts/generate_reference_fixtures.py",
- "generator_sha256": "03b129e336a81bce829a205b2f5cf6a7b3d5f15ee415f671f2fa86c293e95228",
- "policy_sha256": "b341906a9fc9dcc96a7efb624e05fb274cc353fd56b9f93196c8d636a4cb565b",
+ "generator_sha256": "29caab70a0c202247717c69c3862af6d94edecb22f0c7e0a12cee164469f98da",
+ "policy_sha256": "e257e0c953f3b0711fd3ac363f8217689ba27f52abd5963247f5eb68084d4a81",
  "libraries": {
   "python": "3.13.14",
   "mpmath": "1.4.1",

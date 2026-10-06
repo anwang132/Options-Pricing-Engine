@@ -138,3 +138,30 @@ def test_correct_antithetic_estimator_passes_same_small_suite():
         replications=200, paths=4_000, methods=["antithetic"], case_names=["deep_itm_call"]
     )
     assert results[0].passed
+
+
+def test_heston_correlation_sign_mutant_detected():
+    """Flipping the sign of rho (a common convention slip) must fail the QuantLib check."""
+    from dataclasses import replace as dc_replace
+
+    from options_engine.engines.heston_fourier import heston_price
+
+    def flipped(p, cfg):
+        assert p.heston is not None
+        return heston_price(p.with_changes(heston=dc_replace(p.heston, rho=-p.heston.rho)), cfg)[0]
+
+    assert not checks.check_heston_vs_quantlib(flipped).passed
+
+
+def test_heston_limit_detects_missing_mean_reversion_term():
+    """Using theta instead of the integrated variance breaks the sigma -> 0 limit check."""
+    from options_engine.engines.heston_fourier import heston_price
+
+    def wrong_variance(p, cfg):
+        assert p.heston is not None
+        h = p.heston
+        return heston_price(
+            p.with_changes(heston=type(h)(h.theta, h.kappa, h.theta, h.sigma, h.rho)), cfg
+        )[0]
+
+    assert not checks.check_heston_limit(wrong_variance).passed
