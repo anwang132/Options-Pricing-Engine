@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from options_engine.validation import checks
+from options_engine.validation.policy import load_policy, within
 
 pytestmark = [
     pytest.mark.reference,
@@ -26,13 +27,30 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 
 def test_quantlib_european_fixture_reproduces():
+    """Prices must match the committed fixture within the predeclared tolerance.
+
+    The tolerance is absolute (policy `fixture_reproduction.quantlib_price`): the
+    price is a difference of two terms of order the spot, so near the money one
+    ulp of the cumulative normal is worth ~2.7e-14 *relative*, and the deep tails
+    price at 1e-45. Platform libm differences are bounded in price units, not in
+    relative terms.
+    """
     import generate_reference_fixtures as gen
 
+    tol = load_policy()["tolerance"]["fixture_reproduction"]["quantlib_price"]
     fresh = gen.build_quantlib_european()["cases"]
     committed = checks.load_fixture("bsm_european_quantlib_v1.json")["cases"]
     assert len(fresh) == len(committed)
-    for a, b in zip(fresh, committed, strict=True):
-        assert a["price"] == pytest.approx(b["price"], rel=1e-14, abs=1e-15)
+    drift = [
+        f"{b['option_type']} K={b['strike']:g} days={b['days']} vol={b['vol']:g} "
+        f"r={b['rate']:g} q={b['dividend_yield']:g}: {a['price']!r} vs {b['price']!r} "
+        f"(delta {a['price'] - b['price']:.3g})"
+        for a, b in zip(fresh, committed, strict=True)
+        if not within(a["price"] - b["price"], b["price"], tol["atol"], tol["rtol"])
+    ]
+    assert not drift, "fixture drift in {} of {} cases:\n{}".format(
+        len(drift), len(committed), "\n".join(drift[:10])
+    )
 
 
 def test_mpmath_fixture_sample_reproduces():
