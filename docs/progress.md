@@ -280,6 +280,48 @@ Evidence: `reports/release-e/report.md|json`: all 34 deterministic checks and th
 suite pass (145 s; policy SHA-256 c1b9783c…; uncommitted tree). `ruff`, strict `mypy` (101 files)
 clean; `uv run pytest -q`: 346 passed.
 
+## Policy amendment: fixture-reproduction tolerance (2026-10-08)
+
+The nightly `slow-validation` workflow failed on 2026-10-07 and 2026-10-08, both times on
+`test_quantlib_european_fixture_reproduces` and both times on the same single case: the ATM
+7-day 5%-vol call at r = −0.01, where Linux x86-64 gives 0.2667794500311555 and the committed
+fixture (generated on macOS arm64) has 0.2667794500311523. The deterministic tier was green
+throughout; the whole slow tier still passes on macOS, so the test was asserting
+platform-reproducibility it could not deliver.
+
+This was not fixture drift. The analytic European price is `df·(F·N(d1) − K·N(d2))`, two terms
+of order the spot that cancel; that case cancels 49.02 − 48.76 into 0.267, an amplification of
+184x. One ulp in a cumulative normal is therefore worth 2.7e-14 **relative** on that price,
+so the test's `rel=1e-14, abs=1e-15` sat below the noise floor of its own computation and only
+ever passed on the machine the fixture was generated on. The observed gap, 3.2e-15, is less
+than half an ulp at the scale of the intermediate terms. The matrix also contains 20 cases
+priced under 1e-6 (smallest 3e-45, one at −3.4e-15) that are pure cancellation residue, where
+a relative tolerance has no meaning at all.
+
+Amendment: the tolerance moved out of the test body and into the policy as
+`[tolerance.fixture_reproduction.quantlib_price]`, `atol = 1e-12`, `rtol = 1e-12` — absolute,
+because the error enters at the scale of the terms (≈ spot), not of the price. Sizing is
+measured, not guessed: a 1-ulp difference in each `N()` moves no price in the 480-case matrix
+by more than 5.5e-14 (worst at the 5-year 140-strike put), so 1e-12 leaves ~18x for libm and
+compiler differences while staying 100x tighter than the existing `bsm_vs_quantlib.price`
+atol of 1e-10. It catches what this detector is for — a fixture regenerated with a different
+day count, engine or evaluation date, or a library whose algorithm changed, all ≥ 1e-8 — and,
+as the policy comment records, it cannot catch an edit to the last couple of printed digits,
+which no tolerance can distinguish from platform noise. The test now reports every drifting
+case instead of dying on the first.
+
+Policy SHA-256 after the amendment: `b70378d1…` (was `c1b9783c…`). No fixture was regenerated
+and no committed value changed; nothing asserts a fixture's recorded policy hash against the
+live one, so the older fixtures keep their provenance as generated.
+
+Also made the nightly upload its report artifact with `if: always()`. Both failures above
+produced no downloadable report, because the upload step is skipped by default when an earlier
+step fails — exactly when the report is worth reading.
+
+Evidence: `uv run --group reference pytest -q -m "statistical or reference"`: 13 passed (100 s,
+was 1 failed / 12 passed in CI); `uv run options-engine validate --out …`: PASS; `uv run pytest
+-q`: 346 passed; `ruff format --check`, `ruff check`, strict `mypy` (101 files) clean.
+
 ## Current state and next steps
 
 Everything since the 15 committed pieces is **uncommitted** on `build/options-workbench`.

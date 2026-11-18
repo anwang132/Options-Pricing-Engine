@@ -21,7 +21,9 @@ The report lists the *scaled error* max|error|/(atol + rtol|ref|) per check (≤
 | `bsm_published_examples_v1.json` | Hull's BSM worked example (4.76 / 0.81), compared at printed rounding | 1 case (transcribed; edition/page not re-verified) |
 
 Regenerate: `uv run --group reference python scripts/generate_reference_fixtures.py`.
-Drift check: `uv run --group reference pytest -m reference`.
+Drift check: `uv run --group reference pytest -m reference`, against the predeclared
+`[tolerance.fixture_reproduction.quantlib_price]` (atol 1e-12, absolute — see
+"Reproducibility across platforms").
 
 ## Stress matrix (policy v1)
 
@@ -165,6 +167,18 @@ Results are bit-reproducible on one platform and library build (manifest replay 
 Across BLAS/LAPACK builds they are not: a surface fit computed in the Linux container (OpenBLAS)
 and on macOS (Accelerate) differed in the last bits, starting in the `numpy.linalg.lstsq`
 parity regression. Reports therefore record NumPy/SciPy versions and the BLAS implementation.
+
+The same applies to QuantLib's cumulative normal, and the fixture drift check has to allow for
+it. The committed `bsm_european_quantlib_v1.json` was generated on macOS arm64; on Linux x86-64
+one of its 480 cases — the ATM 7-day 5%-vol call at r = −0.01 — comes back 3.2e-15 higher. That
+price is `df·(F·N(d1) − K·N(d2))` = 49.02 − 48.76, so the cancellation amplifies any error in
+`N()` by 184x: one ulp there is 2.7e-14 *relative* on the price, and the observed gap is under
+half an ulp at the scale of the terms. Deviations are bounded in price units, not relative
+ones (at most 5.5e-14 from a 1-ulp `N()` difference, over the whole matrix), and 20 cases in
+the matrix price below 1e-6 where a relative tolerance means nothing. Hence an absolute
+tolerance, predeclared at atol 1e-12. The original `rel=1e-14` assertion sat below the noise
+floor of its own arithmetic and passed only on the machine that generated the fixture; it broke
+the nightly on 2026-10-07/08 (docs/progress.md, 2026-10-08).
 
 ## Findings recorded so far
 

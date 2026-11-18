@@ -101,6 +101,32 @@ rtol = 1e-10
 atol = 1e-8
 rtol = 1e-7
 
+[tolerance.fixture_reproduction.quantlib_price]
+# Slow-tier drift detector: recompute the committed QuantLib fixture with the
+# pinned library and compare against the committed values. The engine under
+# test is not involved; this only asks whether QuantLib 1.43 still produces
+# these numbers on the machine running the suite.
+#
+# The analytic European price is df * (F*N(d1) - K*N(d2)): two terms of order
+# the spot that cancel. Near the money the cancellation reaches ~184x (ATM,
+# 7 days, 5% vol), so a single ulp in one cumulative normal moves that price
+# by 2.7e-14 **relative** -- already past a 1e-14 rtol. The matrix also holds
+# 20 cases priced below 1e-6 (smallest 3e-45, one at -3e-15) that are pure
+# cancellation residue, where relative error carries no meaning at all. A
+# relative tolerance is the wrong instrument for this comparison.
+#
+# Bounding the deviation absolutely instead: a 1-ulp difference in each N()
+# moves any price in the matrix by at most 5.5e-14 (measured over all 480
+# cases; worst at the 5-year 140-strike put). atol 1e-12 leaves ~18x headroom
+# for libm and compiler differences across platforms, while staying 100x
+# tighter than bsm_vs_quantlib.price above. What this catches is a fixture
+# regenerated with different settings (day count, engine, evaluation date) or
+# a library whose algorithm changed: those move prices by 1e-8 or more. It
+# cannot catch an edit to the last couple of printed digits, which is
+# indistinguishable from platform noise at any tolerance.
+atol = 1e-12
+rtol = 1e-12
+
 [tolerance.published]
 # Published textbook values are rounded to the printed decimals.
 half_unit_in_last_place = true
